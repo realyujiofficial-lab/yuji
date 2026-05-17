@@ -116,8 +116,8 @@ i[data-lucide]{display:inline-block;vertical-align:middle}
 /* ── 탭 ── */
 .tabs{display:flex;gap:6px;padding:14px 20px 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .tabs::-webkit-scrollbar{display:none}
-.tab{padding:8px 16px;border-radius:20px;font-size:12px;font-weight:600;border:none;background:#ebebeb;white-space:nowrap;cursor:pointer;color:#888;flex-shrink:0;transition:.1s}
-.tab.active{background:#1a1a1a;color:#fff}
+.tab{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--card);white-space:nowrap;cursor:pointer;color:var(--sub);flex-shrink:0;transition:.1s}
+.tab.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
 .tc{display:none;padding:14px 20px}
 .tc.active{display:block}
 
@@ -324,11 +324,11 @@ textarea.finp{min-height:120px;resize:vertical}
   </div>
 
   <div class="tabs" id="kakao-tabs">
-    <div class="tab active" onclick="switchTab('kakao','dash')">대시보드</div>
-    <div class="tab" onclick="switchTab('kakao','notice')">공지</div>
-    <div class="tab" onclick="switchTab('kakao','ops')">운영방안</div>
-    <div class="tab" onclick="switchTab('kakao','event')">이벤트</div>
-    <div class="tab" onclick="switchTab('kakao','issue')">이슈</div>
+    <div class="tab active" onclick="switchTab('kakao','dash',this)">대시보드</div>
+    <div class="tab" onclick="switchTab('kakao','notice',this)">공지</div>
+    <div class="tab" onclick="switchTab('kakao','ops',this)">운영방안</div>
+    <div class="tab" onclick="switchTab('kakao','event',this)">이벤트</div>
+    <div class="tab" onclick="switchTab('kakao','issue',this)">이슈</div>
   </div>
 
   <div class="tc active" id="kakao-dash" style="padding:12px 20px 0">
@@ -519,9 +519,9 @@ function goSub(id){
   renderSub(id);goPage('sub');
 }
 function goBack(){goPage(prevPage);}
-function switchTab(group,tab){
+function switchTab(group,tab,el){
   document.querySelectorAll(`#${group}-tabs .tab`).forEach(t=>t.classList.remove('active'));
-  event.target.classList.add('active');
+  el.classList.add('active');
   document.querySelectorAll(`[id^="${group}-"].tc`).forEach(c=>c.classList.remove('active'));
   document.getElementById(`${group}-${tab}`)?.classList.add('active');
   ri();
