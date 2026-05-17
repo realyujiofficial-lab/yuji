@@ -3,188 +3,689 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>놀생 오카방 현황</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<title>유지현 OS</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif; background: #f0f2f5; color: #1a1a1a; }
-  header { background: #4e7cff; color: white; padding: 16px 20px; position: sticky; top: 0; z-index: 10; }
-  header h1 { font-size: 18px; font-weight: 700; }
-  header .updated { font-size: 12px; opacity: 0.8; margin-top: 2px; }
-  .container { padding: 16px; max-width: 640px; margin: 0 auto; }
-  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-  .card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-  .card .label { font-size: 12px; color: #888; margin-bottom: 4px; }
-  .card .value { font-size: 28px; font-weight: 700; color: #4e7cff; }
-  .card .sub { font-size: 11px; color: #aaa; margin-top: 2px; }
-  .card.full { grid-column: 1 / -1; }
-  .status-card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-  .status-card .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 700; padding: 6px 14px; border-radius: 20px; margin-bottom: 8px; }
-  .badge.green { background: #e6f9ef; color: #2e7d52; }
-  .badge.yellow { background: #fff8e1; color: #a07000; }
-  .badge.red { background: #fff0f0; color: #c0392b; }
-  .status-card .memo { font-size: 14px; color: #444; line-height: 1.6; }
-  .section { background: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-  .section h2 { font-size: 14px; font-weight: 700; color: #555; margin-bottom: 12px; }
-  .chart-wrap { position: relative; height: 160px; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th { text-align: left; padding: 6px 8px; color: #888; font-weight: 600; border-bottom: 1px solid #f0f0f0; font-size: 12px; }
-  td { padding: 8px; border-bottom: 1px solid #f8f8f8; }
-  tr:last-child td { border-bottom: none; }
-  .rank { color: #bbb; font-size: 12px; width: 20px; }
-  .nick { font-weight: 600; }
-  .days-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
-  .days-30 { background: #fff8e1; color: #a07000; }
-  .days-60 { background: #ffe8e8; color: #c0392b; }
-  .days-90 { background: #f0f0f0; color: #999; }
-  .no-data { color: #bbb; font-size: 13px; padding: 8px 0; }
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f7f5;--sidebar:#ffffff;--card:#ffffff;--border:#e5e5e3;
+  --text:#1a1a1a;--sub:#6b6b6b;--accent:#2563eb;--accent2:#7c3aed;
+  --red:#ef4444;--green:#22c55e;--yellow:#f59e0b;--orange:#f97316;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+
+/* Sidebar */
+#sidebar{width:220px;min-height:100vh;background:var(--sidebar);border-right:1px solid var(--border);padding:20px 0;flex-shrink:0;position:fixed;top:0;left:0;height:100%;overflow-y:auto;z-index:100;transition:transform .2s}
+.logo{padding:0 16px 20px;font-size:17px;font-weight:700;color:var(--text);border-bottom:1px solid var(--border);margin-bottom:8px}
+.logo span{font-size:11px;font-weight:400;color:var(--sub);display:block;margin-top:2px}
+.nav-group{margin:4px 0}
+.nav-label{font-size:10px;font-weight:600;color:var(--sub);letter-spacing:.08em;padding:8px 16px 4px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 16px;font-size:13px;color:var(--sub);cursor:pointer;border-radius:0;transition:all .15s;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:#f0f0ee;color:var(--text)}
+.nav-item.active{background:#eff6ff;color:var(--accent);font-weight:600}
+.nav-item .icon{font-size:15px;width:18px;text-align:center}
+.nav-sub .nav-item{padding-left:36px;font-size:12px}
+
+/* Main */
+#main{margin-left:220px;flex:1;min-height:100vh;padding:28px 32px}
+.page{display:none}
+.page.active{display:block}
+.page-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--sub);margin-bottom:24px}
+
+/* Cards */
+.grid{display:grid;gap:16px}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:1fr 1fr 1fr}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px}
+.card-title{font-size:13px;font-weight:600;color:var(--sub);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.card-title .badge{font-size:10px;background:#eff6ff;color:var(--accent);padding:2px 8px;border-radius:20px}
+
+/* Todo */
+.todo-input-row{display:flex;gap:8px;margin-bottom:12px}
+.todo-input-row input{flex:1;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit}
+.todo-input-row input:focus{border-color:var(--accent)}
+.todo-input-row select{border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:12px;outline:none;background:white;cursor:pointer}
+.btn{border:none;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-primary{background:var(--accent);color:white}
+.btn-primary:hover{background:#1d4ed8}
+.btn-sm{padding:4px 10px;font-size:11px}
+.btn-ghost{background:transparent;color:var(--sub);border:1px solid var(--border)}
+.todo-list{display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto}
+.todo-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:7px;background:#fafafa;font-size:13px}
+.todo-item input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--accent)}
+.todo-item.done .todo-text{text-decoration:line-through;color:var(--sub)}
+.todo-item .todo-tag{font-size:10px;padding:2px 7px;border-radius:10px;margin-left:auto;flex-shrink:0}
+.tag-사업{background:#eff6ff;color:#2563eb}
+.tag-개인{background:#f0fdf4;color:#16a34a}
+.tag-오카방{background:#fdf4ff;color:#7c3aed}
+.tag-테이스트트립{background:#fff7ed;color:#c2410c}
+.todo-del{background:none;border:none;color:#ccc;cursor:pointer;font-size:14px;padding:0 2px}
+.todo-del:hover{color:var(--red)}
+
+/* Calendar */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-nav{background:none;border:1px solid var(--border);border-radius:5px;padding:4px 10px;cursor:pointer;font-size:12px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dow{font-size:10px;color:var(--sub);text-align:center;padding:4px 0;font-weight:600}
+.cal-day{font-size:12px;text-align:center;padding:6px 2px;border-radius:5px;cursor:pointer;transition:background .1s;min-height:32px;position:relative}
+.cal-day:hover{background:#f0f0ee}
+.cal-day.today{background:var(--accent);color:white;font-weight:700}
+.cal-day.other-month{color:#ccc}
+.cal-day .dot{width:4px;height:4px;background:var(--accent2);border-radius:50%;position:absolute;bottom:3px;left:50%;transform:translateX(-50%)}
+
+/* Issue */
+.issue-list{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto}
+.issue-item{padding:10px 14px;border-radius:7px;border-left:3px solid;font-size:13px;background:#fafafa;border-color:var(--border)}
+.issue-item.high{border-color:var(--red);background:#fff5f5}
+.issue-item.mid{border-color:var(--yellow);background:#fffbeb}
+.issue-item.low{border-color:var(--green);background:#f0fdf4}
+.issue-meta{font-size:11px;color:var(--sub);margin-top:3px}
+.issue-input-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.issue-input-row input{flex:1;min-width:120px;border:1px solid var(--border);border-radius:6px;padding:7px 11px;font-size:13px;outline:none;font-family:inherit}
+.issue-input-row select{border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:12px;background:white;cursor:pointer;outline:none}
+
+/* Stat chips */
+.stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.stat-chip{background:white;border:1px solid var(--border);border-radius:8px;padding:12px 16px;flex:1;min-width:100px}
+.stat-chip .num{font-size:22px;font-weight:700;color:var(--text)}
+.stat-chip .lbl{font-size:11px;color:var(--sub);margin-top:2px}
+
+/* Links */
+.link-list{display:flex;flex-direction:column;gap:8px}
+.link-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:7px;font-size:13px;background:#fafafa}
+.link-item a{color:var(--accent);text-decoration:none;font-size:12px}
+.link-item a:hover{text-decoration:underline}
+.link-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
+.badge-local{background:#f0fdf4;color:#15803d}
+.badge-dev{background:#fffbeb;color:#b45309}
+.badge-live{background:#eff6ff;color:#1d4ed8}
+
+/* Doc list */
+.doc-list{display:flex;flex-direction:column;gap:6px}
+.doc-item{display:flex;align-items:center;gap:10px;padding:9px 13px;border:1px solid var(--border);border-radius:7px;background:#fafafa;font-size:13px;cursor:pointer}
+.doc-item:hover{background:#f0f0ee}
+.doc-icon{font-size:16px}
+.doc-date{font-size:11px;color:var(--sub);margin-left:auto}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{font-size:11px;color:var(--sub);font-weight:600;padding:8px 12px;border-bottom:2px solid var(--border);text-align:left}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--border)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#f7f7f5}
+
+/* Section divider */
+.section{margin-bottom:28px}
+.section-title{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Mobile nav */
+#mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--border);z-index:200;padding:8px 0 12px}
+.mobile-nav-items{display:flex;justify-content:space-around}
+.mobile-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--sub);cursor:pointer;padding:4px 12px;border-radius:8px;border:none;background:none}
+.mobile-nav-item.active{color:var(--accent)}
+.mobile-nav-item .icon{font-size:20px}
+#menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:300;background:white;border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:16px;cursor:pointer}
+
+textarea{width:100%;border:1px solid var(--border);border-radius:7px;padding:12px;font-size:13px;font-family:inherit;resize:vertical;outline:none;min-height:100px}
+textarea:focus{border-color:var(--accent)}
+
+.govt-item{padding:12px 16px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;background:#fafafa}
+.govt-item h4{font-size:13px;font-weight:600;margin-bottom:4px}
+.govt-item p{font-size:12px;color:var(--sub)}
+.govt-status{font-size:10px;padding:2px 8px;border-radius:10px;float:right;font-weight:600}
+.s-관심{background:#eff6ff;color:#2563eb}
+.s-준비중{background:#fffbeb;color:#b45309}
+.s-제출{background:#f0fdf4;color:#15803d}
+.s-완료{background:#f3f4f6;color:#6b7280}
+
+input[type=text],input[type=number],input[type=date]{font-family:inherit}
+
+@media(max-width:768px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0;padding:16px 16px 80px}
+  #mobile-nav{display:block}
+  #menu-btn{display:block}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .page-title{font-size:18px;margin-top:40px}
+}
 </style>
 </head>
 <body>
-<header>
-  <h1>놀생 오카방</h1>
-  <div class="updated" id="updated-time">로딩 중...</div>
-</header>
-<div class="container">
-  <div class="cards">
-    <div class="card">
-      <div class="label">오늘 메시지</div>
-      <div class="value" id="today-msgs">-</div>
-      <div class="sub" id="today-date">-</div>
-    </div>
-    <div class="card">
-      <div class="label">오늘 참여자</div>
-      <div class="value" id="today-users">-</div>
-      <div class="sub" id="seven-avg">7일 평균 -개</div>
-    </div>
-    <div class="card full">
-      <div class="label">최근 7일 일평균</div>
-      <div class="value" id="seven-avg-val">-</div>
-      <div class="sub">메시지/일</div>
+
+<button id="menu-btn" onclick="toggleSidebar()">☰</button>
+
+<nav id="sidebar">
+  <div class="logo">유지현 OS <span>Personal Dashboard</span></div>
+
+  <div class="nav-group">
+    <div class="nav-label">메인</div>
+    <button class="nav-item active" onclick="go('main')"><span class="icon">🏠</span> 홈</button>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">사업</div>
+    <button class="nav-item" onclick="go('nolsaeng')"><span class="icon">🌱</span> 놀생</button>
+    <div class="nav-sub">
+      <button class="nav-item" onclick="go('tastetrip')"><span class="icon">✈️</span> 테이스트트립</button>
+      <button class="nav-item" onclick="go('okaband')"><span class="icon">💬</span> 현지인맛집/카톡방</button>
     </div>
   </div>
 
-  <div class="status-card" id="status-card">
-    <div class="badge" id="status-badge">...</div>
-    <div class="memo" id="status-memo">분석 중...</div>
+  <div class="nav-group">
+    <div class="nav-label">개인</div>
+    <button class="nav-item" onclick="go('accident')"><span class="icon">🏥</span> 교통사고</button>
+    <button class="nav-item" onclick="go('network')"><span class="icon">👥</span> 인맥리스트</button>
+    <button class="nav-item" onclick="go('freelance')"><span class="icon">💼</span> FNB마케터</button>
   </div>
+</nav>
 
-  <div class="section">
-    <h2>최근 14일 대화량</h2>
-    <div class="chart-wrap"><canvas id="chart"></canvas></div>
-  </div>
+<main id="main">
 
-  <div class="section">
-    <h2>활성 멤버 TOP10</h2>
-    <table id="active-table">
-      <thead><tr><th></th><th>닉네임</th><th>메시지</th><th>마지막 활동</th></tr></thead>
-      <tbody id="active-body"></tbody>
-    </table>
-  </div>
+<!-- 메인 -->
+<div class="page active" id="page-main">
+  <div class="page-title">안녕하세요, 유지현님 👋</div>
+  <div class="page-sub" id="today-date"></div>
 
-  <div class="section">
-    <h2>이탈 위험 멤버</h2>
-    <table id="risk-table">
-      <thead><tr><th>닉네임</th><th>총 메시지</th><th>침묵</th></tr></thead>
-      <tbody id="risk-body"></tbody>
-    </table>
+  <div class="stat-row" id="main-stats"></div>
+
+  <div class="grid grid-2">
+    <div>
+      <div class="section">
+        <div class="section-title">📋 할일</div>
+        <div class="card">
+          <div class="todo-input-row">
+            <input id="main-todo-input" type="text" placeholder="새 할일 입력..." onkeydown="if(event.key==='Enter')addTodo('main-todo-list')">
+            <select id="main-todo-tag">
+              <option value="사업">사업</option>
+              <option value="테이스트트립">테이스트트립</option>
+              <option value="오카방">오카방</option>
+              <option value="개인">개인</option>
+            </select>
+            <button class="btn btn-primary" onclick="addTodo('main-todo-list')">+</button>
+          </div>
+          <div class="todo-list" id="main-todo-list"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">⚠️ 이슈</div>
+        <div class="card">
+          <div class="issue-input-row">
+            <input id="issue-input" type="text" placeholder="이슈 내용..." onkeydown="if(event.key==='Enter')addIssue()">
+            <select id="issue-level">
+              <option value="high">긴급</option>
+              <option value="mid">보통</option>
+              <option value="low">낮음</option>
+            </select>
+            <select id="issue-area">
+              <option value="테이스트트립">테이스트트립</option>
+              <option value="오카방">오카방</option>
+              <option value="놀생">놀생</option>
+              <option value="개인">개인</option>
+            </select>
+            <button class="btn btn-primary" onclick="addIssue()">+</button>
+          </div>
+          <div class="issue-list" id="issue-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section">
+        <div class="section-title">📅 캘린더</div>
+        <div class="card">
+          <div class="cal-header">
+            <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+            <span id="cal-title" style="font-size:14px;font-weight:700"></span>
+            <button class="cal-nav" onclick="changeMonth(1)">›</button>
+          </div>
+          <div class="cal-grid">
+            <div class="cal-dow">일</div><div class="cal-dow">월</div><div class="cal-dow">화</div>
+            <div class="cal-dow">수</div><div class="cal-dow">목</div><div class="cal-dow">금</div><div class="cal-dow">토</div>
+          </div>
+          <div class="cal-grid" id="cal-body"></div>
+          <div style="margin-top:14px">
+            <div class="card-title">일정 추가</div>
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <input type="date" id="sch-date" style="flex:1;border:1px solid var(--border);border-radius:6px;padding:7px;font-size:12px;outline:none">
+              <input type="text" id="sch-text" placeholder="일정 내용" onkeydown="if(event.key==='Enter')addSchedule()" style="flex:2;border:1px solid var(--border);border-radius:6px;padding:7px;font-size:12px;outline:none;font-family:inherit">
+              <button class="btn btn-primary" onclick="addSchedule()">+</button>
+            </div>
+            <div id="upcoming-list" style="font-size:12px;color:var(--sub);display:flex;flex-direction:column;gap:5px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- 놀생 -->
+<div class="page" id="page-nolsaeng">
+  <div class="page-title">🌱 놀생</div>
+  <div class="page-sub">리틀리 · 작성법 관리</div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title">리틀리 & 링크</div>
+      <div class="link-list" id="nl-static">
+        <div class="link-item"><span>놀생 리틀리</span><a href="#" target="_blank">링크 추가 →</a></div>
+      </div>
+      <div style="margin-top:14px">
+        <div style="display:flex;gap:8px">
+          <input type="text" id="nl-name" placeholder="이름" style="flex:1;border:1px solid var(--border);border-radius:6px;padding:7px;font-size:12px;outline:none;font-family:inherit">
+          <input type="text" id="nl-url" placeholder="URL" style="flex:2;border:1px solid var(--border);border-radius:6px;padding:7px;font-size:12px;outline:none;font-family:inherit">
+          <button class="btn btn-primary" onclick="addNolsaengLink()">+</button>
+        </div>
+        <div id="nl-extra" style="margin-top:8px;display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">작성법 관리 <span class="badge">내 입력 방식</span></div>
+      <p style="font-size:12px;color:var(--sub);margin-bottom:12px">자주 쓰는 입력 방식, 스타일, 규칙</p>
+      <input id="writing-tag" placeholder="카테고리 (예: SNS글쓰기)" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px;font-size:12px;outline:none;font-family:inherit;margin-bottom:8px">
+      <textarea id="writing-content" placeholder="작성법 내용..."></textarea>
+      <button class="btn btn-primary" style="margin-top:8px;width:100%" onclick="saveWriting()">저장</button>
+      <div id="writing-list" style="margin-top:14px;display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 테이스트트립 -->
+<div class="page" id="page-tastetrip">
+  <div class="page-title">✈️ 테이스트트립</div>
+  <div class="page-sub">사이트 · 문서 · 마케팅 · 정부지원</div>
+
+  <div class="section">
+    <div class="section-title">🔗 사이트 링크</div>
+    <div class="card">
+      <div class="link-list">
+        <div class="link-item"><span>로컬</span><a href="http://localhost:3000" target="_blank"><span class="link-badge badge-local">LOCAL</span> localhost:3000 ↗</a></div>
+        <div class="link-item"><span>테이스트트립 리틀리</span><a href="#" target="_blank">링크 추가 →</a></div>
+        <div class="link-item"><span>이메일</span><a href="mailto:sot.tastetrip@gmail.com">sot.tastetrip@gmail.com</a></div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <input type="text" id="tt-link-name" placeholder="이름 (예: 데브서버)" style="flex:1;min-width:80px;border:1px solid var(--border);border-radius:6px;padding:7px;font-size:12px;outline:none;font-family:inherit">
+        <input type="text" id="tt-link-url" placeholder="URL" style="flex:2;min-width:120px;border:1px solid var(--border);border-radius:6px;padding:7px;font-size:12px;outline:none;font-family:inherit">
+        <select id="tt-link-type" style="border:1px solid var(--border);border-radius:6px;padding:7px;font-size:12px;background:white;outline:none">
+          <option value="live">라이브</option>
+          <option value="dev">데브</option>
+          <option value="local">로컬</option>
+        </select>
+        <button class="btn btn-primary" onclick="addTTLink()">+</button>
+      </div>
+      <div id="tt-links-extra" style="margin-top:8px;display:flex;flex-direction:column;gap:6px"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📄 개발 문서</div>
+    <div class="card">
+      <div class="doc-list">
+        <div class="doc-item"><span class="doc-icon">📊</span>테이블정의서_ERD.xlsx<span class="doc-date">2026-02-12</span></div>
+        <div class="doc-item"><span class="doc-icon">📝</span>개발정의.docx<span class="doc-date">2026-04-13</span></div>
+        <div class="doc-item"><span class="doc-icon">📝</span>개발명세서.docx<span class="doc-date">2026-04-15</span></div>
+        <div class="doc-item"><span class="doc-icon">📋</span>MVP_현황명세서.md<span class="doc-date">2026-04-29</span></div>
+        <div class="doc-item"><span class="doc-icon">🗺️</span>프로덕트_로드맵.md<span class="doc-date">2026-04-29</span></div>
+        <div class="doc-item"><span class="doc-icon">📊</span>카테고리3단계구조.xlsx<span class="doc-date">2026-05-15</span></div>
+        <div class="doc-item"><span class="doc-icon">📊</span>통합문서.xlsx<span class="doc-date">2026-05-15</span></div>
+      </div>
+      <input type="text" id="doc-name" placeholder="문서명 추가..." onkeydown="if(event.key==='Enter')addDoc()" style="width:100%;margin-top:10px;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit">
+      <div id="doc-extra" style="margin-top:8px;display:flex;flex-direction:column;gap:6px"></div>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="section">
+      <div class="section-title">📢 SNS/콘텐츠 + 마케팅</div>
+      <div class="card">
+        <div class="todo-input-row">
+          <input id="sns-input" type="text" placeholder="콘텐츠/마케팅 메모..." onkeydown="if(event.key==='Enter')addTodoSns()">
+          <button class="btn btn-primary" onclick="addTodoSns()">+</button>
+        </div>
+        <div class="todo-list" id="sns-list"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🏛️ 정부지원 사업</div>
+      <div class="card">
+        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+          <input id="govt-name" placeholder="지원사업명" style="flex:2;min-width:100px;border:1px solid var(--border);border-radius:6px;padding:7px;font-size:12px;outline:none;font-family:inherit">
+          <input id="govt-deadline" type="date" style="border:1px solid var(--border);border-radius:6px;padding:7px;font-size:12px;outline:none">
+          <select id="govt-status" style="border:1px solid var(--border);border-radius:6px;padding:7px;font-size:12px;background:white;outline:none">
+            <option value="관심">관심</option>
+            <option value="준비중">준비중</option>
+            <option value="제출">제출</option>
+            <option value="완료">완료</option>
+          </select>
+          <button class="btn btn-primary" onclick="addGovt()">+</button>
+        </div>
+        <div id="govt-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🤖 텍스트마이닝 + 랜딩페이지</div>
+    <div class="card" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px">오카방 텍스트마이닝</div>
+        <div style="font-size:12px;color:var(--sub)">놀생_오픈카톡방 파이프라인 실행</div>
+      </div>
+      <button class="btn btn-primary" style="margin-left:auto" onclick="alert('터미널: bash run_all_files.sh')">▶ 파이프라인 실행</button>
+      <button class="btn btn-ghost" onclick="window.open('okaband.html','_blank')">📊 대시보드</button>
+      <button class="btn btn-ghost" id="landing-btn" onclick="alert('랜딩페이지 URL을 연결하세요')">🌐 랜딩페이지</button>
+    </div>
+  </div>
+</div>
+
+<!-- 오카방 -->
+<div class="page" id="page-okaband">
+  <div class="page-title">💬 현지인맛집/여행 카톡방</div>
+  <div class="page-sub">놀생 오픈카톡방 분석 대시보드</div>
+  <div class="card" style="text-align:center;padding:32px">
+    <p style="font-size:13px;color:var(--sub);margin-bottom:16px">오카방 분석 대시보드 (별도 페이지)</p>
+    <button class="btn btn-primary" onclick="window.open('okaband.html','_blank')" style="font-size:14px;padding:12px 28px">📊 오카방 대시보드 열기</button>
+  </div>
+  <div class="section" style="margin-top:24px">
+    <div class="section-title">📋 오카방 할일</div>
+    <div class="card">
+      <div class="todo-input-row">
+        <input id="ok-todo-input" type="text" placeholder="오카방 관련 할일..." onkeydown="if(event.key==='Enter')addTodoOk()">
+        <button class="btn btn-primary" onclick="addTodoOk()">+</button>
+      </div>
+      <div class="todo-list" id="ok-todo-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 교통사고 -->
+<div class="page" id="page-accident">
+  <div class="page-title">🏥 교통사고 현황</div>
+  <div class="page-sub">병원 · 아픈곳 · 목적 · 날짜 · 금액</div>
+
+  <div class="stat-row" id="acc-stats"></div>
+
+  <div class="section">
+    <div class="section-title">+ 기록 추가</div>
+    <div class="card">
+      <div class="grid grid-2" style="gap:10px;margin-bottom:12px">
+        <input id="acc-hospital" placeholder="병원명" style="border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit">
+        <input id="acc-pain" placeholder="아픈 곳 (예: 목, 허리)" style="border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit">
+        <input id="acc-purpose" placeholder="목적 (예: 물리치료, 진단)" style="border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit">
+        <input id="acc-date" type="date" style="border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none">
+        <input id="acc-amount" type="number" placeholder="금액 (원)" style="border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit">
+        <input id="acc-memo" placeholder="메모" style="border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit">
+      </div>
+      <button class="btn btn-primary" onclick="addAccident()" style="width:100%">기록 저장</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📋 기록 목록</div>
+    <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>날짜</th><th>병원</th><th>아픈곳</th><th>목적</th><th>금액</th><th>메모</th><th></th></tr></thead>
+        <tbody id="accident-list"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 인맥 -->
+<div class="page" id="page-network">
+  <div class="page-title">👥 인맥리스트</div>
+  <div class="page-sub">이름 · 관계 · 연락처 · 메모</div>
+
+  <div class="section">
+    <div class="card">
+      <div class="grid grid-2" style="gap:10px;margin-bottom:10px">
+        <input id="net-name" placeholder="이름" style="border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit">
+        <input id="net-rel" placeholder="관계 (예: 멘토, 동료, 투자자)" style="border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit">
+        <input id="net-contact" placeholder="연락처 / SNS" style="border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit">
+        <input id="net-org" placeholder="소속/회사" style="border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit">
+      </div>
+      <input id="net-memo" placeholder="메모 (어떻게 알게 됐는지, 협업 가능 분야 등)" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;outline:none;font-family:inherit;margin-bottom:10px">
+      <button class="btn btn-primary" onclick="addNetwork()" style="width:100%">추가</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <input id="net-search" placeholder="이름/관계/소속 검색..." oninput="renderNetwork()" style="width:100%;border:1px solid var(--border);border-radius:6px;padding:9px 14px;font-size:13px;outline:none;font-family:inherit;margin-bottom:12px">
+    <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
+      <table class="tbl">
+        <thead><tr><th>이름</th><th>관계</th><th>소속</th><th>연락처</th><th>메모</th><th></th></tr></thead>
+        <tbody id="network-list"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- FNB마케터 -->
+<div class="page" id="page-freelance">
+  <div class="page-title">💼 FNB마케터 프리랜서</div>
+  <div class="page-sub">이력서 · 자소서 · SNS 운영</div>
+
+  <div class="grid grid-2">
+    <div class="section">
+      <div class="section-title">📄 이력서</div>
+      <div class="card">
+        <textarea id="resume-content" placeholder="이력서 내용 정리..." style="min-height:200px" onchange="localStorage.setItem('resume',this.value)"></textarea>
+        <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="navigator.clipboard.writeText(document.getElementById('resume-content').value).then(()=>alert('복사됐습니다'))">복사</button>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">✍️ 자소서</div>
+      <div class="card">
+        <textarea id="cover-content" placeholder="자기소개서 내용 정리..." style="min-height:200px" onchange="localStorage.setItem('cover',this.value)"></textarea>
+        <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="navigator.clipboard.writeText(document.getElementById('cover-content').value).then(()=>alert('복사됐습니다'))">복사</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📱 SNS 운영 메모</div>
+    <div class="card">
+      <div class="todo-input-row">
+        <input id="sns-fl-input" type="text" placeholder="SNS 운영 할일 / 아이디어..." onkeydown="if(event.key==='Enter')addTodoSnsFl()">
+        <button class="btn btn-primary" onclick="addTodoSnsFl()">+</button>
+      </div>
+      <div class="todo-list" id="sns-fl-list"></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<nav id="mobile-nav">
+  <div class="mobile-nav-items">
+    <button class="mobile-nav-item active" onclick="go('main')"><span class="icon">🏠</span>홈</button>
+    <button class="mobile-nav-item" onclick="go('nolsaeng')"><span class="icon">🌱</span>놀생</button>
+    <button class="mobile-nav-item" onclick="go('tastetrip')"><span class="icon">✈️</span>테이스트트립</button>
+    <button class="mobile-nav-item" onclick="go('okaband')"><span class="icon">💬</span>오카방</button>
+    <button class="mobile-nav-item" onclick="go('accident')"><span class="icon">🏥</span>개인</button>
+  </div>
+</nav>
+
 <script>
-async function load() {
-  let data;
-  try {
-    const r = await fetch('data.json?t=' + Date.now());
-    data = await r.json();
-  } catch(e) {
-    document.getElementById('updated-time').textContent = '데이터 로딩 실패';
-    return;
-  }
+const S={get:(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
 
-  document.getElementById('updated-time').textContent = '갱신: ' + (data.generated_at || '-');
-
-  const allDates = data.all_dates || [];
-  const daily = data.daily || {};
-
-  // 오늘 / 최신 날짜
-  const latestDate = allDates[allDates.length - 1];
-  const todayData = latestDate ? daily[latestDate] : null;
-  document.getElementById('today-msgs').textContent = todayData ? todayData.msgs : '-';
-  document.getElementById('today-users').textContent = todayData ? todayData.users : '-';
-  document.getElementById('today-date').textContent = latestDate || '-';
-  document.getElementById('seven-avg-val').textContent = data.recent_7d_avg || '-';
-  document.getElementById('seven-avg').textContent = '7일 평균 ' + (data.recent_7d_avg || '-') + '개';
-
-  // 상태 판정
-  const avg = data.recent_7d_avg || 0;
-  const todayMsgs = todayData ? todayData.msgs : 0;
-  const riskCount = Object.keys(data.at_risk || {}).length;
-  let statusClass, statusText, statusMemo;
-  if (avg >= 50 && todayMsgs >= 20) {
-    statusClass = 'green'; statusText = '🟢 양호';
-    statusMemo = `일평균 ${avg}개, 오늘 ${todayMsgs}개. 활성 상태 유지 중.`;
-  } else if (avg >= 20 || todayMsgs >= 10) {
-    statusClass = 'yellow'; statusText = '🟡 주의';
-    statusMemo = `일평균 ${avg}개. 대화 유도 콘텐츠 올려보세요. 이탈 위험 ${riskCount}명.`;
-  } else {
-    statusClass = 'red'; statusText = '🔴 개입 필요';
-    statusMemo = `일평균 ${avg}개로 저조. 오늘 직접 대화 트리거 권고. 이탈 위험 ${riskCount}명.`;
-  }
-  document.getElementById('status-badge').className = 'badge ' + statusClass;
-  document.getElementById('status-badge').textContent = statusText;
-  document.getElementById('status-memo').textContent = statusMemo;
-
-  // 14일 차트
-  const last14 = allDates.slice(-14);
-  const labels = last14.map(d => {
-    const m = d.match(/(\d+)월 (\d+)일/);
-    return m ? m[1]+'/'+m[2] : d;
-  });
-  const vals = last14.map(d => (daily[d] ? daily[d].msgs : 0));
-  new Chart(document.getElementById('chart'), {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{ data: vals, backgroundColor: '#4e7cff', borderRadius: 4 }]
-    },
-    options: {
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
-        y: { beginAtZero: true, ticks: { font: { size: 10 } } }
-      },
-      responsive: true, maintainAspectRatio: false
-    }
-  });
-
-  // 활성 멤버 TOP10
-  const userStats = data.user_stats || {};
-  const top10 = Object.entries(userStats).slice(0, 10);
-  const tbody = document.getElementById('active-body');
-  if (top10.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="4" class="no-data">데이터 없음</td></tr>';
-  } else {
-    tbody.innerHTML = top10.map(([nick, info], i) =>
-      `<tr><td class="rank">${i+1}</td><td class="nick">${nick}</td><td>${info.msgs}</td><td>${info.last || '-'}</td></tr>`
-    ).join('');
-  }
-
-  // 이탈 위험
-  const atRisk = data.at_risk || {};
-  const rbody = document.getElementById('risk-body');
-  const riskEntries = Object.entries(atRisk);
-  if (riskEntries.length === 0) {
-    rbody.innerHTML = '<tr><td colspan="3" class="no-data">이탈 위험 멤버 없음 👍</td></tr>';
-  } else {
-    rbody.innerHTML = riskEntries.map(([nick, info]) => {
-      const days = info.days_silent;
-      const cls = days >= 60 ? 'days-60' : days >= 30 ? 'days-30' : 'days-90';
-      return `<tr><td class="nick">${nick}</td><td>${info.msgs}</td><td><span class="days-badge ${cls}">${days}일 침묵</span></td></tr>`;
-    }).join('');
-  }
+const PAGES=['main','nolsaeng','tastetrip','okaband','accident','network','freelance'];
+function go(id){
+  PAGES.forEach(p=>document.getElementById('page-'+p)?.classList.remove('active'));
+  document.getElementById('page-'+id)?.classList.add('active');
+  document.querySelectorAll('.nav-item,.mobile-nav-item').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll(`[onclick="go('${id}')"]`).forEach(el=>el.classList.add('active'));
+  if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');
+  window.scrollTo(0,0);
 }
-load();
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+
+document.getElementById('today-date').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+document.getElementById('sch-date').value=new Date().toISOString().slice(0,10);
+
+// Calendar
+let calDate=new Date();
+function renderCal(){
+  const y=calDate.getFullYear(),m=calDate.getMonth();
+  document.getElementById('cal-title').textContent=`${y}년 ${m+1}월`;
+  const first=new Date(y,m,1).getDay(),last=new Date(y,m+1,0).getDate();
+  const todayStr=new Date().toISOString().slice(0,10);
+  const schedules=S.get('schedules',[]);
+  let html='';
+  for(let i=0;i<first;i++)html+=`<div class="cal-day other-month">${new Date(y,m,0).getDate()-first+i+1}</div>`;
+  for(let d=1;d<=last;d++){
+    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const hasEv=schedules.some(s=>s.date===ds);
+    const isToday=ds===todayStr;
+    html+=`<div class="cal-day${isToday?' today':''}">${d}${hasEv&&!isToday?'<div class="dot"></div>':''}</div>`;
+  }
+  document.getElementById('cal-body').innerHTML=html;
+  renderUpcoming();
+}
+function changeMonth(d){calDate.setMonth(calDate.getMonth()+d);renderCal()}
+function addSchedule(){
+  const date=document.getElementById('sch-date').value,text=document.getElementById('sch-text').value.trim();
+  if(!date||!text)return;
+  const arr=S.get('schedules',[]);arr.push({date,text,id:Date.now()});arr.sort((a,b)=>a.date.localeCompare(b.date));S.set('schedules',arr);
+  document.getElementById('sch-text').value='';renderCal();updateStats();
+}
+function renderUpcoming(){
+  const today=new Date().toISOString().slice(0,10);
+  const arr=S.get('schedules',[]).filter(s=>s.date>=today).slice(0,5);
+  document.getElementById('upcoming-list').innerHTML=arr.map(s=>`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span>${s.text}</span><span style="color:var(--accent);font-weight:600">${s.date}</span></div>`).join('')||'<span>예정 일정 없음</span>';
+}
+
+// Todos
+function _addTodo(listKey,inputId,tagId){
+  const input=document.getElementById(inputId),text=input.value.trim();if(!text)return;
+  const tag=tagId?document.getElementById(tagId)?.value:'';
+  const arr=S.get(listKey,[]);arr.unshift({text,tag,done:false,id:Date.now()});S.set(listKey,arr);
+  input.value='';renderTodos(listKey);updateStats();
+}
+function addTodo(listKey){_addTodo(listKey,'main-todo-input','main-todo-tag')}
+function addTodoSns(){_addTodo('sns-list','sns-input',null)}
+function addTodoOk(){_addTodo('ok-todo-list','ok-todo-input',null)}
+function addTodoSnsFl(){_addTodo('sns-fl-list','sns-fl-input',null)}
+function toggleTodo(k,id){const arr=S.get(k,[]),i=arr.findIndex(t=>t.id===id);if(i>=0){arr[i].done=!arr[i].done;S.set(k,arr);renderTodos(k);updateStats();}}
+function delTodo(k,id){S.set(k,S.get(k,[]).filter(t=>t.id!==id));renderTodos(k);updateStats();}
+function renderTodos(k){
+  const el=document.getElementById(k);if(!el)return;
+  el.innerHTML=S.get(k,[]).map(t=>`<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo('${k}',${t.id})"><span class="todo-text">${t.text}</span>${t.tag?`<span class="todo-tag tag-${t.tag}">${t.tag}</span>`:''}<button class="todo-del" onclick="delTodo('${k}',${t.id})">✕</button></div>`).join('');
+}
+
+// Issues
+function addIssue(){
+  const text=document.getElementById('issue-input').value.trim();if(!text)return;
+  const arr=S.get('issues',[]);arr.unshift({text,level:document.getElementById('issue-level').value,area:document.getElementById('issue-area').value,id:Date.now(),date:new Date().toLocaleDateString('ko-KR')});S.set('issues',arr);
+  document.getElementById('issue-input').value='';renderIssues();updateStats();
+}
+function delIssue(id){S.set('issues',S.get('issues',[]).filter(i=>i.id!==id));renderIssues();updateStats();}
+function renderIssues(){
+  const el=document.getElementById('issue-list');if(!el)return;
+  el.innerHTML=S.get('issues',[]).map(i=>`<div class="issue-item ${i.level}"><div style="display:flex;justify-content:space-between"><span>${i.text}</span><button class="todo-del" onclick="delIssue(${i.id})">✕</button></div><div class="issue-meta">${i.area} · ${i.date}</div></div>`).join('')||'<div style="color:var(--sub);font-size:12px;text-align:center;padding:12px">이슈 없음 ✓</div>';
+}
+
+// Stats
+function updateStats(){
+  const todos=S.get('main-todo-list',[]),done=todos.filter(t=>t.done).length,remain=todos.filter(t=>!t.done).length,issues=S.get('issues',[]).length,schedules=S.get('schedules',[]).filter(s=>s.date>=new Date().toISOString().slice(0,10)).length;
+  document.getElementById('main-stats').innerHTML=`<div class="stat-chip"><div class="num">${remain}</div><div class="lbl">남은 할일</div></div><div class="stat-chip"><div class="num">${done}</div><div class="lbl">완료한 일</div></div><div class="stat-chip"><div class="num">${issues}</div><div class="lbl">이슈</div></div><div class="stat-chip"><div class="num">${schedules}</div><div class="lbl">예정 일정</div></div>`;
+}
+
+// Govt
+function addGovt(){
+  const name=document.getElementById('govt-name').value.trim();if(!name)return;
+  const arr=S.get('govt',[]);arr.unshift({name,deadline:document.getElementById('govt-deadline').value,status:document.getElementById('govt-status').value,id:Date.now()});S.set('govt',arr);
+  document.getElementById('govt-name').value='';renderGovt();
+}
+function delGovt(id){S.set('govt',S.get('govt',[]).filter(g=>g.id!==id));renderGovt();}
+function renderGovt(){
+  const el=document.getElementById('govt-list');if(!el)return;
+  el.innerHTML=S.get('govt',[]).map(g=>`<div class="govt-item"><span class="govt-status s-${g.status}">${g.status}</span><h4>${g.name}</h4><p>${g.deadline||'마감일 미정'}</p><button class="todo-del" style="margin-top:6px;font-size:11px;color:var(--sub)" onclick="delGovt(${g.id})">삭제</button></div>`).join('')||'<div style="color:var(--sub);font-size:12px;text-align:center;padding:12px">지원사업 없음</div>';
+}
+
+// Accident
+function addAccident(){
+  const hospital=document.getElementById('acc-hospital').value.trim();if(!hospital)return;
+  const arr=S.get('accidents',[]);arr.unshift({hospital,pain:document.getElementById('acc-pain').value,purpose:document.getElementById('acc-purpose').value,date:document.getElementById('acc-date').value,amount:document.getElementById('acc-amount').value,memo:document.getElementById('acc-memo').value,id:Date.now()});S.set('accidents',arr);
+  ['acc-hospital','acc-pain','acc-purpose','acc-date','acc-amount','acc-memo'].forEach(id=>document.getElementById(id).value='');
+  renderAccidents();
+}
+function delAccident(id){S.set('accidents',S.get('accidents',[]).filter(a=>a.id!==id));renderAccidents();}
+function renderAccidents(){
+  const arr=S.get('accidents',[]);
+  const el=document.getElementById('accident-list');if(el)el.innerHTML=arr.map(a=>`<tr><td>${a.date||'-'}</td><td>${a.hospital}</td><td>${a.pain||'-'}</td><td>${a.purpose||'-'}</td><td>${a.amount?Number(a.amount).toLocaleString()+'원':'-'}</td><td>${a.memo||'-'}</td><td><button class="todo-del" onclick="delAccident(${a.id})">✕</button></td></tr>`).join('');
+  const total=arr.reduce((s,a)=>s+(Number(a.amount)||0),0);
+  const el2=document.getElementById('acc-stats');if(el2)el2.innerHTML=`<div class="stat-chip"><div class="num">${arr.length}</div><div class="lbl">총 방문 횟수</div></div><div class="stat-chip"><div class="num">${total.toLocaleString()}</div><div class="lbl">총 진료비 (원)</div></div>`;
+}
+
+// Network
+function addNetwork(){
+  const name=document.getElementById('net-name').value.trim();if(!name)return;
+  const arr=S.get('network',[]);arr.unshift({name,rel:document.getElementById('net-rel').value,contact:document.getElementById('net-contact').value,org:document.getElementById('net-org').value,memo:document.getElementById('net-memo').value,id:Date.now()});S.set('network',arr);
+  ['net-name','net-rel','net-contact','net-org','net-memo'].forEach(id=>document.getElementById(id).value='');
+  renderNetwork();
+}
+function delNetwork(id){S.set('network',S.get('network',[]).filter(n=>n.id!==id));renderNetwork();}
+function renderNetwork(){
+  const q=(document.getElementById('net-search')?.value||'').toLowerCase();
+  const arr=S.get('network',[]).filter(n=>!q||n.name.includes(q)||n.rel?.includes(q)||n.org?.includes(q));
+  const el=document.getElementById('network-list');if(!el)return;
+  el.innerHTML=arr.map(n=>`<tr><td>${n.name}</td><td>${n.rel||'-'}</td><td>${n.org||'-'}</td><td>${n.contact||'-'}</td><td>${n.memo||'-'}</td><td><button class="todo-del" onclick="delNetwork(${n.id})">✕</button></td></tr>`).join('');
+}
+
+// Nolsaeng links
+function addNolsaengLink(){
+  const name=document.getElementById('nl-name').value.trim(),url=document.getElementById('nl-url').value.trim();if(!name||!url)return;
+  const arr=S.get('nl-links',[]);arr.push({name,url,id:Date.now()});S.set('nl-links',arr);
+  document.getElementById('nl-name').value='';document.getElementById('nl-url').value='';renderNLLinks();
+}
+function renderNLLinks(){
+  document.getElementById('nl-extra').innerHTML=S.get('nl-links',[]).map(l=>`<div class="link-item"><span>${l.name}</span><a href="${l.url}" target="_blank">${l.url} ↗</a></div>`).join('');
+}
+
+// TT links
+function addTTLink(){
+  const name=document.getElementById('tt-link-name').value.trim(),url=document.getElementById('tt-link-url').value.trim(),type=document.getElementById('tt-link-type').value;if(!name||!url)return;
+  const arr=S.get('tt-links',[]);arr.push({name,url,type,id:Date.now()});S.set('tt-links',arr);
+  document.getElementById('tt-link-name').value='';document.getElementById('tt-link-url').value='';renderTTLinks();
+}
+function renderTTLinks(){
+  const badge={live:'badge-live',dev:'badge-dev',local:'badge-local'};
+  document.getElementById('tt-links-extra').innerHTML=S.get('tt-links',[]).map(l=>`<div class="link-item"><span><span class="link-badge ${badge[l.type]||''}">${l.type.toUpperCase()}</span> ${l.name}</span><a href="${l.url}" target="_blank">${l.url} ↗</a></div>`).join('');
+}
+
+// Docs
+function addDoc(){
+  const name=document.getElementById('doc-name').value.trim();if(!name)return;
+  const arr=S.get('docs-extra',[]);arr.push({name,date:new Date().toISOString().slice(0,10),id:Date.now()});S.set('docs-extra',arr);
+  document.getElementById('doc-name').value='';renderDocs();
+}
+function renderDocs(){
+  document.getElementById('doc-extra').innerHTML=S.get('docs-extra',[]).map(d=>`<div class="doc-item"><span class="doc-icon">📄</span>${d.name}<span class="doc-date">${d.date}</span></div>`).join('');
+}
+
+// Writing
+function saveWriting(){
+  const tag=document.getElementById('writing-tag').value.trim(),content=document.getElementById('writing-content').value.trim();if(!content)return;
+  const arr=S.get('writings',[]);arr.unshift({tag,content,id:Date.now(),date:new Date().toLocaleDateString('ko-KR')});S.set('writings',arr);
+  document.getElementById('writing-tag').value='';document.getElementById('writing-content').value='';renderWritings();
+}
+function renderWritings(){
+  document.getElementById('writing-list').innerHTML=S.get('writings',[]).map(w=>`<div class="card" style="background:#fafafa;padding:12px"><div style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:6px">${w.tag||'기타'} <span style="color:var(--sub);font-weight:400">· ${w.date}</span></div><div style="font-size:12px;white-space:pre-wrap">${w.content}</div></div>`).join('');
+}
+
+// Init
+function init(){
+  renderCal();updateStats();renderIssues();renderGovt();renderAccidents();renderNetwork();renderNLLinks();renderTTLinks();renderDocs();renderWritings();
+  ['main-todo-list','sns-list','ok-todo-list','sns-fl-list'].forEach(renderTodos);
+  document.getElementById('resume-content').value=localStorage.getItem('resume')||'';
+  document.getElementById('cover-content').value=localStorage.getItem('cover')||'';
+}
+init();
 </script>
 </body>
 </html>
