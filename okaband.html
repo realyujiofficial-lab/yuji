@@ -62,7 +62,8 @@ async function load(){
   try{const r=await fetch('data.json?t='+Date.now());d=await r.json();}
   catch(e){
     document.getElementById('status-text').textContent='data.json 없음';
-    ['t-active','t-risk'].forEach(id=>document.getElementById(id).innerHTML='<tr><td colspan="4" class="empty">데이터 없음</td></tr>');
+    document.getElementById('t-active').innerHTML='<tr><td colspan="4" class="empty">데이터 없음</td></tr>';
+    document.getElementById('t-risk').innerHTML='<tr><td colspan="3" class="empty">데이터 없음</td></tr>';
     return;
   }
 

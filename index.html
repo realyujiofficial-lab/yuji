@@ -96,9 +96,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;back
 .issue-item.low{border-left-color:#bbb}
 .issue-txt{font-size:13px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;font-weight:500}
 .issue-meta{font-size:10px;color:var(--sub);margin-top:3px}
-.inp-row{display:flex;gap:8px;padding:12px 20px}
+.inp-row{display:flex;gap:8px;padding:12px 20px;flex-wrap:nowrap;align-items:center}
 .inp-row input,.inp-row select{border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13px;background:var(--card);outline:none;font-family:inherit}
-.inp-row input{flex:1}
+.inp-row input{flex:1;min-width:0}
+.inp-row select{flex-shrink:0;max-width:80px}
 
 /* ── 캘린더 ── */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 8px}
@@ -125,7 +126,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;back
 .tc.active{display:block}
 
 /* ── 카톡방 대시보드 iframe ── */
-.dashboard-frame{width:100%;border:none;border-radius:14px;background:var(--card);display:block;height:calc(100svh - 200px);min-height:400px}
+.dashboard-frame{width:100%;border:none;border-radius:14px;background:var(--card);display:block;height:calc(100svh - 210px - env(safe-area-inset-bottom,0px));min-height:400px}
 
 /* ── 운영 콘텐츠 ── */
 .notice-box{background:#fdf8f4;border:1px solid #ece0d4;border-radius:14px;padding:16px;margin-bottom:12px;font-size:13px;line-height:1.9}
@@ -147,7 +148,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;back
 .sev-low{background:#eaeaea;color:#777}
 .iss-name{font-size:12px;flex:1;line-height:1.4}
 .iss-st{font-size:10px;color:var(--sub);flex-shrink:0}
-.sitbar{font-size:12px;color:#666;background:#f5f0eb;border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 10px 10px 0;margin-bottom:12px;line-height:1.5}
+.sitbar{font-size:12px;color:#666;background:#f5f0eb;border-left:3px solid var(--accent);padding:10px 14px;border-radius:12px;margin-bottom:12px;line-height:1.5}
 .mention-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border)}
 .mention-row:last-child{border-bottom:none}
 .mention-icon{width:28px;display:flex;align-items:center;justify-content:center;color:var(--dim);flex-shrink:0}
@@ -194,12 +195,12 @@ textarea.finp{min-height:120px;resize:vertical}
 
 /* ── 이력서/자소서 ── */
 .ta-page{padding:16px 20px}
-.ta-page textarea{width:100%;border:1.5px solid var(--border);border-radius:14px;padding:15px;font-size:14px;font-family:inherit;outline:none;resize:none;min-height:calc(100vh - 200px);background:var(--card);line-height:1.7}
+.ta-page textarea{width:100%;border:1.5px solid var(--border);border-radius:14px;padding:15px;font-size:14px;font-family:inherit;outline:none;resize:none;min-height:calc(100svh - 220px);background:var(--card);line-height:1.7}
 .ta-page textarea:focus{border-color:#1a1a1a}
 .cpy-btn{width:100%;margin-top:10px;border:none;border-radius:14px;padding:14px;background:#f0ece8;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;color:#555}
 
 /* ── 경고 박스 ── */
-.warn-box{background:#fff7f0;border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:12px 16px;margin-bottom:12px;font-size:13px;line-height:1.6}
+.warn-box{background:#fff7f0;border-left:3px solid var(--accent);border-radius:12px;padding:12px 16px;margin-bottom:12px;font-size:13px;line-height:1.6}
 .warn-box strong{display:block;font-weight:700;margin-bottom:4px;color:var(--accent)}
 </style>
 </head>
@@ -510,10 +511,12 @@ let prevPage='home';
 function goPage(id){
   PAGES.forEach(p=>document.getElementById('pg-'+p)?.classList.remove('active'));
   document.getElementById('pg-'+id)?.classList.add('active');
-  document.querySelectorAll('.gnb-btn').forEach(b=>b.classList.remove('active'));
   const idx={home:0,biz:1,kakao:2,personal:3};
-  if(idx[id]!==undefined)document.querySelectorAll('.gnb-btn')[idx[id]]?.classList.add('active');
-  if(id!=='sub')prevPage=id;
+  if(id!=='sub'){
+    document.querySelectorAll('.gnb-btn').forEach(b=>b.classList.remove('active'));
+    if(idx[id]!==undefined)document.querySelectorAll('.gnb-btn')[idx[id]]?.classList.add('active');
+    prevPage=id;
+  }
   document.getElementById('app').scrollTop=0;
   ri();
 }
@@ -568,7 +571,7 @@ function subDocs(){
   return `<div class="card" style="margin:8px 20px">${rows}</div><div class="form-wrap"><div style="display:flex;gap:8px"><input id="doc-inp" class="finp" style="margin:0;flex:1" placeholder="문서명 추가..."><button class="add-btn" onclick="addDoc()"><i data-lucide="plus"></i></button></div></div>`;
 }
 function subSns(){return `<div class="form-wrap" style="margin-top:8px"><div style="display:flex;gap:8px"><input id="sns-tt-inp" class="finp" style="margin:0;flex:1" placeholder="콘텐츠/마케팅 메모..."><button id="sns-tt-add" class="add-btn"><i data-lucide="plus"></i></button></div></div><div class="card" style="margin:10px 20px"><div id="sns-tt-list"></div></div>`;}
-function subGovt(){return `<div class="form-wrap" style="margin-top:8px"><input id="g-name" class="finp" placeholder="지원사업명"><div style="display:flex;gap:8px;margin-bottom:10px"><input id="g-dl" type="date" class="finp" style="margin:0;flex:1"><select id="g-status" class="fsel" style="margin:0;flex:0 0 90px"><option>관심</option><option>준비중</option><option>제출</option><option>완료</option></select></div><button id="govt-save" class="submit-btn">추가</button></div><div class="card" style="margin:12px 20px"><div id="govt-list"></div></div>`;}
+function subGovt(){return `<div class="form-wrap" style="margin-top:8px"><input id="g-name" class="finp" placeholder="지원사업명"><div style="display:flex;gap:8px;margin-bottom:10px"><input id="g-dl" type="date" class="finp" style="margin:0;flex:1"><select id="g-status" class="fsel" style="margin:0;flex:0 0 90px"><option>관심</option><option>준비중</option><option>제출</option><option>완료</option></select></div><button id="govt-save" class="submit-btn">추가</button></div><div class="card" style="margin:12px 20px 20px"><div id="govt-list"></div></div>`;}
 function subAcc(){
   const arr=S.get('accidents',[]);
   const total=arr.reduce((s,a)=>s+(Number(a.amount)||0),0);
@@ -576,7 +579,7 @@ function subAcc(){
   const list=arr.map(a=>`<div class="acc-item"><div class="acc-top">${a.hospital} <span style="font-size:11px;color:var(--sub);font-weight:400">${a.date||''}</span></div><div class="acc-info">${[a.pain,a.purpose,a.amount?Number(a.amount).toLocaleString()+'원':''].filter(Boolean).join(' · ')}</div>${a.memo?`<div class="acc-info">${a.memo}</div>`:''}<button onclick="delAcc(${a.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:4px">삭제</button></div>`).join('');
   return `${stats}<div class="card" style="margin:0 20px 14px">${list||'<div class="empty">기록 없음</div>'}</div><div class="form-wrap"><div class="sec-lbl" style="margin-bottom:10px">기록 추가</div><div class="finp-grid"><input id="a-hosp" class="finp" style="margin:0" placeholder="병원명"><input id="a-pain" class="finp" style="margin:0" placeholder="아픈 곳"></div><div class="finp-grid"><input id="a-purpose" class="finp" style="margin:0" placeholder="목적"><input id="a-date" type="date" class="finp" style="margin:0"></div><div class="finp-grid"><input id="a-amount" type="number" class="finp" style="margin:0" placeholder="금액 (원)"><input id="a-memo" class="finp" style="margin:0" placeholder="메모"></div><button id="acc-save" class="submit-btn">저장</button></div>`;
 }
-function subNetwork(){return `<div class="form-wrap" style="margin-top:4px"><input id="net-search" class="finp" placeholder="검색..."><div class="card" style="margin-bottom:12px"><div id="net-list"></div></div><div class="sec-lbl" style="margin-bottom:10px">인맥 추가</div><div class="finp-grid"><input id="n-name" class="finp" style="margin:0" placeholder="이름"><input id="n-rel" class="finp" style="margin:0" placeholder="관계"></div><div class="finp-grid"><input id="n-org" class="finp" style="margin:0" placeholder="소속/회사"><input id="n-contact" class="finp" style="margin:0" placeholder="연락처"></div><input id="n-memo" class="finp" placeholder="메모"><button id="net-save" class="submit-btn">추가</button></div>`;}
+function subNetwork(){return `<div class="form-wrap" style="margin-top:4px"><input id="net-search" class="finp" placeholder="검색..."></div><div class="card" style="margin:0 20px 12px"><div id="net-list"></div></div><div class="form-wrap"><div class="sec-lbl" style="margin-bottom:10px">인맥 추가</div><div class="finp-grid"><input id="n-name" class="finp" style="margin:0" placeholder="이름"><input id="n-rel" class="finp" style="margin:0" placeholder="관계"></div><div class="finp-grid"><input id="n-org" class="finp" style="margin:0" placeholder="소속/회사"><input id="n-contact" class="finp" style="margin:0" placeholder="연락처"></div><input id="n-memo" class="finp" placeholder="메모"><button id="net-save" class="submit-btn">추가</button></div>`;}
 
 function renderNetList(){
   const q=(document.getElementById('net-search')?.value||'').toLowerCase();
