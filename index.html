@@ -6,6 +6,7 @@
 <title>유지현 OS</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;scrollbar-width:none;-ms-overflow-style:none}
 *::-webkit-scrollbar{display:none}
@@ -115,8 +116,23 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .tc{display:none;padding:14px 20px}
 .tc.active{display:block}
 
-/* ── 카톡방 대시보드 iframe ── */
-.dashboard-frame{width:100%;border:none;border-radius:14px;background:var(--card);display:block;height:calc(100svh - 210px - env(safe-area-inset-bottom,0px));min-height:400px}
+/* ── 카톡방 대시보드 인라인 ── */
+#kakao-dash .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+#kakao-dash .num-box{background:#fff;border-radius:12px;padding:12px 8px;text-align:center}
+#kakao-dash .dnum{font-size:22px;font-weight:800}
+#kakao-dash .dlbl{font-size:10px;color:var(--sub);margin-top:2px}
+#kakao-dash .dblock{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+#kakao-dash .dblock-title{font-size:11px;color:#bbb;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+#kakao-dash .dstatus{font-size:13px;line-height:1.6;color:var(--dim)}
+#kakao-dash .chart-wrap{height:120px}
+#kakao-dash table{width:100%;border-collapse:collapse;font-size:12px}
+#kakao-dash th{text-align:left;color:var(--sub);font-size:11px;padding:4px 6px;border-bottom:1px solid #eee}
+#kakao-dash td{padding:7px 6px;border-bottom:1px solid #f5f5f5;color:var(--text)}
+#kakao-dash tr:last-child td{border:none}
+#kakao-dash .silent{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:600}
+#kakao-dash .d30{background:#fff8e1;color:#a07000}
+#kakao-dash .d60{background:#ffe8e8;color:#c0392b}
+#kakao-dash .d90{background:#f0f0f0;color:#999}
 
 /* ── 운영 콘텐츠 ── */
 .notice-box{background:#f5f5f5;border:1px solid #e8e8e8;border-radius:14px;padding:16px;margin-bottom:12px;font-size:13px;line-height:1.9}
@@ -386,8 +402,30 @@ textarea.finp{min-height:120px;resize:vertical}
   </div>
 
   <!-- 대시보드 탭 -->
-  <div class="tc active" id="kakao-dash" style="padding:12px 20px 0">
-    <iframe src="okaband.html" class="dashboard-frame" scrolling="yes"></iframe>
+  <div class="tc active" id="kakao-dash" style="padding:12px 20px">
+    <div class="row3">
+      <div class="num-box"><div class="dnum" id="v-msgs">-</div><div class="dlbl">오늘 메시지</div></div>
+      <div class="num-box"><div class="dnum" id="v-users">-</div><div class="dlbl">오늘 참여자</div></div>
+      <div class="num-box"><div class="dnum" id="v-avg">-</div><div class="dlbl">7일 평균</div></div>
+    </div>
+    <div class="dblock">
+      <div class="dblock-title">방 상태</div>
+      <div class="dstatus" id="status-text">분석 중...</div>
+    </div>
+    <div class="dblock">
+      <div class="dblock-title">최근 14일</div>
+      <div class="chart-wrap"><canvas id="dash-chart"></canvas></div>
+    </div>
+    <div class="dblock">
+      <div class="dblock-title">활성 멤버 TOP10</div>
+      <table><thead><tr><th>#</th><th>닉네임</th><th>메시지</th><th>마지막</th></tr></thead>
+      <tbody id="t-active"><tr><td colspan="4" style="color:#bbb;font-size:12px;padding:6px 0">로딩 중...</td></tr></tbody></table>
+    </div>
+    <div class="dblock">
+      <div class="dblock-title">이탈 위험</div>
+      <table><thead><tr><th>닉네임</th><th>총</th><th>침묵</th></tr></thead>
+      <tbody id="t-risk"><tr><td colspan="3" style="color:#bbb;font-size:12px;padding:6px 0">로딩 중...</td></tr></tbody></table>
+    </div>
   </div>
 
   <!-- 공지 탭 -->
@@ -784,10 +822,7 @@ document.getElementById('sch-date').value=new Date().toISOString().slice(0,10);
 
 const PAGES=['home','biz','kakao','personal','sub'];
 let prevPage='home';
-function setAppScroll(id,tab){
-  const app=document.getElementById('app');
-  app.style.overflowY=(id==='kakao'&&(!tab||tab==='dash'))?'hidden':'auto';
-}
+function setAppScroll(){}
 function goPage(id){
   PAGES.forEach(p=>document.getElementById('pg-'+p)?.classList.remove('active'));
   document.getElementById('pg-'+id)?.classList.add('active');
@@ -1114,6 +1149,44 @@ function addDoc(){const inp=document.getElementById('doc-inp'),name=inp?.value.t
 function delAcc(id){S.set('accidents',S.get('accidents',[]).filter(a=>a.id!==id));updateAccSub();renderSub('acc');}
 function delNet(id){S.set('network',S.get('network',[]).filter(n=>n.id!==id));updateNetSub();renderNetList();}
 function delGovt(id){S.set('govt',S.get('govt',[]).filter(g=>g.id!==id));renderGovtList();}
+
+// ── 카톡방 대시보드 데이터 로드 ──
+async function loadDash(){
+  let d;
+  try{const r=await fetch('data.json?t='+Date.now());d=await r.json();}
+  catch(e){
+    document.getElementById('status-text').textContent='data.json 없음';
+    document.getElementById('t-active').innerHTML='<tr><td colspan="4" style="color:#bbb;font-size:12px">데이터 없음</td></tr>';
+    document.getElementById('t-risk').innerHTML='<tr><td colspan="3" style="color:#bbb;font-size:12px">데이터 없음</td></tr>';
+    return;
+  }
+  const dates=d.all_dates||[],daily=d.daily||{};
+  const latest=dates[dates.length-1],today=latest?daily[latest]:null;
+  document.getElementById('v-msgs').textContent=today?today.msgs:'-';
+  document.getElementById('v-users').textContent=today?today.users:'-';
+  document.getElementById('v-avg').textContent=d.recent_7d_avg||'-';
+  const avg=d.recent_7d_avg||0,msgs=today?today.msgs:0,risk=Object.keys(d.at_risk||{}).length;
+  document.getElementById('status-text').textContent=
+    avg>=50&&msgs>=20?`양호 — 일평균 ${avg}개, 오늘 ${msgs}개`
+    :avg>=20||msgs>=10?`주의 — 일평균 ${avg}개. 이탈 위험 ${risk}명`
+    :`개입 필요 — 일평균 ${avg}개 저조. 이탈 위험 ${risk}명`;
+  const l14=dates.slice(-14);
+  new Chart(document.getElementById('dash-chart'),{
+    type:'bar',
+    data:{labels:l14.map(x=>{const m=x.match(/(\d+)월 (\d+)일/);return m?m[1]+'/'+m[2]:x;}),
+      datasets:[{data:l14.map(x=>daily[x]?daily[x].msgs:0),backgroundColor:'#FF6B35',borderRadius:4}]},
+    options:{plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#aaa'}},y:{beginAtZero:true,ticks:{font:{size:9},color:'#aaa'},grid:{color:'#f5f5f5'}}},responsive:true,maintainAspectRatio:false}
+  });
+  const top10=Object.entries(d.user_stats||{}).slice(0,10);
+  document.getElementById('t-active').innerHTML=top10.length
+    ?top10.map(([n,i],x)=>`<tr><td style="color:#bbb">${x+1}</td><td style="font-weight:600">${n}</td><td>${i.msgs}</td><td style="color:#aaa">${i.last||'-'}</td></tr>`).join('')
+    :'<tr><td colspan="4" style="color:#bbb;font-size:12px">없음</td></tr>';
+  const risks=Object.entries(d.at_risk||{});
+  document.getElementById('t-risk').innerHTML=risks.length
+    ?risks.map(([n,i])=>{const c=i.days_silent>=60?'d60':i.days_silent>=30?'d30':'d90';return`<tr><td style="font-weight:600">${n}</td><td>${i.msgs}</td><td><span class="silent ${c}">${i.days_silent}일</span></td></tr>`;}).join('')
+    :'<tr><td colspan="3" style="color:#bbb;font-size:12px">이탈 위험 없음</td></tr>';
+}
+loadDash();
 
 // ── 초기화 ──
 renderTodos();
