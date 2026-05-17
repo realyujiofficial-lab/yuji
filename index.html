@@ -27,7 +27,7 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .back-btn [data-lucide]{width:22px;height:22px}
 
 /* ── 헤더 ── */
-.hdr{padding:24px 20px 12px;background:var(--bg);position:sticky;top:0;z-index:10}
+.hdr{padding:24px 20px 12px;background:#fff;position:sticky;top:0;z-index:10;border-bottom:1px solid #f5f5f5}
 .hdr-greeting{font-size:20px;font-weight:800;line-height:1.3;margin-bottom:4px}
 .hdr-date{font-size:11px;color:var(--sub);letter-spacing:.02em}
 .hdr-todo-preview{font-size:12px;color:var(--dim);margin-top:5px;font-weight:500}
@@ -35,11 +35,11 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .back-btn{background:none;border:none;cursor:pointer;padding:0;color:var(--text);display:flex;align-items:center}
 
 /* ── GNB ── */
-.gnb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.gnb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:10px 4px 14px;border:none;background:none;cursor:pointer;color:#a3a3a3;transition:color .15s;width:100%}
-.gnb-btn.active{color:#1a1a1a}
-.gnb-btn [data-lucide]{width:26px;height:26px}
-.gnb-lbl{font-size:10px;font-weight:500;letter-spacing:-.01em}
+.gnb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #f0f0f0;display:grid;grid-template-columns:repeat(4,1fr);z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.gnb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px 4px 14px;border:none;background:none;cursor:pointer;color:#a3a3a3;transition:color .15s;width:100%}
+.gnb-btn.active{color:var(--accent)}
+.gnb-btn [data-lucide]{width:28px;height:28px}
+.gnb-lbl{font-size:12px;font-weight:500;letter-spacing:-.01em}
 .gnb-btn.active .gnb-lbl{font-weight:700}
 
 /* ── 카드 ── */
