@@ -681,13 +681,13 @@ const EVENT_IDEAS=[
 // ── 공지 히스토리 렌더링 ──
 function renderNoticeHist(){
   const el=document.getElementById('notice-hist-list');if(!el)return;
-  el.innerHTML=NOTICES.map(n=>`
+  el.innerHTML=[...NOTICES].reverse().map(n=>`
     <div class="notice-hist-item">
       <div class="notice-hist-head" onclick="toggleNoticeHist(${n.id})">
         <span class="notice-hist-date">${n.date}</span>
         <span class="notice-hist-title">${n.title}</span>
       </div>
-      <div class="notice-detail" id="nhdet-${n.id}">${n.detail}</div>
+      <div class="notice-detail open" id="nhdet-${n.id}">${n.detail}</div>
     </div>
   `).join('');
 }
@@ -711,7 +711,7 @@ function renderIssueHist(){
         <span class="iss-hist-title">${i.title}</span>
         <span style="font-size:10px;color:var(--sub);flex-shrink:0">${i.status}</span>
       </div>
-      <div class="iss-detail" id="ihdet-${i.id}">${i.detail}</div>
+      <div class="iss-detail open" id="ihdet-${i.id}">${i.detail}</div>
     </div>
   `).join('');
 }
