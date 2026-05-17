@@ -202,6 +202,77 @@ textarea.finp{min-height:120px;resize:vertical}
 /* ── 경고 박스 ── */
 .warn-box{background:#fff7f0;border-left:3px solid var(--accent);border-radius:12px;padding:12px 16px;margin-bottom:12px;font-size:13px;line-height:1.6}
 .warn-box strong{display:block;font-weight:700;margin-bottom:4px;color:var(--accent)}
+
+/* ── 메시지 뱅크 ── */
+.msg-cat{font-size:10px;font-weight:700;color:var(--sub);letter-spacing:.08em;text-transform:uppercase;padding:10px 0 6px;margin-top:4px}
+.msg-card{background:#fafaf8;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;position:relative}
+.msg-card.used{opacity:.45}
+.msg-card-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.msg-sit{font-size:10px;font-weight:700;color:var(--accent);background:#fff0ea;padding:2px 8px;border-radius:6px;flex-shrink:0}
+.msg-actions{display:flex;gap:6px;margin-left:auto}
+.msg-copy{border:none;border-radius:8px;padding:5px 10px;background:#f0ece8;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;color:#555}
+.msg-toggle{border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+.msg-toggle.unused{background:#e8f5e9;color:#2e7d32}
+.msg-toggle.used{background:#f3f4f6;color:#888}
+.msg-body{font-size:13px;line-height:1.7;color:var(--text)}
+
+/* ── 이슈 히스토리 ── */
+.iss-hist-item{padding:13px 0;border-bottom:1px solid var(--border)}
+.iss-hist-item:last-child{border-bottom:none}
+.iss-hist-head{display:flex;align-items:center;gap:8px;cursor:pointer}
+.iss-hist-date{font-size:10px;color:var(--sub);flex-shrink:0;min-width:52px}
+.iss-hist-title{font-size:13px;font-weight:600;flex:1}
+.iss-hist-arr{font-size:11px;color:#ccc;transition:transform .2s}
+.iss-hist-arr.open{transform:rotate(180deg)}
+.iss-detail{display:none;margin-top:8px;font-size:12px;color:var(--dim);line-height:1.7;background:#f8f8f6;border-radius:10px;padding:10px 12px}
+.iss-detail.open{display:block}
+
+/* ── 공지 히스토리 ── */
+.notice-hist-item{padding:12px 0;border-bottom:1px solid var(--border)}
+.notice-hist-item:last-child{border-bottom:none}
+.notice-hist-head{display:flex;align-items:center;gap:8px;cursor:pointer}
+.notice-hist-date{font-size:10px;color:var(--sub);flex-shrink:0;min-width:58px}
+.notice-hist-title{font-size:13px;font-weight:600;flex:1}
+.notice-hist-arr{font-size:11px;color:#ccc;transition:transform .2s}
+.notice-hist-arr.open{transform:rotate(180deg)}
+.notice-detail{display:none;margin-top:8px;font-size:12px;color:var(--dim);line-height:1.7;background:#f8f8f6;border-radius:10px;padding:10px 12px}
+.notice-detail.open{display:block}
+
+/* ── 이벤트 상태 배지 ── */
+.ev-badge{font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;flex-shrink:0}
+.ev-soon{background:#fff7ed;color:#c2410c}
+.ev-now{background:#dcfce7;color:#166534}
+.ev-done{background:#f3f4f6;color:#888}
+
+/* ── 이벤트 카드 ── */
+.ev-card{background:#fafaf8;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
+.ev-card-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.ev-card-title{font-size:13px;font-weight:700;flex:1}
+
+/* ── 프롬프트 카드 ── */
+.prompt-card{background:#f0f4ff;border:1px solid #c7d7fc;border-radius:14px;padding:14px;margin-bottom:12px}
+.prompt-card-title{font-size:12px;font-weight:800;color:#3b5bdb;margin-bottom:8px}
+.prompt-card-body{font-size:12px;color:#333;line-height:1.7;white-space:pre-wrap}
+.prompt-copy{width:100%;margin-top:10px;border:none;border-radius:10px;padding:10px;background:#dbe4ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;color:#3b5bdb}
+
+/* ── 체크리스트 ── */
+.chk-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.chk-item:last-child{border-bottom:none}
+.chk-item input[type=checkbox]{width:16px;height:16px;accent-color:#1a1a1a;flex-shrink:0;margin-top:2px;cursor:pointer}
+.chk-txt{flex:1;line-height:1.5}
+.chk-txt.chked{text-decoration:line-through;color:#ccc}
+
+/* ── SNS 콘텐츠 라인업 ── */
+.content-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.content-item:last-child{border-bottom:none}
+.content-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;margin-top:2px;cursor:pointer}
+.content-txt{flex:1;font-size:12px;line-height:1.5;color:var(--text)}
+.content-txt.done{text-decoration:line-through;color:#ccc}
+
+/* ── 링크 버튼 ── */
+.link-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;text-decoration:none;color:var(--text)}
+.link-row:active{background:#f5f4f1}
+.link-url{font-size:11px;color:var(--sub);margin-top:2px}
 </style>
 </head>
 <body>
@@ -335,40 +406,53 @@ textarea.finp{min-height:120px;resize:vertical}
     <div class="tab" onclick="switchTab('kakao','issue',this)">이슈</div>
   </div>
 
+  <!-- 대시보드 탭 -->
   <div class="tc active" id="kakao-dash" style="padding:12px 20px 0">
     <iframe src="okaband.html" class="dashboard-frame" scrolling="yes"></iframe>
   </div>
 
+  <!-- 공지 탭 -->
   <div class="tc" id="kakao-notice">
     <div class="sitbar" id="issue-alert-bar">현재 긴급 이슈 없음</div>
+
+    <div class="sec-lbl" style="padding:0 0 8px">공지 히스토리</div>
+    <div class="card" style="margin:0 0 14px">
+      <div class="p" style="padding-bottom:4px" id="notice-hist-list"></div>
+    </div>
+
+    <div class="sec-lbl" style="padding:0 0 8px">작성 가이드</div>
     <div class="notice-box">
-      <strong>방향 공지 초안 — 복사해서 카톡방 발송</strong>
-      <div style="font-size:13px;line-height:1.9;color:#444">안녕하세요 여러분<br><br>오카방은 <strong>직접 가본 맛집·핫플·여행 정보를 나누는 공간</strong>이에요.<br>친목도 좋은데, 핵심은 <strong>실제 경험 기반 정보</strong>예요.<br><br>앞으로도 좋은 정보 많이 나눠요</div>
-      <button class="copy-btn" onclick="navigator.clipboard.writeText('안녕하세요 여러분\n\n오카방은 직접 가본 맛집·핫플·여행 정보를 나누는 공간이에요.\n친목도 좋은데, 핵심은 실제 경험 기반 정보예요.\n\n앞으로도 좋은 정보 많이 나눠요').then(()=>alert('복사됐어요!'))">공지 복사</button>
+      <strong>트러블 없는 공지 작성 가이드</strong>
+      <ol style="padding-left:18px;margin-top:8px;font-size:13px;line-height:1.9;color:#444">
+        <li>문제 지적 대신 <strong>방향 안내</strong> (비난 없이)</li>
+        <li>"~해주세요" 대신 <strong>"~해주시면 감사해요"</strong></li>
+        <li>근거 제시 — <strong>설문/운영 기준</strong> 언급</li>
+        <li>마무리: <strong>감사 인사 + 긍정적 전망</strong></li>
+        <li>길이: <strong>5줄 이내</strong></li>
+      </ol>
     </div>
-    <div class="card">
-      <div class="mention-row">
-        <div class="mention-icon"><i data-lucide="message-circle"></i></div>
-        <div class="mention-body"><div class="mtitle">친목 대화가 길어질 때</div><div class="msub">재밌는 이야기 감사해요. 이 근처 맛집도 알면 공유해줘요!</div></div>
-      </div>
-      <div class="mention-row">
-        <div class="mention-icon"><i data-lucide="help-circle"></i></div>
-        <div class="mention-body"><div class="mtitle">방향 질문이 들어올 때</div><div class="msub">경험 기반 정보 공유가 메인이에요. 진짜 경험 중심으로요!</div></div>
-      </div>
-      <div class="mention-row">
-        <div class="mention-icon"><i data-lucide="wind"></i></div>
-        <div class="mention-body"><div class="mtitle">분위기 전환이 필요할 때</div><div class="msub">이번 주 어디 다녀오셨어요? 핫플 추천받고 싶어요.</div></div>
+
+    <div class="sec-lbl" style="padding:0 0 8px">앞으로 할 공지</div>
+    <div class="card" style="margin:0 0 14px">
+      <div class="p" id="notice-todo-list">
+        <div class="chk-item"><input type="checkbox" onchange="toggleChk('notice-chk','0',this)"><span class="chk-txt" id="notice-chk-0">여름 시즌 릴레이 이벤트 공지 (6월)</span></div>
+        <div class="chk-item"><input type="checkbox" onchange="toggleChk('notice-chk','1',this)"><span class="chk-txt" id="notice-chk-1">지역 아카이브 안내 (톡게시판)</span></div>
+        <div class="chk-item"><input type="checkbox" onchange="toggleChk('notice-chk','2',this)"><span class="chk-txt" id="notice-chk-2">비활성 멤버 정리 예고 (9월, @태그 금지, 공지로만)</span></div>
+        <div class="chk-item"><input type="checkbox" onchange="toggleChk('notice-chk','3',this)"><span class="chk-txt" id="notice-chk-3">번개 모임 공지 (7~8월)</span></div>
       </div>
     </div>
-    <div class="sec" style="margin-top:14px"><div class="sec-lbl">공지 메모</div></div>
-    <div class="card">
+
+    <div class="sec-lbl" style="padding:0 0 8px">공지 메모</div>
+    <div class="card" style="margin:0 0 14px">
       <div class="inp-row"><input id="notice-inp" type="text" placeholder="공지 아이디어..." onkeydown="if(event.key==='Enter')addSimple('notice-list','notice-inp')"><button class="add-btn" onclick="addSimple('notice-list','notice-inp')"><i data-lucide="plus"></i></button></div>
       <div id="notice-list"></div>
     </div>
   </div>
 
+  <!-- 운영방안 탭 -->
   <div class="tc" id="kakao-ops">
-    <div class="card">
+    <div class="sec-lbl" style="padding:0 0 8px">설문 결과</div>
+    <div class="card" style="margin:0 0 14px">
       <div class="p">
         <div class="chip-row"><span class="chip">경험 기반</span><span class="chip">장소 중심</span><span class="chip">광고 배제</span><span class="chip">적당한 온기</span><span class="chip">친목 지양</span></div>
         <div style="font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.06em;margin-bottom:6px">멤버가 원하는 것 TOP 5</div>
@@ -387,48 +471,53 @@ textarea.finp{min-height:120px;resize:vertical}
         </ul>
       </div>
     </div>
-    <div class="sec" style="margin-top:14px"><div class="sec-lbl">운영 메모</div></div>
-    <div class="card">
+
+    <div class="sec-lbl" style="padding:0 0 8px">상황별 메시지 뱅크</div>
+    <div id="msg-bank-list"></div>
+
+    <div class="sec-lbl" style="padding:12px 0 8px">운영 메모</div>
+    <div class="card" style="margin:0 0 14px">
       <div class="inp-row"><input id="ops-inp" type="text" placeholder="운영 아이디어..." onkeydown="if(event.key==='Enter')addSimple('ops-list','ops-inp')"><button class="add-btn" onclick="addSimple('ops-list','ops-inp')"><i data-lucide="plus"></i></button></div>
       <div id="ops-list"></div>
     </div>
   </div>
 
+  <!-- 이벤트 탭 -->
   <div class="tc" id="kakao-event">
-    <div class="card">
-      <div class="p">
-        <div class="ev-item"><div class="ev-title">계절 커버사진 교체 — 분기 1회</div><div class="ev-desc">봄·여름·가을·겨울 초 Canva 제작. 방 이름 + "진짜 경험을 나누는 사람들" 슬로건</div></div>
-        <div class="ev-item"><div class="ev-title">지역 현지인 릴레이 — 월 1회</div><div class="ev-desc">매월 1·15일 지역 지목, @태그로 릴레이 요청. 현지인이 진짜 가는 곳!</div></div>
-        <div class="ev-item"><div class="ev-title">계절 특집 핫플 공지 — 분기 1회</div><div class="ev-desc">봄=벚꽃코스 / 여름=계곡+밥집 / 가을=단풍드라이브 / 겨울=야경+온천</div></div>
-        <div class="ev-item"><div class="ev-title">소규모 번개 모임 — 분기 1회</div><div class="ev-desc">당일 또는 1박2일. 설문에서 6명 희망 확인.</div></div>
-        <div class="ev-item" style="border:none"><div class="ev-title">후기 인증 이벤트</div><div class="ev-desc">사진+짧은 후기 공유 참여자 추첨, 소정의 선물</div></div>
-      </div>
+    <div class="sec-lbl" style="padding:0 0 8px">진행 예정 이벤트</div>
+    <div id="event-plan-list"></div>
+
+    <div class="sec-lbl" style="padding:8px 0 8px">이벤트 아이디어 모음</div>
+    <div id="event-idea-list"></div>
+
+    <div class="sec-lbl" style="padding:8px 0 8px">기획 프롬프트</div>
+    <div class="prompt-card">
+      <div class="prompt-card-title">새 이벤트 기획 시 이 질문에 답하세요</div>
+      <div class="prompt-card-body">대상: 누구를 위한 이벤트인가?
+목적: 활성화 / 신규 유입 / 기여자 보상 / 시즌 콘텐츠?
+방식: 참여 방법은 간단한가?
+타이밍: 언제가 적절한가?</div>
     </div>
-    <div class="sec" style="margin-top:14px"><div class="sec-lbl">이벤트 아이디어 추가</div></div>
-    <div class="card">
+
+    <div class="sec-lbl" style="padding:4px 0 8px">이벤트 아이디어 추가</div>
+    <div class="card" style="margin:0 0 14px">
       <div class="inp-row"><input id="ev-inp" type="text" placeholder="이벤트 아이디어..." onkeydown="if(event.key==='Enter')addSimple('ev-list','ev-inp')"><button class="add-btn" onclick="addSimple('ev-list','ev-inp')"><i data-lucide="plus"></i></button></div>
       <div id="ev-list"></div>
     </div>
   </div>
 
+  <!-- 이슈 탭 -->
   <div class="tc" id="kakao-issue">
-    <div class="warn-box" id="kakao-issue-warn"><strong>분위기 전환 체크리스트</strong>정보 중심 대화 유도 → 계절 릴레이 이벤트 시작 → 커버사진 교체 → 방향 공지 재발송 → 활발한 멤버 개인톡 감사 인사</div>
-    <div class="card">
-      <div class="p">
-        <div class="iss-row"><span class="sev sev-high">높음</span><span class="iss-name">260516 옴팡 추방 후 공개 비난</span><span class="iss-st">종결</span></div>
-        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">260301 닉변 요청 후 집중 이탈 35명</span><span class="iss-st">종결</span></div>
-        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">241029 수다방 분리 배경</span><span class="iss-st">종결</span></div>
-        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">241016 송파거주자 이탈</span><span class="iss-st">미확인</span></div>
-        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">241015 옴팡 연애수다 이탈</span><span class="iss-st">종결</span></div>
-        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">240806 유료서비스 논란</span><span class="iss-st">종결</span></div>
-        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">240221 성적 발언 + 이탈</span><span class="iss-st">종결</span></div>
-        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">230601 대규모 강퇴/이탈</span><span class="iss-st">종결</span></div>
-        <div class="iss-row" style="border:none"><span class="sev sev-low">낮음</span><span class="iss-name">220916 코인 광고 계정 침입</span><span class="iss-st">종결</span></div>
-      </div>
+    <div class="warn-box"><strong>조기 감지 체크리스트</strong>삭제 메시지 증가 / 특정 멤버 방향 무관 대화 주도 / "수다/친목" 언급 증가 / 자진 퇴장 주 2명 이상 / DM 건의 유입</div>
+
+    <div class="sec-lbl" style="padding:0 0 8px">이슈 히스토리</div>
+    <div class="card" style="margin:0 0 14px">
+      <div class="p" style="padding-bottom:4px" id="issue-hist-list"></div>
     </div>
-    <div class="sec" style="margin-top:14px"><div class="sec-lbl">새 이슈 기록</div></div>
-    <div class="card">
-      <div class="inp-row"><input id="new-iss-inp" type="text" placeholder="이슈 내용..." onkeydown="if(event.key==='Enter')addSimple('new-iss-list','new-iss-inp')"><button class="add-btn" onclick="addSimple('new-iss-list','new-iss-inp')"><i data-lucide="plus"></i></button></div>
+
+    <div class="sec-lbl" style="padding:0 0 8px">새 이슈 기록</div>
+    <div class="card" style="margin:0 0 14px">
+      <div class="inp-row"><input id="new-iss-inp" type="text" placeholder="대화 내용 붙여넣기 또는 이슈 요약 입력..." onkeydown="if(event.key==='Enter')addSimple('new-iss-list','new-iss-inp')"><button class="add-btn" onclick="addSimple('new-iss-list','new-iss-inp')"><i data-lucide="plus"></i></button></div>
       <div id="new-iss-list"></div>
     </div>
   </div>
@@ -494,6 +583,208 @@ textarea.finp{min-height:120px;resize:vertical}
 const S={get:(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
 function ri(){if(window.lucide)lucide.createIcons();}
 
+// ── 이슈 데이터 ──
+const ISSUES=[
+  {id:1,date:'2022.09',title:'코인 광고 계정 침입',sev:'low',status:'종결',detail:'김아린/김수진 두 계정이 동일 코인 리딩방 광고. 즉시 추방. 당시 입장 제한 없었음. 조직적 스팸 패턴.'},
+  {id:2,date:'2023.06',title:'대규모 강퇴/이탈',sev:'mid',status:'종결',detail:'방 바이럴 급증 후 이질 멤버 유입. 6월 한 달 강퇴/퇴장 10명 이상. 삭제 메시지 다수. 같은 날 다중 강퇴 2회 발생.'},
+  {id:3,date:'2024.02',title:'성적 발언 + 다수 이탈',sev:'mid',status:'종결',detail:'성적 발언 후 멤버 이탈. 운영 기준 강화 계기. 명시적 운영 규칙 필요성 부각.'},
+  {id:4,date:'2024.08',title:'유료서비스 논란',sev:'mid',status:'종결',detail:'운영자 유료 코스 서비스 관련 방 내 논란. 운영자와 커뮤니티 관계 경계 재정립 계기.'},
+  {id:5,date:'2024.10',title:'옴팡 연애수다 + 멤버 이탈',sev:'mid',status:'종결',detail:'옴팡 연애/소개팅 수다 + 멤버 이탈. 방 방향 이탈 패턴의 초기 신호. 수다방 분리 필요성 논의 시작.'},
+  {id:6,date:'2024.10',title:'송파 거주자 이탈',sev:'mid',status:'미확인',detail:'송파 거주자가 옴팡 발언에 분노 후 이탈. 정확한 사유 미확인. 의존적 멤버 갈등 패턴.'},
+  {id:7,date:'2024.10',title:'수다방 분리 배경',sev:'mid',status:'종결',detail:'6명이 친목 흐름 지적. 옴팡 본인이 수다방 요청. 2024.11.05 수다방 개설. 방 분리 후 정보방 흐름 개선.'},
+  {id:8,date:'2026.05',title:'옴팡 추방 후 공개 비난',sev:'high',status:'종결',detail:'옴팡 추방 후 "죠디맛집" 닉으로 재입장, 공개 비난 후 퇴장. 감정적 반박 없이 기준 중심 대응. 남은 멤버 동요 없음.'},
+  {id:9,date:'2026.03',title:'닉변 요청 후 집중 이탈',sev:'mid',status:'종결',detail:'대량 @멘션 닉변 요청(10건 이상) → 강퇴11+자진퇴장24 = 35명 이탈. 알림 폭탄이 피로감 유발. 향후 공지로만.'},
+];
+
+// ── 공지 히스토리 ──
+const NOTICES=[
+  {id:1,date:'2024.11.04',title:'사적인 수다 자제 공지',detail:'"사적인 수다는 자제 부탁드려요!" — 수다방 분리 예고. 옴팡이 먼저 수다방 요청한 맥락.'},
+  {id:2,date:'2024.11.05',title:'수다방·모임방·크리에이터방 개설',detail:'수다/모임/크리에이터 교육방 개설 공지. 정보방 흐름 정리 목적.'},
+  {id:3,date:'2026.03.01',title:'닉네임 변경 요청 공지',detail:'전체 멤버 @멘션으로 닉변 요청 대량 발송 → 35명 이탈. 향후 공지로만 처리하는 기준 생김.'},
+  {id:4,date:'2026.05.16',title:'방 정리(옴팡) 후 운영 방향 공지',detail:'옴팡 추방 직후 방 방향 안내 공지. "방 방향에 맞지 않아 정리했습니다" 중심.'},
+  {id:5,date:'2026.05.17',title:'공개 비난 이후 감사·운영방향 공지',detail:'오후 9:01 감사 + 향후 운영 방향 공지. 감정적 반박 없이 기준 중심 마무리. 멤버 동요 없이 대화 이어감.'},
+];
+
+// ── 메시지 뱅크 데이터 ──
+const MSG_BANK=[
+  {sit:'대화 유도',msgs:[
+    {id:'m1',text:'이번 주 어디 다녀오셨어요? 맛집이든 카페든 툭 던져주세요!'},
+    {id:'m2',text:'요즘 어디가 핫한지 궁금해요. 최근에 진짜 좋았던 곳 있으세요?'},
+    {id:'m3',text:'날씨 좋은데 어디가 땡기세요? 이 시기에 가면 좋은 곳 공유해줘요!'},
+  ]},
+  {sit:'친목 흐름 전환',msgs:[
+    {id:'m4',text:'재밌는 이야기 감사해요. 이 근처 맛집도 알면 공유해줘요!'},
+    {id:'m5',text:'그 동네 가셨군요! 거기서 가볼 만한 식당이나 카페 있었나요?'},
+    {id:'m6',text:'흥미로운 이야기네요. 혹시 그 근처 현지인 추천 맛집도 아시면 나눠주세요!'},
+  ]},
+  {sit:'신규 멤버 환영',msgs:[
+    {id:'m7',text:'새로 오신 분들 환영해요! 방은 직접 가본 맛집·핫플·여행 정보를 나누는 공간이에요. 편하게 후기 공유해주세요.'},
+    {id:'m8',text:'반갑습니다! 거주 지역이나 자주 가시는 곳 닉네임에 넣어두시면 서로 추천 주고받기 편해요.'},
+  ]},
+  {sit:'기여자 감사',msgs:[
+    {id:'m9',text:'이번 달도 좋은 정보 공유해주신 분들 덕분에 방이 살아있습니다. 정말 감사해요!'},
+    {id:'m10',text:'맛집 정보 열심히 올려주시는 분들 덕에 방이 풍성해져요. 다들 고마워요!'},
+  ]},
+  {sit:'지역 릴레이',msgs:[
+    {id:'m11',text:'이번 달 릴레이 지역: [지역]! 현지 사시는 분들 진짜 가는 곳 추천 부탁드려요. 관광지 말고 동네 숨은 곳도 환영해요!'},
+    {id:'m12',text:'[지역] 멤버 분들, 이 시기에 가면 좋은 곳 있으세요? 현지 추천 기다릴게요!'},
+  ]},
+  {sit:'시즌/이벤트',msgs:[
+    {id:'m13',text:'이번 여름 계곡·해변 다녀오신 분 후기 공유 부탁드려요! 밥집 정보도 같이면 더욱 환영해요.'},
+    {id:'m14',text:'날씨 좋아지는 계절에 어디 가셨나요? 봄나들이 코스 공유해주세요!'},
+    {id:'m15',text:'연말에 야경 + 맛집 코스 추천해주실 분 있으세요? 모아서 정리해볼게요!'},
+  ]},
+];
+
+// ── 이벤트 계획 데이터 ──
+const EVENT_PLANS=[
+  {status:'soon',label:'즉시',title:'계절 커버사진 교체 (봄→여름)',desc:'6월 1일 Canva로 교체. 방 이름 + "진짜 경험을 나누는 사람들" 슬로건.'},
+  {status:'soon',label:'즉시',title:'지역 현지인 릴레이 첫 회',desc:'이번 주 시작. 지역 지목 후 현지 멤버 @태그로 릴레이 요청.'},
+  {status:'soon',label:'이번 달',title:'핵심 기여자 감사 멘트',desc:'5월 말. 정보 많이 공유한 멤버 3~5명 이름 + "덕분에 방이 살아있습니다" 공지.'},
+  {status:'soon',label:'다음 달',title:'주간 뉴스 공지 시범 운영',desc:'6월 시작. 유튜브/트위터 맛집·여행 뉴스 3~5개 + 카카오방 공유 문구.'},
+  {status:'soon',label:'분기',title:'소규모 번개 모임',desc:'7~8월 당일치기. 설문에서 6명 희망 확인. 카카오폼 모집.'},
+  {status:'soon',label:'분기',title:'비활성 멤버 정리',desc:'9월. @태그 금지, 공지로만. 6개월 이상 발언 없는 멤버 대상.'},
+];
+
+// ── 이벤트 아이디어 데이터 ──
+const EVENT_IDEAS=[
+  {title:'계절 테마 커버사진 교체',desc:'분기 1회. Canva로 계절감 있는 커버 제작. 멤버 귀속감 + 신규 유인.'},
+  {title:'지역 현지인 릴레이',desc:'월 1회 고정. 지역 지목 → @태그 릴레이. 진짜 현지인이 가는 곳.'},
+  {title:'계절 특집 핫플 공지',desc:'분기 1회. 봄=벚꽃/여름=계곡+밥집/가을=단풍/겨울=야경+온천.'},
+  {title:'소규모 번개 모임',desc:'분기 1회. 당일 or 1박2일. 오픈 모집 → 10명 이하 소규모 진행.'},
+  {title:'주간/월간 맛집 뉴스 뽑기',desc:'유튜브/X/블로그에서 핫한 지역별 뉴스 3~5개 + 방 공유 문구.'},
+  {title:'핵심 기여자 감사 멘트',desc:'월 1회. 정보 기여자 3~5명 이름 + "덕분에 방이 살아있습니다" 공지.'},
+  {title:'지역별 추천 아카이브',desc:'톡게시판 or 노션. 지역/카테고리별 멤버 추천 장소 정리.'},
+  {title:'비활성 멤버 정기 정리',desc:'연 1~2회. @태그 금지, 공지로만. 6개월 이상 미발언 멤버 정리.'},
+];
+
+// ── 공지 히스토리 렌더링 ──
+function renderNoticeHist(){
+  const el=document.getElementById('notice-hist-list');if(!el)return;
+  el.innerHTML=NOTICES.map(n=>`
+    <div class="notice-hist-item">
+      <div class="notice-hist-head" onclick="toggleNoticeHist(${n.id})">
+        <span class="notice-hist-date">${n.date}</span>
+        <span class="notice-hist-title">${n.title}</span>
+        <span class="notice-hist-arr" id="nharr-${n.id}">▼</span>
+      </div>
+      <div class="notice-detail" id="nhdet-${n.id}">${n.detail}</div>
+    </div>
+  `).join('');
+}
+function toggleNoticeHist(id){
+  const det=document.getElementById('nhdet-'+id),arr=document.getElementById('nharr-'+id);
+  if(!det)return;
+  const open=det.classList.toggle('open');
+  if(arr)arr.classList.toggle('open',open);
+}
+
+// ── 이슈 히스토리 렌더링 ──
+function renderIssueHist(){
+  const el=document.getElementById('issue-hist-list');if(!el)return;
+  const sevMap={high:'sev-high',mid:'sev-mid',low:'sev-low'};
+  const sevLbl={high:'높음',mid:'중간',low:'낮음'};
+  el.innerHTML=[...ISSUES].reverse().map(i=>`
+    <div class="iss-hist-item">
+      <div class="iss-hist-head" onclick="toggleIssueHist(${i.id})">
+        <span class="iss-hist-date">${i.date}</span>
+        <span class="sev ${sevMap[i.sev]}">${sevLbl[i.sev]}</span>
+        <span class="iss-hist-title">${i.title}</span>
+        <span style="font-size:10px;color:var(--sub);flex-shrink:0">${i.status}</span>
+        <span class="iss-hist-arr" id="iharr-${i.id}">▼</span>
+      </div>
+      <div class="iss-detail" id="ihdet-${i.id}">${i.detail}</div>
+    </div>
+  `).join('');
+}
+function toggleIssueHist(id){
+  const det=document.getElementById('ihdet-'+id),arr=document.getElementById('iharr-'+id);
+  if(!det)return;
+  const open=det.classList.toggle('open');
+  if(arr)arr.classList.toggle('open',open);
+}
+
+// ── 메시지 뱅크 렌더링 ──
+function renderMsgBank(){
+  const el=document.getElementById('msg-bank-list');if(!el)return;
+  const used=S.get('msg-used',[]);
+  el.innerHTML=MSG_BANK.map(cat=>`
+    <div class="msg-cat">${cat.sit}</div>
+    ${cat.msgs.map(m=>{
+      const isUsed=used.includes(m.id);
+      return `<div class="msg-card${isUsed?' used':''}" id="msgcard-${m.id}">
+        <div class="msg-card-head">
+          <span class="msg-sit">${cat.sit}</span>
+          <div class="msg-actions">
+            <button class="msg-copy" onclick="copyMsg(${JSON.stringify(m.text).replace(/'/g,'&#39;')})">복사</button>
+            <button class="msg-toggle ${isUsed?'used':'unused'}" id="msgtgl-${m.id}" onclick="toggleMsgUsed('${m.id}')">${isUsed?'사용완료':'미사용'}</button>
+          </div>
+        </div>
+        <div class="msg-body">${m.text}</div>
+      </div>`;
+    }).join('')}
+  `).join('');
+}
+function copyMsg(text){navigator.clipboard.writeText(text).then(()=>showToast('복사됐어요!'));}
+function toggleMsgUsed(id){
+  let used=S.get('msg-used',[]);
+  const idx=used.indexOf(id);
+  if(idx>=0)used.splice(idx,1);else used.push(id);
+  S.set('msg-used',used);
+  renderMsgBank();
+}
+
+// ── 이벤트 계획 렌더링 ──
+function renderEventPlan(){
+  const el=document.getElementById('event-plan-list');if(!el)return;
+  el.innerHTML=EVENT_PLANS.map(e=>`
+    <div class="ev-card">
+      <div class="ev-card-head">
+        <span class="ev-badge ev-soon">${e.label}</span>
+        <span class="ev-card-title">${e.title}</span>
+      </div>
+      <div style="font-size:12px;color:var(--dim);line-height:1.6">${e.desc}</div>
+    </div>
+  `).join('');
+}
+
+// ── 이벤트 아이디어 렌더링 ──
+function renderEventIdeas(){
+  const el=document.getElementById('event-idea-list');if(!el)return;
+  el.innerHTML=EVENT_IDEAS.map(e=>`
+    <div class="ev-card">
+      <div class="ev-card-head">
+        <span class="ev-card-title">${e.title}</span>
+      </div>
+      <div style="font-size:12px;color:var(--dim);line-height:1.6">${e.desc}</div>
+    </div>
+  `).join('');
+}
+
+// ── 체크박스 토글 ──
+function toggleChk(key,idx,el){
+  const arr=S.get(key,[]);
+  arr[idx]=el.checked;
+  S.set(key,arr);
+  const txt=document.getElementById(`${key}-${idx}`);
+  if(txt)txt.classList.toggle('chked',el.checked);
+}
+function initChks(){
+  const nc=S.get('notice-chk',[]);
+  [0,1,2,3].forEach(i=>{
+    const el=document.querySelector(`input[onchange="toggleChk('notice-chk','${i}',this)"]`);
+    const txt=document.getElementById(`notice-chk-${i}`);
+    if(el&&nc[i]){el.checked=true;if(txt)txt.classList.add('chked');}
+  });
+}
+
+function showToast(msg){
+  let t=document.getElementById('_toast');
+  if(!t){t=document.createElement('div');t.id='_toast';t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:opacity .2s';document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._to);t._to=setTimeout(()=>{t.style.opacity='0';},1800);
+}
+
 const GREETINGS=["유지현, 러블리해","넌 항상 잘하고 있어","내가 널 사랑해","오늘도 멋진 유지현","넌 멋져, 진짜로","너의 기준은 옳아 — 확실하게 표현해","하나씩 해나가면 돼, 넌 할 수 있어","유지현은 언제나 옳다","넌 이미 충분히 잘하고 있어","오카방도 테이스트트립도 다 잘 될 거야"];
 function getGreeting(){
   const issues=S.get('issues',[]).filter(i=>i.level==='high').length;
@@ -537,41 +828,200 @@ const SUB_TITLES={writing:'작성법','tt-docs':'개발 문서','tt-sns':'SNS / 
 function renderSub(id){
   document.getElementById('sub-title').textContent=SUB_TITLES[id]||'';
   const fn={
-    writing:subWriting,'tt-docs':subDocs,'tt-sns':subSns,'tt-govt':subGovt,
+    writing:subWriting,
+    'tt-docs':subDocs,
+    'tt-sns':subSns,
+    'tt-govt':subGovt,
     'tt-mine':()=>`<div class="form-wrap" style="margin-top:16px;display:flex;flex-direction:column;gap:10px"><button class="submit-btn" onclick="alert('터미널: bash run_all_files.sh')">파이프라인 실행</button><button class="submit-btn" style="background:#f0ece8;color:#333" onclick="window.open('okaband.html','_blank')">대시보드 열기</button><button class="submit-btn" style="background:#f0ece8;color:#333">랜딩페이지</button></div>`,
-    acc:subAcc,network:subNetwork,
-    resume:()=>`<div class="ta-page"><textarea id="ta-resume" placeholder="이력서 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-resume').value).then(()=>alert('복사됐어요!'))">복사</button></div>`,
-    cover:()=>`<div class="ta-page"><textarea id="ta-cover" placeholder="자소서 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-cover').value).then(()=>alert('복사됐어요!'))">복사</button></div>`,
+    acc:subAcc,
+    network:subNetwork,
+    resume:()=>`<div class="ta-page"><textarea id="ta-resume" placeholder="이력서 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-resume').value).then(()=>showToast('복사됐어요!'))">복사</button></div>`,
+    cover:()=>`<div class="ta-page"><textarea id="ta-cover" placeholder="자소서 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-cover').value).then(()=>showToast('복사됐어요!'))">복사</button></div>`,
     'sns-fl':()=>`<div class="form-wrap" style="margin-top:8px"><div style="display:flex;gap:8px"><input id="sns-fl-inp" class="finp" style="margin:0;flex:1" placeholder="SNS 운영 메모..."><button id="sns-fl-add" class="add-btn"><i data-lucide="plus"></i></button></div></div><div class="card" style="margin:10px 20px"><div id="sns-fl-list"></div></div>`,
   };
   document.getElementById('sub-body').innerHTML=fn[id]?fn[id]():'<div class="empty">준비중</div>';
   afterSub(id);ri();
 }
+
 function afterSub(id){
-  if(id==='acc'){document.getElementById('acc-save')?.addEventListener('click',()=>{const h=v('a-hosp');if(!h)return;const arr=S.get('accidents',[]);arr.unshift({hospital:h,pain:v('a-pain'),purpose:v('a-purpose'),date:v('a-date'),amount:v('a-amount'),memo:v('a-memo'),id:Date.now()});S.set('accidents',arr);updateAccSub();alert('저장됐어요!');renderSub('acc');ri();});}
+  if(id==='acc'){document.getElementById('acc-save')?.addEventListener('click',()=>{const h=v('a-hosp');if(!h)return;const arr=S.get('accidents',[]);arr.unshift({hospital:h,pain:v('a-pain'),purpose:v('a-purpose'),date:v('a-date'),amount:v('a-amount'),memo:v('a-memo'),id:Date.now()});S.set('accidents',arr);updateAccSub();showToast('저장됐어요!');renderSub('acc');ri();});}
   if(id==='network'){renderNetList();document.getElementById('net-search')?.addEventListener('input',renderNetList);document.getElementById('net-save')?.addEventListener('click',()=>{const n=v('n-name');if(!n)return;const arr=S.get('network',[]);arr.unshift({name:n,rel:v('n-rel'),org:v('n-org'),contact:v('n-contact'),memo:v('n-memo'),id:Date.now()});S.set('network',arr);['n-name','n-rel','n-org','n-contact','n-memo'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});updateNetSub();renderNetList();});}
   if(id==='resume'){const ta=document.getElementById('ta-resume');if(ta){ta.value=localStorage.getItem('resume')||'';ta.addEventListener('input',e=>localStorage.setItem('resume',e.target.value));}}
   if(id==='cover'){const ta=document.getElementById('ta-cover');if(ta){ta.value=localStorage.getItem('cover')||'';ta.addEventListener('input',e=>localStorage.setItem('cover',e.target.value));}}
   if(id==='sns-fl'){renderListInEl('sns-fl-list','sns-fl-items');document.getElementById('sns-fl-add')?.addEventListener('click',()=>{const inp=document.getElementById('sns-fl-inp'),t=inp.value.trim();if(!t)return;const arr=S.get('sns-fl-items',[]);arr.unshift({text:t,id:Date.now()});S.set('sns-fl-items',arr);inp.value='';renderListInEl('sns-fl-list','sns-fl-items');});}
-  if(id==='tt-sns'){renderListInEl('sns-tt-list','sns-tt-items');document.getElementById('sns-tt-add')?.addEventListener('click',()=>{const inp=document.getElementById('sns-tt-inp'),t=inp.value.trim();if(!t)return;const arr=S.get('sns-tt-items',[]);arr.unshift({text:t,id:Date.now()});S.set('sns-tt-items',arr);inp.value='';renderListInEl('sns-tt-list','sns-tt-items');});}
+  if(id==='tt-sns'){renderSnsContent();document.getElementById('sns-tt-add')?.addEventListener('click',()=>{const inp=document.getElementById('sns-tt-inp'),t=inp.value.trim();if(!t)return;const arr=S.get('sns-tt-items',[]);arr.unshift({text:t,id:Date.now()});S.set('sns-tt-items',arr);inp.value='';renderListInEl('sns-tt-list','sns-tt-items');ri();});}
   if(id==='tt-govt'){renderGovtList();document.getElementById('govt-save')?.addEventListener('click',()=>{const n=v('g-name');if(!n)return;const arr=S.get('govt',[]);arr.unshift({name:n,deadline:v('g-dl'),status:document.getElementById('g-status')?.value||'관심',id:Date.now()});S.set('govt',arr);document.getElementById('g-name').value='';renderGovtList();});}
   if(id==='writing'){document.getElementById('wt-save')?.addEventListener('click',()=>{const tag=v('wt-tag'),content=v('wt-body');if(!content)return;const arr=S.get('writings',[]);arr.unshift({tag,content,id:Date.now(),date:new Date().toLocaleDateString('ko-KR')});S.set('writings',arr);renderSub('writing');ri();});}
+  if(id==='tt-docs'){renderDocsList();}
 }
 function v(id){return document.getElementById(id)?.value||'';}
 
+// ── 서브페이지: 작성법 ──
+const YECHANG_PROMPTS=[
+  {title:'문제 인식 / 창업 동기',prompt:`나는 현지인 방문 리뷰 기반 여행·맛집 큐레이션 서비스 테이스트트립을 창업 준비 중이야.\n문제 인식 섹션을 써줘. 핵심: 광고/체험단 리뷰 범람 → 신뢰할 정보 없음 → \n실제 방문한 사람 후기가 가장 신뢰도 높음. 오카방 3년 운영으로 실증.\n예창 심사위원 설득력 있게, 구체적 수치 포함해서.`},
+  {title:'아이템 소개 / 제품·서비스 설명',prompt:`테이스트트립은 오카방 멤버 실 방문 리뷰를 기반으로 한 여행·맛집 큐레이션 앱이야.\nMVP 현황: [라이브] https://sot-tastetrip.vercel.app\n핵심 기능: 장소 리스트/저장/플랜/현지인인증.\n아이템 소개 섹션을 예창 양식에 맞게 작성해줘.\n광고 아닌 찐 리뷰 → 선택 피로 해소가 핵심 가치.`},
+  {title:'시장 분석 / 목표 시장',prompt:`테이스트트립 시장 분석 섹션 작성해줘.\n타겟: 2030 여행자, 로컬 경험 원하는 국내외 여행객.\n연관 시장: 국내 여행 앱 시장, FNB 정보 플랫폼, 로컬크리에이터 이코노미.\n관심 분야: 로컬, FNB, 숙소, 카페, 관광, 여행.\nTAM/SAM/SOM 구조로 수치 포함해서.`},
+  {title:'사업화 전략 / 수익 모델',prompt:`테이스트트립 사업화 전략과 수익 모델 섹션 써줘.\n단기: 오카방 데이터 → DB → 앱 트래픽 확보.\n중기: 매장 제휴·광고 (체험단 아닌 데이터 기반).\n장기: B2B 데이터 판매, 현지인 투어 커머스.\n예창 심사 통과 기준으로 구체적으로.`},
+  {title:'팀 구성 / 대표자 역량',prompt:`테이스트트립 팀 소개 섹션 써줘.\n대표: 유지현 — 놀생 창업, 오카방 3년 운영, FNB마케터 경험, IT 개발 경험.\n전북 군산 출신, 로컬 음식/문화 가치에 대한 철학 있음.\n방이동 대양회관 알바 → 직접 고객 데이터 수집 경험.\n강점: 커뮤니티 운영 + 마케팅 + 개발 직접 수행.`},
+];
+
 function subWriting(){
   const arr=S.get('writings',[]);
+  const prompts=YECHANG_PROMPTS.map((p,i)=>`
+    <div class="prompt-card" style="margin-bottom:10px">
+      <div class="prompt-card-title">${i+1}. ${p.title}</div>
+      <div class="prompt-card-body" style="font-size:11px">${p.prompt}</div>
+      <button class="prompt-copy" onclick="navigator.clipboard.writeText(${JSON.stringify(p.prompt)}).then(()=>showToast('복사됐어요!'))">Claude에 붙여넣기용 복사</button>
+    </div>
+  `).join('');
   const items=arr.map(w=>`<div style="padding:13px 20px;border-bottom:1px solid var(--border)"><div style="font-size:10px;color:var(--accent);font-weight:700;letter-spacing:.06em;margin-bottom:4px">${w.tag||'기타'} · ${w.date}</div><div style="font-size:13px;line-height:1.7;white-space:pre-wrap">${w.content}</div><button onclick="delWriting(${w.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:4px">삭제</button></div>`).join('');
-  return `<div class="form-wrap" style="margin-top:8px"><input id="wt-tag" class="finp" placeholder="카테고리 (예: SNS 글쓰기)"><textarea id="wt-body" class="finp" placeholder="작성법 내용..."></textarea><button id="wt-save" class="submit-btn">저장</button></div>${arr.length?`<div class="card" style="margin:14px 20px">${items}</div>`:'<div class="empty">기록 없음</div>'}`;
+  return `
+    <div class="sec-lbl" style="padding:14px 20px 8px">2026 예창 대단원별 프롬프트</div>
+    <div style="padding:0 20px 4px;font-size:12px;color:var(--sub)">각 대단원 작성 시 아래 프롬프트를 Claude에게 붙여넣기</div>
+    <div style="padding:10px 20px 0">${prompts}</div>
+    <div class="sec-lbl" style="padding:14px 20px 8px">작성 메모</div>
+    <div class="form-wrap"><input id="wt-tag" class="finp" placeholder="카테고리 (예: SNS 글쓰기)"><textarea id="wt-body" class="finp" placeholder="작성법 내용..."></textarea><button id="wt-save" class="submit-btn">저장</button></div>
+    ${arr.length?`<div class="card" style="margin:14px 20px">${items}</div>`:''}
+  `;
 }
+
+// ── 서브페이지: 개발 문서 ──
+const FIXED_DOCS=[
+  {n:'테이블정의서 ERD',d:'26.02',path:'/mnt/c/Users/ryu53/Downloads/TasteTrip/00. TasteTrip_문서/'},
+  {n:'개발정의서',d:'26.04',path:'/mnt/c/Users/ryu53/Downloads/TasteTrip/00. TasteTrip_문서/'},
+  {n:'개발명세서',d:'26.04',path:'/mnt/c/Users/ryu53/Downloads/TasteTrip/00. TasteTrip_문서/'},
+  {n:'MVP 현황명세서',d:'26.04',path:'/mnt/c/Users/ryu53/Downloads/TasteTrip/00. TasteTrip_문서/260429_TasteTrip_MVP_현황명세서.md'},
+  {n:'프로덕트 로드맵',d:'26.04',path:'/mnt/c/Users/ryu53/Downloads/TasteTrip/00. TasteTrip_문서/260429_테이스트립_프로덕트_로드맵.md'},
+  {n:'카테고리 3단계구조',d:'26.05',path:'/mnt/c/Users/ryu53/Downloads/TasteTrip/00. TasteTrip_문서/'},
+  {n:'통합문서',d:'26.05',path:'/mnt/c/Users/ryu53/Downloads/TasteTrip/00. TasteTrip_문서/'},
+];
 function subDocs(){
   const extra=S.get('docs-extra',[]);
-  const fixed=[{n:'테이블정의서 ERD',d:'26.02'},{n:'개발정의서',d:'26.04'},{n:'개발명세서',d:'26.04'},{n:'MVP 현황명세서',d:'26.04'},{n:'프로덕트 로드맵',d:'26.04'},{n:'카테고리 3단계구조',d:'26.05'},{n:'통합문서',d:'26.05'}];
-  const rows=[...fixed,...extra.map(d=>({n:d.name,d:d.date?.slice(2,7)||''}))].map(d=>`<div class="row" style="cursor:default"><div class="row-icon"><i data-lucide="file-text"></i></div><div class="row-body"><div class="row-title">${d.n}</div></div><span style="font-size:11px;color:var(--sub)">${d.d}</span></div>`).join('');
-  return `<div class="card" style="margin:8px 20px">${rows}</div><div class="form-wrap"><div style="display:flex;gap:8px"><input id="doc-inp" class="finp" style="margin:0;flex:1" placeholder="문서명 추가..."><button class="add-btn" onclick="addDoc()"><i data-lucide="plus"></i></button></div></div>`;
+  const rows=[...FIXED_DOCS,...extra.map(d=>({n:d.name,d:d.date?.slice(2,7)||'',path:''}))].map(d=>`
+    <div class="row" onclick="navigator.clipboard.writeText(${JSON.stringify(d.path||d.n)}).then(()=>showToast('경로 복사됨'))">
+      <div class="row-icon"><i data-lucide="file-text"></i></div>
+      <div class="row-body"><div class="row-title">${d.n}</div><div class="row-sub">${d.path||''}</div></div>
+      <span style="font-size:11px;color:var(--sub)">${d.d}</span>
+    </div>
+  `).join('');
+  return `
+    <div class="prompt-card" style="margin:10px 20px">
+      <div class="prompt-card-title">개발 문서 빠른 접근 프롬프트</div>
+      <div class="prompt-card-body" style="font-size:11px">"[문서명] 문서 요약해줘" / "[기능명] 어떻게 구현돼있어?" / "로드맵 현황 알려줘"</div>
+    </div>
+    <div class="card" style="margin:0 20px">${rows}</div>
+    <div class="form-wrap" style="margin-top:12px"><div style="display:flex;gap:8px"><input id="doc-inp" class="finp" style="margin:0;flex:1" placeholder="문서명 추가..."><button class="add-btn" onclick="addDoc()"><i data-lucide="plus"></i></button></div></div>
+  `;
 }
-function subSns(){return `<div class="form-wrap" style="margin-top:8px"><div style="display:flex;gap:8px"><input id="sns-tt-inp" class="finp" style="margin:0;flex:1" placeholder="콘텐츠/마케팅 메모..."><button id="sns-tt-add" class="add-btn"><i data-lucide="plus"></i></button></div></div><div class="card" style="margin:10px 20px"><div id="sns-tt-list"></div></div>`;}
-function subGovt(){return `<div class="form-wrap" style="margin-top:8px"><input id="g-name" class="finp" placeholder="지원사업명"><div style="display:flex;gap:8px;margin-bottom:10px"><input id="g-dl" type="date" class="finp" style="margin:0;flex:1"><select id="g-status" class="fsel" style="margin:0;flex:0 0 90px"><option>관심</option><option>준비중</option><option>제출</option><option>완료</option></select></div><button id="govt-save" class="submit-btn">추가</button></div><div class="card" style="margin:12px 20px 20px"><div id="govt-list"></div></div>`;}
+function renderDocsList(){/* 문서 목록은 subDocs에서 직접 렌더 */}
+
+// ── 서브페이지: SNS/마케팅 ──
+const SNS_CONTENTS=[
+  '광고 아닌 리뷰 — 오카방 멤버 실방문 후기 첫 포스팅',
+  '지역 현지인 추천 시리즈 #1 — 군산 편',
+  '테이스트트립이 다른 이유 — 체험단 없는 리뷰',
+  '오카방 소개 — 현지인 맛집 방의 3년 기록',
+  '선택 피로 해소 — 믿을 수 있는 정보 하나의 가치',
+  '로컬 카페 큐레이션 — 관광지 말고 동네 카페',
+  '테이스트트립 앱 소개 — MVP 라이브',
+  '여행 계획 짜는 법 — 현지인처럼',
+  'FNB 마케팅 인사이트 — 매장이 선택되는 구조',
+  '오카방 3년 운영 후기 — 커뮤니티와 신뢰',
+  '창업 일지 — 데이터 기반 큐레이션의 시작',
+];
+function subSns(){
+  const done=S.get('sns-content-done',[]);
+  const contentList=SNS_CONTENTS.map((c,i)=>`
+    <div class="content-item">
+      <input type="checkbox" ${done.includes(i)?'checked':''} onchange="toggleSnsContent(${i},this)">
+      <span class="content-txt ${done.includes(i)?'done':''}" id="snsc-${i}">${c}</span>
+    </div>
+  `).join('');
+  const actionChks=S.get('sns-action-done',[]);
+  const actions=['@spotontaste_tastetrip 바이오 문구 정리','오카방 실 방문 리뷰 첫 포스팅 기획','지역 특색 콘텐츠 1개 제작','오카방 신규 멤버 유입 채널 추가'];
+  const actionList=actions.map((a,i)=>`
+    <div class="chk-item">
+      <input type="checkbox" ${actionChks.includes(i)?'checked':''} onchange="toggleSnsAction(${i},this)">
+      <span class="chk-txt ${actionChks.includes(i)?'chked':''}" id="snsa-${i}">${a}</span>
+    </div>
+  `).join('');
+  return `
+    <div class="card" style="margin:10px 20px">
+      <div class="p">
+        <div style="font-size:13px;font-weight:800;margin-bottom:6px">테이스트트립 공식 인스타</div>
+        <div style="font-size:12px;color:var(--dim);margin-bottom:8px">@spotontaste_tastetrip</div>
+        <div class="chip-row"><span class="chip">실방문리뷰 50%</span><span class="chip">지역특색 20%</span><span class="chip">오카방소개 15%</span><span class="chip">큐레이션 15%</span></div>
+        <div style="font-size:12px;color:var(--dim);line-height:1.6">핵심: "광고 아닌 리뷰, 체험단 아닌 후기, 핫플 아닌 이유 있는 곳"</div>
+      </div>
+    </div>
+    <div class="card" style="margin:0 20px 12px">
+      <div class="p">
+        <div style="font-size:13px;font-weight:800;margin-bottom:4px">유지현 개인 브랜딩</div>
+        <div style="font-size:11px;color:var(--sub);margin-bottom:8px">Threads / X / 인스타</div>
+        <div style="font-size:12px;color:var(--dim);margin-bottom:12px;line-height:1.6">포지셔닝: "실 방문 고객 데이터 기반으로 매장을 선택되는 구조로 만드는 마케팅"</div>
+        <div style="font-size:11px;font-weight:700;color:var(--sub);margin-bottom:8px">콘텐츠 라인업</div>
+        ${contentList}
+      </div>
+    </div>
+    <div class="card" style="margin:0 20px 12px">
+      <div class="p">
+        <div style="font-size:13px;font-weight:800;margin-bottom:8px">액션 체크리스트</div>
+        ${actionList}
+      </div>
+    </div>
+    <div class="sec-lbl" style="padding:0 20px 8px">마케팅 메모</div>
+    <div class="card" style="margin:0 20px 14px">
+      <div style="padding:10px 20px;display:flex;gap:8px"><input id="sns-tt-inp" class="finp" style="margin:0;flex:1" placeholder="콘텐츠/마케팅 메모..."><button id="sns-tt-add" class="add-btn"><i data-lucide="plus"></i></button></div>
+      <div id="sns-tt-list"></div>
+    </div>
+  `;
+}
+function renderSnsContent(){
+  renderListInEl('sns-tt-list','sns-tt-items');
+}
+function toggleSnsContent(i,el){
+  let done=S.get('sns-content-done',[]);
+  const idx=done.indexOf(i);
+  if(idx>=0)done.splice(idx,1);else done.push(i);
+  S.set('sns-content-done',done);
+  const txt=document.getElementById('snsc-'+i);
+  if(txt)txt.classList.toggle('done',el.checked);
+}
+function toggleSnsAction(i,el){
+  let done=S.get('sns-action-done',[]);
+  const idx=done.indexOf(i);
+  if(idx>=0)done.splice(idx,1);else done.push(i);
+  S.set('sns-action-done',done);
+  const txt=document.getElementById('snsa-'+i);
+  if(txt)txt.classList.toggle('chked',el.checked);
+}
+
+// ── 서브페이지: 정부지원 ──
+function subGovt(){
+  const interestChips=['로컬','FNB','숙소','카페','로컬크리에이터','관광','여행','IT·데이터'];
+  const portals=[
+    {name:'K-스타트업',url:'https://www.k-startup.go.kr'},
+    {name:'중소벤처기업부',url:'https://www.mss.go.kr'},
+    {name:'한국관광공사 관광기업지원',url:'https://www.knto.or.kr'},
+    {name:'여성기업종합지원센터',url:'https://www.wbiz.or.kr'},
+    {name:'창업진흥원',url:'https://www.kised.or.kr'},
+  ];
+  return `
+    <div style="padding:10px 20px 4px">
+      <div class="chip-row">${interestChips.map(c=>`<span class="chip">${c}</span>`).join('')}</div>
+    </div>
+    <div class="card" style="margin:0 20px 14px">
+      <div class="p">
+        <div style="font-size:13px;font-weight:800;margin-bottom:10px">정부지원 자동 탐색 — 주요 포털</div>
+        ${portals.map(p=>`<a href="${p.url}" target="_blank" class="link-row"><div><div style="font-size:13px;font-weight:600">${p.name}</div><div class="link-url">${p.url}</div></div><i data-lucide="external-link" style="width:14px;height:14px;color:var(--sub)"></i></a>`).join('')}
+      </div>
+    </div>
+    <div class="sec-lbl" style="padding:0 20px 8px">지원사업 추가</div>
+    <div class="form-wrap"><input id="g-name" class="finp" placeholder="지원사업명"><div style="display:flex;gap:8px;margin-bottom:10px"><input id="g-dl" type="date" class="finp" style="margin:0;flex:1"><select id="g-status" class="fsel" style="margin:0;flex:0 0 90px"><option>관심</option><option>준비중</option><option>제출</option><option>완료</option></select></div><button id="govt-save" class="submit-btn">추가</button></div>
+    <div class="card" style="margin:12px 20px 20px"><div id="govt-list"></div></div>
+  `;
+}
+
 function subAcc(){
   const arr=S.get('accidents',[]);
   const total=arr.reduce((s,a)=>s+(Number(a.amount)||0),0);
@@ -680,8 +1130,20 @@ function delAcc(id){S.set('accidents',S.get('accidents',[]).filter(a=>a.id!==id)
 function delNet(id){S.set('network',S.get('network',[]).filter(n=>n.id!==id));updateNetSub();renderNetList();}
 function delGovt(id){S.set('govt',S.get('govt',[]).filter(g=>g.id!==id));renderGovtList();}
 
-renderTodos();renderIssues();renderCal();updateStats();updateAccSub();updateNetSub();
+// ── 초기화 ──
+renderTodos();
+renderIssues();
+renderCal();
+updateStats();
+updateAccSub();
+updateNetSub();
 ['notice-list','ops-list','ev-list','new-iss-list'].forEach(renderSimple);
+renderNoticeHist();
+renderIssueHist();
+renderMsgBank();
+renderEventPlan();
+renderEventIdeas();
+initChks();
 ri();
 </script>
 </body>
