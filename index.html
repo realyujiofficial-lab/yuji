@@ -6,11 +6,11 @@
 <title>유지현 OS</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
-<script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.263.1/dist/umd/lucide.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--bg:#f5f5f5;--card:#ffffff;--border:#e8e8e8;--text:#171717;--sub:#a3a3a3;--accent:#FF6B35;--dim:#525252}
-html,body{height:100%;overflow:hidden}
+html{height:100%;overflow:hidden;background:#fff}body{height:100%;overflow:hidden}
 body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;max-width:480px;margin:0 auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
 /* ── 레이아웃 ── */
@@ -59,19 +59,19 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .btn-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:16px 20px}
 .gbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px 8px;border-radius:14px;border:none;background:#f5f5f5;cursor:pointer;font-family:inherit;text-decoration:none;color:var(--text);min-height:78px;transition:background .1s,transform .1s}
 .gbtn:active{background:#ebebeb;transform:scale(.97)}
-.gbtn [data-lucide]{width:22px;height:22px;color:var(--dim)}
+.gbtn [data-lucide]{width:22px;height:22px;color:#555}
 .gbtn .gtxt{font-size:12px;font-weight:700;color:#333}
 
 /* ── 리스트 로우 ── */
 .row{display:flex;align-items:center;gap:14px;padding:15px 20px;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none;color:inherit}
 .row:last-child{border-bottom:none}
 .row:active{background:#f5f5f5}
-.row-icon{width:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--dim)}
+.row-icon{width:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#333}
 .row-icon [data-lucide]{width:20px;height:20px}
 .row-body{flex:1;min-width:0}
 .row-title{font-size:15px;font-weight:600}
 .row-sub{font-size:11px;color:var(--sub);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row-arr{color:#ccc;display:flex;align-items:center;flex-shrink:0}
+.row-arr{color:#aaa;display:flex;align-items:center;flex-shrink:0}
 .row-arr [data-lucide]{width:16px;height:16px}
 
 /* ── 할일 ── */
@@ -342,7 +342,7 @@ textarea.finp{min-height:120px;resize:vertical}
     <div class="hdr-date">놀생 · 테이스트트립</div>
   </div>
 
-  <div class="sec" style="margin-top:8px"><div class="sec-lbl" style="display:flex;align-items:center;gap:5px"><i data-lucide="sprout" style="width:11px;height:11px"></i>놀생</div></div>
+  <div class="sec" style="margin-top:8px"><div class="sec-lbl">놀생</div></div>
   <div class="card" style="margin:0 20px 14px">
     <div class="btn-grid-2">
       <a class="gbtn" href="https://litt.ly/nol_life.official" target="_blank">
@@ -354,7 +354,7 @@ textarea.finp{min-height:120px;resize:vertical}
     </div>
   </div>
 
-  <div class="sec"><div class="sec-lbl" style="display:flex;align-items:center;gap:5px"><i data-lucide="utensils" style="width:11px;height:11px"></i>테이스트트립</div></div>
+  <div class="sec"><div class="sec-lbl">테이스트트립</div></div>
   <div class="card" style="margin:0 20px 4px">
     <div class="btn-grid-3">
       <a class="gbtn" href="https://litt.ly/spotontaste_tastetrip.official" target="_blank">
@@ -531,7 +531,7 @@ textarea.finp{min-height:120px;resize:vertical}
     <div class="hdr-date">교통사고 · 인맥 · FNB마케터</div>
   </div>
 
-  <div class="sec" style="margin-top:8px"><div class="sec-lbl" style="display:flex;align-items:center;gap:5px"><i data-lucide="car" style="width:11px;height:11px"></i>교통사고</div></div>
+  <div class="sec" style="margin-top:8px"><div class="sec-lbl">교통사고</div></div>
   <div class="card" style="margin:0 20px 14px">
     <div class="row" onclick="goSub('acc')">
       <div class="row-icon"><i data-lucide="clipboard-list"></i></div>
@@ -540,7 +540,7 @@ textarea.finp{min-height:120px;resize:vertical}
     </div>
   </div>
 
-  <div class="sec"><div class="sec-lbl" style="display:flex;align-items:center;gap:5px"><i data-lucide="users" style="width:11px;height:11px"></i>인맥</div></div>
+  <div class="sec"><div class="sec-lbl">인맥</div></div>
   <div class="card" style="margin:0 20px 14px">
     <div class="row" onclick="goSub('network')">
       <div class="row-icon"><i data-lucide="users"></i></div>
@@ -549,7 +549,7 @@ textarea.finp{min-height:120px;resize:vertical}
     </div>
   </div>
 
-  <div class="sec"><div class="sec-lbl" style="display:flex;align-items:center;gap:5px"><i data-lucide="briefcase" style="width:11px;height:11px"></i>FNB마케터</div></div>
+  <div class="sec"><div class="sec-lbl">FNB마케터</div></div>
   <div class="card" style="margin:0 20px 16px">
     <div class="btn-grid-3">
       <button class="gbtn" onclick="goSub('resume')"><i data-lucide="file-text"></i><span class="gtxt">이력서</span></button>
