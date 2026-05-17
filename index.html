@@ -13,7 +13,8 @@ html{height:100%;overflow:hidden;background:#fff}body{height:100%;overflow:hidde
 body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;max-width:480px;margin:0 auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
 /* ── 레이아웃 ── */
-#app{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(94px + env(safe-area-inset-bottom,0px))}
+#app{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(94px + env(safe-area-inset-bottom,0px));scrollbar-width:none;-ms-overflow-style:none}
+#app::-webkit-scrollbar{display:none}
 .page{display:none}
 .page.active{display:block}
 
@@ -782,6 +783,10 @@ document.getElementById('sch-date').value=new Date().toISOString().slice(0,10);
 
 const PAGES=['home','biz','kakao','personal','sub'];
 let prevPage='home';
+function setAppScroll(id,tab){
+  const app=document.getElementById('app');
+  app.style.overflowY=(id==='kakao'&&(!tab||tab==='dash'))?'hidden':'auto';
+}
 function goPage(id){
   PAGES.forEach(p=>document.getElementById('pg-'+p)?.classList.remove('active'));
   document.getElementById('pg-'+id)?.classList.add('active');
@@ -791,7 +796,9 @@ function goPage(id){
     if(idx[id]!==undefined)document.querySelectorAll('.gnb-btn')[idx[id]]?.classList.add('active');
     prevPage=id;
   }
-  document.getElementById('app').scrollTop=0;
+  const app=document.getElementById('app');
+  app.scrollTop=0;
+  setAppScroll(id);
 }
 function goSub(id){
   prevPage=PAGES.find(p=>p!=='sub'&&document.getElementById('pg-'+p)?.classList.contains('active'))||'home';
@@ -803,6 +810,7 @@ function switchTab(group,tab,el){
   el.classList.add('active');
   document.querySelectorAll(`[id^="${group}-"].tc`).forEach(c=>c.classList.remove('active'));
   document.getElementById(`${group}-${tab}`)?.classList.add('active');
+  setAppScroll(group,tab);
 }
 
 const SUB_TITLES={writing:'작성법','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'교통사고',network:'인맥',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
