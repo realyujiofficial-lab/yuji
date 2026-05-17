@@ -17,11 +17,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;back
 .page.active{display:block}
 
 /* ── 아이콘 ── */
-i[data-lucide]{display:inline-block;vertical-align:middle}
-.icon-sm i[data-lucide]{width:16px;height:16px}
-.icon-md i[data-lucide]{width:20px;height:20px}
-.icon-lg i[data-lucide]{width:24px;height:24px}
-.icon-xl i[data-lucide]{width:28px;height:28px}
+[data-lucide]{display:inline-block;vertical-align:middle}
+.icon-sm [data-lucide]{width:16px;height:16px}
+.icon-md [data-lucide]{width:20px;height:20px}
+.icon-lg [data-lucide]{width:24px;height:24px}
+.icon-xl [data-lucide]{width:28px;height:28px}
 
 /* ── 헤더 ── */
 .hdr{padding:24px 20px 12px;background:var(--bg);position:sticky;top:0;z-index:10}
@@ -35,7 +35,7 @@ i[data-lucide]{display:inline-block;vertical-align:middle}
 .gnb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);z-index:100;padding-bottom:env(safe-area-inset-bottom)}
 .gnb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:10px 0 14px;border:none;background:none;cursor:pointer;color:#a3a3a3;transition:color .15s}
 .gnb-btn.active{color:#1a1a1a}
-.gnb-btn i[data-lucide]{width:26px;height:26px}
+.gnb-btn [data-lucide]{width:26px;height:26px}
 .gnb-lbl{font-size:10px;font-weight:500;letter-spacing:-.01em}
 .gnb-btn.active .gnb-lbl{font-weight:700}
 
@@ -56,7 +56,7 @@ i[data-lucide]{display:inline-block;vertical-align:middle}
 .btn-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:16px 20px}
 .gbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px 8px;border-radius:14px;border:none;background:#f5f4f1;cursor:pointer;font-family:inherit;text-decoration:none;color:var(--text);min-height:78px;transition:background .1s,transform .1s}
 .gbtn:active{background:#ece9e5;transform:scale(.97)}
-.gbtn i[data-lucide]{width:22px;height:22px;color:var(--dim)}
+.gbtn [data-lucide]{width:22px;height:22px;color:var(--dim)}
 .gbtn .gtxt{font-size:12px;font-weight:700;color:#333}
 
 /* ── 리스트 로우 ── */
@@ -64,12 +64,12 @@ i[data-lucide]{display:inline-block;vertical-align:middle}
 .row:last-child{border-bottom:none}
 .row:active{background:#f8f8f6}
 .row-icon{width:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--dim)}
-.row-icon i[data-lucide]{width:20px;height:20px}
+.row-icon [data-lucide]{width:20px;height:20px}
 .row-body{flex:1;min-width:0}
 .row-title{font-size:15px;font-weight:600}
 .row-sub{font-size:11px;color:var(--sub);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row-arr{color:#ccc;display:flex;align-items:center;flex-shrink:0}
-.row-arr i[data-lucide]{width:16px;height:16px}
+.row-arr [data-lucide]{width:16px;height:16px}
 
 /* ── 할일 ── */
 .todo-inp-row{display:flex;gap:8px;padding:14px 20px 10px}
@@ -77,7 +77,7 @@ i[data-lucide]{display:inline-block;vertical-align:middle}
 .todo-inp-row input:focus{border-color:#1a1a1a}
 .todo-inp-row select{border:1.5px solid var(--border);border-radius:10px;padding:10px 8px;font-size:12px;background:var(--card);outline:none;color:var(--dim)}
 .add-btn{border:none;border-radius:10px;padding:11px 16px;background:#1a1a1a;color:#fff;font-size:18px;font-weight:700;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
-.add-btn i[data-lucide]{width:18px;height:18px}
+.add-btn [data-lucide]{width:18px;height:18px}
 .todo-item{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--border);font-size:14px}
 .todo-item:last-child{border-bottom:none}
 .todo-item input[type=checkbox]{width:18px;height:18px;accent-color:#1a1a1a;flex-shrink:0;cursor:pointer}
@@ -85,7 +85,7 @@ i[data-lucide]{display:inline-block;vertical-align:middle}
 .tt{flex:1;line-height:1.4}
 .ttag{font-size:10px;padding:2px 7px;border-radius:8px;flex-shrink:0;background:#f0ece8;color:#999;font-weight:600}
 .xbtn{background:none;border:none;color:#ddd;cursor:pointer;padding:0;display:flex;align-items:center}
-.xbtn i[data-lucide]{width:14px;height:14px}
+.xbtn [data-lucide]{width:14px;height:14px}
 
 /* ── 이슈 ── */
 .issue-item{padding:13px 20px;border-bottom:1px solid var(--border);border-left:3px solid var(--border)}
@@ -102,7 +102,7 @@ i[data-lucide]{display:inline-block;vertical-align:middle}
 /* ── 캘린더 ── */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 8px}
 .cal-m{font-size:15px;font-weight:700}
-.cal-nbtn{background:none;border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:14px;cursor:pointer}
+.cal-nbtn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:14px;cursor:pointer;display:flex;align-items:center;color:var(--dim)}.cal-nbtn [data-lucide]{width:16px;height:16px}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:0 12px 8px;gap:2px}
 .cal-dow{font-size:9px;color:var(--sub);text-align:center;padding:3px 0;font-weight:600}
 .cal-day{font-size:12px;text-align:center;padding:7px 2px;border-radius:8px;position:relative}
@@ -150,7 +150,7 @@ i[data-lucide]{display:inline-block;vertical-align:middle}
 .mention-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border)}
 .mention-row:last-child{border-bottom:none}
 .mention-icon{width:28px;display:flex;align-items:center;justify-content:center;color:var(--dim);flex-shrink:0}
-.mention-icon i[data-lucide]{width:18px;height:18px}
+.mention-icon [data-lucide]{width:18px;height:18px}
 .mention-body .mtitle{font-size:13px;font-weight:600;margin-bottom:3px}
 .mention-body .msub{font-size:12px;color:var(--dim);line-height:1.5}
 
@@ -244,9 +244,9 @@ textarea.finp{min-height:120px;resize:vertical}
   <div class="sec"><div class="sec-lbl">캘린더</div></div>
   <div class="card" style="margin:0 20px 16px">
     <div class="cal-nav">
-      <button class="cal-nbtn" onclick="changeMonth(-1)">‹</button>
+      <button class="cal-nbtn" onclick="changeMonth(-1)"><i data-lucide="chevron-left"></i></button>
       <span class="cal-m" id="cal-title"></span>
-      <button class="cal-nbtn" onclick="changeMonth(1)">›</button>
+      <button class="cal-nbtn" onclick="changeMonth(1)"><i data-lucide="chevron-right"></i></button>
     </div>
     <div class="cal-grid">
       <div class="cal-dow">일</div><div class="cal-dow">월</div><div class="cal-dow">화</div><div class="cal-dow">수</div><div class="cal-dow">목</div><div class="cal-dow">금</div><div class="cal-dow">토</div>
