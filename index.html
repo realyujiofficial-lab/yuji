@@ -6,7 +6,7 @@
 <title>유지현 OS</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--bg:#f7f7f5;--card:#fff;--border:#e8e8e6;--text:#1a1a1a;--sub:#999;--accent:#2563eb;--red:#ef4444;--green:#22c55e;--yellow:#f59e0b;--purple:#7c3aed;--pink:#ec4899}
+:root{--bg:#f2f2ef;--card:#ffffff;--border:#ebebeb;--text:#1a1a1a;--sub:#aaa;--accent:#FF6B35;--red:#e53e3e;--green:#38a169;--yellow:#d97706;--purple:#805ad5;--pink:#FF6B35}
 html,body{height:100%;overflow:hidden}
 body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative}
 
@@ -16,58 +16,59 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;back
 .page.active{display:block}
 
 /* ── 헤더 ── */
-.hdr{padding:16px 16px 10px;background:var(--bg);position:sticky;top:0;z-index:10}
-.hdr-greeting{font-size:17px;font-weight:700;line-height:1.3;margin-bottom:2px}
+.hdr{padding:20px 20px 12px;background:var(--bg);position:sticky;top:0;z-index:10}
+.hdr-greeting{font-size:18px;font-weight:800;line-height:1.3;margin-bottom:2px;color:#1a1a1a}
 .hdr-date{font-size:11px;color:var(--sub)}
 .hdr-sub{font-size:12px;color:var(--sub);margin-top:4px}
 .back-row{display:flex;align-items:center;gap:8px;margin-bottom:2px}
 .back-btn{background:none;border:none;font-size:20px;color:var(--accent);cursor:pointer;padding:0;line-height:1}
 
 /* ── 하단 네비 ── */
-.gnb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);z-index:100}
-.gnb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0 10px;border:none;background:none;cursor:pointer;border-top:2px solid transparent;transition:.1s}
-.gnb-btn .gi{font-size:24px;line-height:1}
+.gnb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.gnb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0 12px;border:none;background:none;cursor:pointer;border-top:2px solid transparent;transition:.1s}
+.gnb-btn .gi{font-size:22px;line-height:1}
 .gnb-btn.active{border-top-color:var(--accent)}
-.gnb-btn.active .gi{filter:saturate(2)}
+.gnb-btn.active .gi{filter:none}
 
 /* ── 카드 ── */
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:12px}
-.px{padding:0 16px}
-.py{padding:16px 0}
+.card{background:var(--card);border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 1px 6px rgba(0,0,0,.05)}
+.px{padding:0 20px}
+.py{padding:20px 0}
 .p{padding:16px}
-.sec{padding:0 16px;margin-bottom:4px}
-.sec-lbl{font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.sec{padding:0 20px;margin-bottom:6px}
+.sec-lbl{font-size:11px;font-weight:700;color:#bbb;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
 
 /* ── 그리드 버튼 ── */
 .btn-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px}
 .btn-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:16px}
-.gbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:14px 8px;border-radius:12px;border:1px solid var(--border);background:#fafaf9;cursor:pointer;font-family:inherit;text-decoration:none;color:var(--text);min-height:72px;-webkit-tap-highlight-color:transparent}
-.gbtn:active{background:#f0f0ee}
-.gbtn .gicon{font-size:26px;line-height:1}
-.gbtn .gtxt{font-size:12px;font-weight:600;color:var(--text)}
+.gbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 8px;border-radius:14px;border:none;background:#f9f9f7;cursor:pointer;font-family:inherit;text-decoration:none;color:var(--text);min-height:76px;-webkit-tap-highlight-color:transparent;transition:.1s}
+.gbtn:active{background:#efefec;transform:scale(.97)}
+.gbtn .gicon{font-size:24px;line-height:1}
+.gbtn .gtxt{font-size:12px;font-weight:600;color:#333}
 .gbtn .gsub{font-size:10px;color:var(--sub)}
 
 /* ── 리스트 로우 ── */
-.row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none;color:inherit}
+.row{display:flex;align-items:center;gap:14px;padding:15px 20px;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none;color:inherit}
 .row:last-child{border-bottom:none}
-.row:active{background:#f5f5f3}
+.row:active{background:#f8f8f6}
 .row-icon{font-size:20px;width:28px;text-align:center;flex-shrink:0}
 .row-body{flex:1;min-width:0}
-.row-title{font-size:14px;font-weight:600}
-.row-sub{font-size:11px;color:var(--sub);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-title{font-size:15px;font-weight:600;color:#1a1a1a}
+.row-sub{font-size:11px;color:var(--sub);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row-arr{color:#ccc;font-size:18px;flex-shrink:0}
 
 /* ── 통계 칩 ── */
-.stat-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 16px 4px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center}
-.stat-n{font-size:20px;font-weight:700}
-.stat-l{font-size:9px;color:var(--sub);margin-top:1px}
+.stat-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 20px 12px}
+.stat{background:var(--card);border-radius:12px;padding:12px 6px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.stat-n{font-size:20px;font-weight:800;color:#1a1a1a}
+.stat-l{font-size:9px;color:var(--sub);margin-top:2px;letter-spacing:.02em}
 
 /* ── 할일 ── */
 .todo-wrap{padding:0 16px 12px}
 .todo-inp-row{display:flex;gap:8px;margin-bottom:8px}
-.todo-inp-row input{flex:1;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;outline:none;font-family:inherit;background:var(--card)}
-.todo-inp-row select{border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;background:var(--card);outline:none}
+.todo-inp-row input{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:inherit;background:var(--card)}
+.todo-inp-row input:focus{border-color:#1a1a1a}
+.todo-inp-row select{border:1.5px solid var(--border);border-radius:10px;padding:10px;font-size:12px;background:var(--card);outline:none}
 .add-btn{border:none;border-radius:10px;padding:10px 16px;background:var(--accent);color:#fff;font-size:18px;font-weight:700;cursor:pointer;flex-shrink:0}
 .todo-list{}
 .todo-item{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);font-size:13px}
@@ -76,18 +77,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;back
 .todo-item.done .tt{text-decoration:line-through;color:#bbb}
 .tt{flex:1;line-height:1.4}
 .ttag{font-size:10px;padding:2px 6px;border-radius:8px;flex-shrink:0}
-.ttag-사업{background:#eff6ff;color:#2563eb}
-.ttag-테이스트트립{background:#fff7ed;color:#c2410c}
-.ttag-카톡방{background:#fdf4ff;color:var(--purple)}
-.ttag-개인{background:#f0fdf4;color:#15803d}
+.ttag-사업{background:#f5f0eb;color:#888}
+.ttag-테이스트트립{background:#f5f0eb;color:#888}
+.ttag-카톡방{background:#f5f0eb;color:#888}
+.ttag-개인{background:#f5f0eb;color:#888}
 .xbtn{background:none;border:none;color:#ddd;font-size:15px;cursor:pointer;padding:0 2px;flex-shrink:0}
 
 /* ── 이슈 ── */
 .issue-item{padding:11px 16px;border-bottom:1px solid var(--border);border-left:3px solid var(--border)}
 .issue-item:last-child{border-bottom:none}
-.issue-item.high{border-left-color:var(--red);background:#fff9f9}
-.issue-item.mid{border-left-color:var(--yellow);background:#fffdf0}
-.issue-item.low{border-left-color:var(--green)}
+.issue-item.high{border-left-color:#e53e3e;background:#fff8f8}
+.issue-item.mid{border-left-color:#d4a853;background:#fffdf5}
+.issue-item.low{border-left-color:#aaa}
 .issue-txt{font-size:13px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .issue-meta{font-size:10px;color:var(--sub);margin-top:3px}
 .inp-row{display:flex;gap:8px;padding:12px 16px}
@@ -101,7 +102,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;back
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 8px;gap:2px}
 .cal-dow{font-size:9px;color:var(--sub);text-align:center;padding:3px 0}
 .cal-day{font-size:12px;text-align:center;padding:6px 2px;border-radius:6px;position:relative}
-.cal-day.today{background:var(--accent);color:#fff;font-weight:700}
+.cal-day.today{background:#1a1a1a;color:#fff;font-weight:800}
 .cal-day.other{color:#ccc}
 .cal-dot{width:4px;height:4px;background:var(--purple);border-radius:50%;position:absolute;bottom:1px;left:50%;transform:translateX(-50%)}
 .sch-add{display:flex;gap:8px;padding:10px 16px;border-top:1px solid var(--border)}
@@ -113,19 +114,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;back
 /* ── 오카방 탭 ── */
 .tabs{display:flex;gap:6px;padding:12px 16px 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .tabs::-webkit-scrollbar{display:none}
-.tab{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--card);white-space:nowrap;cursor:pointer;color:var(--sub);flex-shrink:0}
-.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tab{padding:8px 16px;border-radius:20px;font-size:12px;font-weight:600;border:none;background:#ebebeb;white-space:nowrap;cursor:pointer;color:#888;flex-shrink:0;transition:.1s}
+.tab.active{background:#1a1a1a;color:#fff}
 .tc{display:none;padding:12px 16px}
 .tc.active{display:block}
 .dashboard-frame{width:100%;border:none;border-radius:12px;background:var(--card);display:block}
 
 /* ── 공지/이슈/이벤트 콘텐츠 ── */
-.notice-box{background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:14px;margin-bottom:10px;font-size:13px;line-height:1.8}
-.notice-box h4{font-weight:700;margin-bottom:6px}
+.notice-box{background:#fdf8f4;border:1px solid #ebe0d6;border-radius:14px;padding:16px;margin-bottom:10px;font-size:13px;line-height:1.8}
+.notice-box h4{font-weight:700;margin-bottom:6px;color:#1a1a1a}
 .copy-btn{width:100%;margin-top:8px;border:none;border-radius:8px;padding:10px;background:#f3f4f6;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
 .copy-btn:active{background:#e5e7eb}
 .chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.chip{display:inline-block;background:#eff6ff;color:var(--accent);border-radius:8px;padding:3px 9px;font-size:11px;font-weight:600}
+.chip{display:inline-block;background:#f0ece8;color:#666;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600}
 .md-ul{padding-left:18px;margin:6px 0 10px}
 .md-ul li{font-size:13px;line-height:1.6;margin-bottom:3px}
 .ev-item{padding:12px 0;border-bottom:1px solid var(--border)}
@@ -135,22 +136,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;back
 .iss-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
 .iss-row:last-child{border-bottom:none}
 .sev{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:700;flex-shrink:0}
-.sev-high{background:#fee2e2;color:#b91c1c}
-.sev-mid{background:#fef9c3;color:#854d0e}
-.sev-low{background:#dcfce7;color:#166534}
+.sev-high{background:#f5e8e8;color:#c0392b}
+.sev-mid{background:#f5f0e0;color:#8b6914}
+.sev-low{background:#eaeaea;color:#777}
 .iss-name{font-size:12px;flex:1;line-height:1.4}
 .iss-st{font-size:10px;color:var(--sub);flex-shrink:0}
 .sitbar{font-size:12px;color:var(--sub);background:#f0fdf4;border-left:3px solid var(--green);padding:10px 12px;border-radius:0 8px 8px 0;margin-bottom:10px}
 
 /* ── 입력 폼 ── */
 .form-wrap{padding:0 16px}
-.finp{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:inherit;background:var(--card);display:block;margin-bottom:10px}
-.finp:focus{border-color:var(--accent)}
+.finp{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:12px 15px;font-size:14px;outline:none;font-family:inherit;background:var(--card);display:block;margin-bottom:10px}
+.finp:focus{border-color:#1a1a1a}
 .finp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
 .finp-grid .finp{margin-bottom:0}
 .fsel{border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:13px;background:var(--card);outline:none;width:100%;margin-bottom:10px;font-family:inherit}
-.submit-btn{width:100%;border:none;border-radius:12px;padding:14px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px}
-.submit-btn:active{background:#1d4ed8}
+.submit-btn{width:100%;border:none;border-radius:14px;padding:15px;background:#1a1a1a;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;transition:.1s}
+.submit-btn:active{background:#333;transform:scale(.98)}
 textarea.finp{min-height:120px;resize:vertical}
 
 /* ── 교통사고 ── */
@@ -208,7 +209,7 @@ textarea.finp{min-height:120px;resize:vertical}
   <div class="stat-bar" id="main-stats"></div>
 
   <div class="sec" style="margin-top:12px"><div class="sec-lbl">📋 할일</div></div>
-  <div class="card" style="margin:0 16px 12px">
+  <div class="card" style="margin:0 20px 12px">
     <div class="todo-inp-row" style="padding:12px 16px 0">
       <input id="main-todo-inp" type="text" placeholder="새 할일..." onkeydown="if(event.key==='Enter')addTodo()">
       <select id="main-todo-tag">
@@ -223,7 +224,7 @@ textarea.finp{min-height:120px;resize:vertical}
   </div>
 
   <div class="sec"><div class="sec-lbl">⚠️ 이슈</div></div>
-  <div class="card" style="margin:0 16px 12px">
+  <div class="card" style="margin:0 20px 12px">
     <div class="inp-row">
       <input id="issue-inp" type="text" placeholder="이슈 내용..." onkeydown="if(event.key==='Enter')addIssue()">
       <select id="issue-lv"><option value="high">긴급</option><option value="mid">보통</option><option value="low">낮음</option></select>
@@ -234,7 +235,7 @@ textarea.finp{min-height:120px;resize:vertical}
   </div>
 
   <div class="sec"><div class="sec-lbl">📅 캘린더</div></div>
-  <div class="card" style="margin:0 16px 16px">
+  <div class="card" style="margin:0 20px 16px">
     <div class="cal-nav">
       <button class="cal-nbtn" onclick="changeMonth(-1)">‹</button>
       <span class="cal-m" id="cal-title"></span>
@@ -261,7 +262,7 @@ textarea.finp{min-height:120px;resize:vertical}
   </div>
 
   <div class="sec" style="margin-top:8px"><div class="sec-lbl">🌱 놀생</div></div>
-  <div class="card" style="margin:0 16px 14px">
+  <div class="card" style="margin:0 20px 14px">
     <div class="btn-grid-2">
       <a class="gbtn" href="https://litt.ly/nol_life.official" target="_blank">
         <span class="gicon">🌿</span><span class="gtxt">리틀리</span>
@@ -273,7 +274,7 @@ textarea.finp{min-height:120px;resize:vertical}
   </div>
 
   <div class="sec"><div class="sec-lbl">✈️ 테이스트트립</div></div>
-  <div class="card" style="margin:0 16px 4px">
+  <div class="card" style="margin:0 20px 4px">
     <div class="btn-grid-3">
       <a class="gbtn" href="https://litt.ly/spotontaste_tastetrip.official" target="_blank">
         <span class="gicon">🔗</span><span class="gtxt">리틀리</span>
@@ -286,7 +287,7 @@ textarea.finp{min-height:120px;resize:vertical}
       </a>
     </div>
   </div>
-  <div class="card" style="margin:0 16px 16px">
+  <div class="card" style="margin:0 20px 16px">
     <div class="row" onclick="goSub('tt-docs')"><span class="row-icon">📄</span><div class="row-body"><div class="row-title">개발 문서</div></div><span class="row-arr">›</span></div>
     <div class="row" onclick="goSub('tt-sns')"><span class="row-icon">📢</span><div class="row-body"><div class="row-title">SNS / 마케팅</div></div><span class="row-arr">›</span></div>
     <div class="row" onclick="goSub('tt-govt')"><span class="row-icon">🏛</span><div class="row-body"><div class="row-title">정부지원</div></div><span class="row-arr">›</span></div>
@@ -421,7 +422,7 @@ textarea.finp{min-height:120px;resize:vertical}
   </div>
 
   <div class="sec" style="margin-top:8px"><div class="sec-lbl">🏥 교통사고</div></div>
-  <div class="card" style="margin:0 16px 14px">
+  <div class="card" style="margin:0 20px 14px">
     <div class="row" onclick="goSub('acc')">
       <span class="row-icon">📋</span>
       <div class="row-body"><div class="row-title">기록 목록</div><div class="row-sub" id="acc-sub">기록 없음</div></div>
@@ -430,7 +431,7 @@ textarea.finp{min-height:120px;resize:vertical}
   </div>
 
   <div class="sec"><div class="sec-lbl">👥 인맥</div></div>
-  <div class="card" style="margin:0 16px 14px">
+  <div class="card" style="margin:0 20px 14px">
     <div class="row" onclick="goSub('network')">
       <span class="row-icon">👤</span>
       <div class="row-body"><div class="row-title">인맥 목록</div><div class="row-sub" id="net-sub">기록 없음</div></div>
@@ -439,7 +440,7 @@ textarea.finp{min-height:120px;resize:vertical}
   </div>
 
   <div class="sec"><div class="sec-lbl">💼 FNB마케터</div></div>
-  <div class="card" style="margin:0 16px 16px">
+  <div class="card" style="margin:0 20px 16px">
     <div class="btn-grid-3">
       <button class="gbtn" onclick="goSub('resume')"><span class="gicon">📄</span><span class="gtxt">이력서</span></button>
       <button class="gbtn" onclick="goSub('cover')"><span class="gicon">✍️</span><span class="gtxt">자소서</span></button>
@@ -622,7 +623,7 @@ function subAcc(){
   const total=arr.reduce((s,a)=>s+(Number(a.amount)||0),0);
   const statbar=arr.length?`<div style="display:flex;gap:10px;padding:0 16px 12px"><div class="stat" style="flex:1"><div class="stat-n">${arr.length}</div><div class="stat-l">총 방문</div></div><div class="stat" style="flex:2"><div class="stat-n" style="font-size:15px">${total.toLocaleString()}원</div><div class="stat-l">총 진료비</div></div></div>`:'';
   const list=arr.map(a=>`<div class="acc-item"><div class="acc-top">${a.hospital} <span style="font-size:11px;color:var(--sub);font-weight:400">${a.date||''}</span></div><div class="acc-info">${[a.pain,a.purpose,a.amount?Number(a.amount).toLocaleString()+'원':''].filter(Boolean).join(' · ')}</div>${a.memo?`<div class="acc-info">${a.memo}</div>`:''}<button onclick="delAcc(${a.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:4px">삭제</button></div>`).join('');
-  return `${statbar}<div class="card" style="margin:0 16px 14px">${list||'<div class="empty">기록 없음</div>'}</div><div style="padding:0 16px"><div class="sec-lbl" style="margin-bottom:8px">+ 기록 추가</div><div class="finp-grid"><input id="a-hosp" class="finp" style="margin:0" placeholder="병원명 *"><input id="a-pain" class="finp" style="margin:0" placeholder="아픈 곳"></div><div class="finp-grid"><input id="a-purpose" class="finp" style="margin:0" placeholder="목적"><input id="a-date" type="date" class="finp" style="margin:0"></div><div class="finp-grid"><input id="a-amount" type="number" class="finp" style="margin:0" placeholder="금액(원)"><input id="a-memo" class="finp" style="margin:0" placeholder="메모"></div><button id="acc-save" class="submit-btn">저장</button></div>`;
+  return `${statbar}<div class="card" style="margin:0 20px 14px">${list||'<div class="empty">기록 없음</div>'}</div><div style="padding:0 16px"><div class="sec-lbl" style="margin-bottom:8px">+ 기록 추가</div><div class="finp-grid"><input id="a-hosp" class="finp" style="margin:0" placeholder="병원명 *"><input id="a-pain" class="finp" style="margin:0" placeholder="아픈 곳"></div><div class="finp-grid"><input id="a-purpose" class="finp" style="margin:0" placeholder="목적"><input id="a-date" type="date" class="finp" style="margin:0"></div><div class="finp-grid"><input id="a-amount" type="number" class="finp" style="margin:0" placeholder="금액(원)"><input id="a-memo" class="finp" style="margin:0" placeholder="메모"></div><button id="acc-save" class="submit-btn">저장</button></div>`;
 }
 function subNetwork(){
   return `<div class="form-wrap" style="margin-top:4px"><input id="net-search" class="finp" placeholder="🔍 검색..."><div class="card" style="margin-bottom:12px"><div id="net-list"></div></div><div class="sec-lbl" style="margin-bottom:8px">+ 인맥 추가</div><div class="finp-grid"><input id="n-name" class="finp" style="margin:0" placeholder="이름 *"><input id="n-rel" class="finp" style="margin:0" placeholder="관계"></div><div class="finp-grid"><input id="n-org" class="finp" style="margin:0" placeholder="소속/회사"><input id="n-contact" class="finp" style="margin:0" placeholder="연락처"></div><input id="n-memo" class="finp" placeholder="메모"><button id="net-save" class="submit-btn">추가</button></div>`;
