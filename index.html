@@ -412,6 +412,12 @@ textarea.finp{min-height:120px;resize:vertical}
       <div class="dblock-title">방 상태</div>
       <div class="dstatus" id="status-text">분석 중...</div>
     </div>
+    <div class="dblock" id="today-log-block" style="display:none">
+      <div class="dblock-title">최신 일지</div>
+      <div id="today-log-date" style="font-size:11px;color:var(--sub);margin-bottom:8px"></div>
+      <div id="today-topics" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+      <div id="today-ops" style="font-size:13px;color:var(--dim);line-height:1.6"></div>
+    </div>
     <div class="dblock">
       <div class="dblock-title">최근 14일</div>
       <div class="chart-wrap"><canvas id="dash-chart"></canvas></div>
@@ -1170,6 +1176,19 @@ async function loadDash(){
     avg>=50&&msgs>=20?`양호 — 일평균 ${avg}개, 오늘 ${msgs}개`
     :avg>=20||msgs>=10?`주의 — 일평균 ${avg}개. 이탈 위험 ${risk}명`
     :`개입 필요 — 일평균 ${avg}개 저조. 이탈 위험 ${risk}명`;
+
+  // 최신 일지 (topics, ops_note, issue_flag)
+  const logBlock=document.getElementById('today-log-block');
+  if(today&&(today.topics||today.ops_note||today.issue_flag)){
+    logBlock.style.display='';
+    document.getElementById('today-log-date').textContent=latest;
+    const topicsEl=document.getElementById('today-topics');
+    topicsEl.innerHTML=(today.topics||[]).map(t=>`<span style="background:#f5f5f5;border-radius:8px;padding:3px 10px;font-size:12px;font-weight:600;color:#555">${t}</span>`).join('');
+    const parts=[];
+    if(today.issue_flag)parts.push(`<span style="color:var(--accent);font-weight:700">[${today.issue_flag}]</span>`);
+    if(today.ops_note)parts.push(today.ops_note);
+    document.getElementById('today-ops').innerHTML=parts.join(' ');
+  }else{logBlock.style.display='none';}
   const l14=dates.slice(-14);
   new Chart(document.getElementById('dash-chart'),{
     type:'bar',
