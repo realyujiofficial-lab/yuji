@@ -212,8 +212,8 @@ textarea.finp{min-height:120px;resize:vertical}
 .msg-actions{display:flex;gap:6px;margin-left:auto}
 .msg-copy{border:none;border-radius:8px;padding:5px 10px;background:#f0ece8;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;color:#555}
 .msg-toggle{border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
-.msg-toggle.unused{background:#e8f5e9;color:#2e7d32}
-.msg-toggle.used{background:#f3f4f6;color:#888}
+.msg-toggle.unused{background:#f0ece8;color:#999}
+.msg-toggle.used{background:#e8f5e9;color:#2e7d32}
 .msg-body{font-size:13px;line-height:1.7;color:var(--text)}
 
 /* ── 이슈 히스토리 ── */
@@ -222,7 +222,6 @@ textarea.finp{min-height:120px;resize:vertical}
 .iss-hist-head{display:flex;align-items:center;gap:8px;cursor:pointer}
 .iss-hist-date{font-size:10px;color:var(--sub);flex-shrink:0;min-width:52px}
 .iss-hist-title{font-size:13px;font-weight:600;flex:1}
-.iss-hist-arr{font-size:11px;color:#ccc;transition:transform .2s}
 .iss-hist-arr.open{transform:rotate(180deg)}
 .iss-detail{display:none;margin-top:8px;font-size:12px;color:var(--dim);line-height:1.7;background:#f8f8f6;border-radius:10px;padding:10px 12px}
 .iss-detail.open{display:block}
@@ -233,7 +232,6 @@ textarea.finp{min-height:120px;resize:vertical}
 .notice-hist-head{display:flex;align-items:center;gap:8px;cursor:pointer}
 .notice-hist-date{font-size:10px;color:var(--sub);flex-shrink:0;min-width:58px}
 .notice-hist-title{font-size:13px;font-weight:600;flex:1}
-.notice-hist-arr{font-size:11px;color:#ccc;transition:transform .2s}
 .notice-hist-arr.open{transform:rotate(180deg)}
 .notice-detail{display:none;margin-top:8px;font-size:12px;color:var(--dim);line-height:1.7;background:#f8f8f6;border-radius:10px;padding:10px 12px}
 .notice-detail.open{display:block}
@@ -250,10 +248,10 @@ textarea.finp{min-height:120px;resize:vertical}
 .ev-card-title{font-size:13px;font-weight:700;flex:1}
 
 /* ── 프롬프트 카드 ── */
-.prompt-card{background:#f0f4ff;border:1px solid #c7d7fc;border-radius:14px;padding:14px;margin-bottom:12px}
-.prompt-card-title{font-size:12px;font-weight:800;color:#3b5bdb;margin-bottom:8px}
-.prompt-card-body{font-size:12px;color:#333;line-height:1.7;white-space:pre-wrap}
-.prompt-copy{width:100%;margin-top:10px;border:none;border-radius:10px;padding:10px;background:#dbe4ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;color:#3b5bdb}
+.prompt-card{background:#fdf8f4;border:1px solid #ece0d4;border-radius:14px;padding:14px;margin-bottom:12px}
+.prompt-card-title{font-size:12px;font-weight:800;color:var(--accent);margin-bottom:8px}
+.prompt-card-body{font-size:12px;color:#555;line-height:1.7;white-space:pre-wrap}
+.prompt-copy{width:100%;margin-top:10px;border:none;border-radius:10px;padding:10px;background:#f0ece8;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;color:#555}
 
 /* ── 체크리스트 ── */
 .chk-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
@@ -638,12 +636,12 @@ const MSG_BANK=[
 
 // ── 이벤트 계획 데이터 ──
 const EVENT_PLANS=[
-  {status:'soon',label:'즉시',title:'계절 커버사진 교체 (봄→여름)',desc:'6월 1일 Canva로 교체. 방 이름 + "진짜 경험을 나누는 사람들" 슬로건.'},
-  {status:'soon',label:'즉시',title:'지역 현지인 릴레이 첫 회',desc:'이번 주 시작. 지역 지목 후 현지 멤버 @태그로 릴레이 요청.'},
-  {status:'soon',label:'이번 달',title:'핵심 기여자 감사 멘트',desc:'5월 말. 정보 많이 공유한 멤버 3~5명 이름 + "덕분에 방이 살아있습니다" 공지.'},
-  {status:'soon',label:'다음 달',title:'주간 뉴스 공지 시범 운영',desc:'6월 시작. 유튜브/트위터 맛집·여행 뉴스 3~5개 + 카카오방 공유 문구.'},
-  {status:'soon',label:'분기',title:'소규모 번개 모임',desc:'7~8월 당일치기. 설문에서 6명 희망 확인. 카카오폼 모집.'},
-  {status:'soon',label:'분기',title:'비활성 멤버 정리',desc:'9월. @태그 금지, 공지로만. 6개월 이상 발언 없는 멤버 대상.'},
+  {cls:'ev-soon',label:'즉시',title:'계절 커버사진 교체 (봄→여름)',desc:'6월 1일 Canva로 교체. 방 이름 + "진짜 경험을 나누는 사람들" 슬로건.'},
+  {cls:'ev-soon',label:'즉시',title:'지역 현지인 릴레이 첫 회',desc:'이번 주 시작. 지역 지목 후 현지 멤버 @태그로 릴레이 요청.'},
+  {cls:'ev-now',label:'이번 달',title:'핵심 기여자 감사 멘트',desc:'5월 말. 정보 많이 공유한 멤버 3~5명 이름 + "덕분에 방이 살아있습니다" 공지.'},
+  {cls:'ev-now',label:'이번 달',title:'주간 뉴스 공지 시범 운영',desc:'6월 시작. 유튜브/트위터 맛집·여행 뉴스 3~5개 + 카카오방 공유 문구.'},
+  {cls:'ev-done',label:'분기',title:'소규모 번개 모임',desc:'7~8월 당일치기. 설문에서 6명 희망 확인. 카카오폼 모집.'},
+  {cls:'ev-done',label:'분기',title:'비활성 멤버 정리',desc:'9월. @태그 금지, 공지로만. 6개월 이상 발언 없는 멤버 대상.'},
 ];
 
 // ── 이벤트 아이디어 데이터 ──
@@ -666,7 +664,7 @@ function renderNoticeHist(){
       <div class="notice-hist-head" onclick="toggleNoticeHist(${n.id})">
         <span class="notice-hist-date">${n.date}</span>
         <span class="notice-hist-title">${n.title}</span>
-        <span class="notice-hist-arr" id="nharr-${n.id}">▼</span>
+        <i data-lucide="chevron-down" id="nharr-${n.id}" style="width:14px;height:14px;color:#ccc;transition:transform .2s;flex-shrink:0"></i>
       </div>
       <div class="notice-detail" id="nhdet-${n.id}">${n.detail}</div>
     </div>
@@ -676,7 +674,7 @@ function toggleNoticeHist(id){
   const det=document.getElementById('nhdet-'+id),arr=document.getElementById('nharr-'+id);
   if(!det)return;
   const open=det.classList.toggle('open');
-  if(arr)arr.classList.toggle('open',open);
+  if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';
 }
 
 // ── 이슈 히스토리 렌더링 ──
@@ -691,7 +689,7 @@ function renderIssueHist(){
         <span class="sev ${sevMap[i.sev]}">${sevLbl[i.sev]}</span>
         <span class="iss-hist-title">${i.title}</span>
         <span style="font-size:10px;color:var(--sub);flex-shrink:0">${i.status}</span>
-        <span class="iss-hist-arr" id="iharr-${i.id}">▼</span>
+        <i data-lucide="chevron-down" id="iharr-${i.id}" style="width:14px;height:14px;color:#ccc;transition:transform .2s;flex-shrink:0"></i>
       </div>
       <div class="iss-detail" id="ihdet-${i.id}">${i.detail}</div>
     </div>
@@ -701,7 +699,7 @@ function toggleIssueHist(id){
   const det=document.getElementById('ihdet-'+id),arr=document.getElementById('iharr-'+id);
   if(!det)return;
   const open=det.classList.toggle('open');
-  if(arr)arr.classList.toggle('open',open);
+  if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';
 }
 
 // ── 메시지 뱅크 렌더링 ──
@@ -740,7 +738,7 @@ function renderEventPlan(){
   el.innerHTML=EVENT_PLANS.map(e=>`
     <div class="ev-card">
       <div class="ev-card-head">
-        <span class="ev-badge ev-soon">${e.label}</span>
+        <span class="ev-badge ${e.cls}">${e.label}</span>
         <span class="ev-card-title">${e.title}</span>
       </div>
       <div style="font-size:12px;color:var(--dim);line-height:1.6">${e.desc}</div>
