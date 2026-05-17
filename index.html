@@ -143,9 +143,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;back
 .iss-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
 .iss-row:last-child{border-bottom:none}
 .sev{font-size:10px;padding:3px 8px;border-radius:8px;font-weight:700;flex-shrink:0}
-.sev-high{background:#f5e8e8;color:#c0392b}
-.sev-mid{background:#f7f0e0;color:#8b6914}
-.sev-low{background:#eaeaea;color:#777}
+.sev-high{background:#fff0eb;color:var(--accent)}
+.sev-mid{background:#f0ece8;color:#888}
+.sev-low{background:#f5f5f5;color:#bbb}
 .iss-name{font-size:12px;flex:1;line-height:1.4}
 .iss-st{font-size:10px;color:var(--sub);flex-shrink:0}
 .sitbar{font-size:12px;color:#666;background:#f5f0eb;border-left:3px solid var(--accent);padding:10px 14px;border-radius:12px;margin-bottom:12px;line-height:1.5}
@@ -183,10 +183,10 @@ textarea.finp{min-height:120px;resize:vertical}
 .govt-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .govt-name{font-size:13px;font-weight:600;flex:1}
 .govt-st{font-size:10px;padding:2px 8px;border-radius:8px;font-weight:700;flex-shrink:0}
-.g관심{background:#eff6ff;color:#2563eb}
-.g준비중{background:#fff7ed;color:#c2410c}
-.g제출{background:#f0fdf4;color:#15803d}
-.g완료{background:#f3f4f6;color:#6b7280}
+.g관심{background:#f0ece8;color:#aaa}
+.g준비중{background:#fff0eb;color:var(--accent)}
+.g제출{background:#1a1a1a;color:#fff}
+.g완료{background:#f0ece8;color:#bbb}
 .govt-dl{font-size:11px;color:var(--sub);margin-top:3px}
 .sns-item{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .sns-item:last-child{border-bottom:none}
@@ -212,8 +212,8 @@ textarea.finp{min-height:120px;resize:vertical}
 .msg-actions{display:flex;gap:6px;margin-left:auto}
 .msg-copy{border:none;border-radius:8px;padding:5px 10px;background:#f0ece8;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;color:#555}
 .msg-toggle{border:none;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
-.msg-toggle.unused{background:#f0ece8;color:#999}
-.msg-toggle.used{background:#e8f5e9;color:#2e7d32}
+.msg-toggle.unused{background:#f0ece8;color:#bbb}
+.msg-toggle.used{background:#1a1a1a;color:#fff}
 .msg-body{font-size:13px;line-height:1.7;color:var(--text)}
 
 /* ── 이슈 히스토리 ── */
@@ -237,10 +237,10 @@ textarea.finp{min-height:120px;resize:vertical}
 .notice-detail.open{display:block}
 
 /* ── 이벤트 상태 배지 ── */
-.ev-badge{font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;flex-shrink:0}
-.ev-soon{background:#fff7ed;color:#c2410c}
-.ev-now{background:#dcfce7;color:#166534}
-.ev-done{background:#f3f4f6;color:#888}
+.ev-badge{font-size:10px;padding:2px 7px;border-radius:6px;font-weight:700;flex-shrink:0;background:#f0ece8;color:#888}
+.ev-soon{color:var(--accent)}
+.ev-now{color:#555}
+.ev-done{color:#bbb}
 
 /* ── 이벤트 카드 ── */
 .ev-card{background:#fafaf8;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
