@@ -6,7 +6,6 @@
 <title>유지현 OS</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
-<script src="https://cdn.jsdelivr.net/npm/lucide@0.263.1/dist/umd/lucide.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--bg:#f5f5f5;--card:#ffffff;--border:#e8e8e8;--text:#171717;--sub:#a3a3a3;--accent:#FF6B35;--dim:#525252}
@@ -19,12 +18,6 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .page.active{display:block}
 
 /* ── 아이콘 ── */
-[data-lucide]{display:inline-block;vertical-align:middle;flex-shrink:0}
-.icon-sm [data-lucide]{width:16px;height:16px}
-.icon-md [data-lucide]{width:20px;height:20px}
-.icon-lg [data-lucide]{width:24px;height:24px}
-.icon-xl [data-lucide]{width:28px;height:28px}
-.back-btn [data-lucide]{width:22px;height:22px}
 
 /* ── 헤더 ── */
 .hdr{padding:24px 20px 12px;background:#fff;position:sticky;top:0;z-index:10;border-bottom:1px solid #f5f5f5}
@@ -32,15 +25,14 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .hdr-date{font-size:11px;color:var(--sub);letter-spacing:.02em}
 .hdr-todo-preview{font-size:12px;color:var(--dim);margin-top:5px;font-weight:500}
 .back-row{display:flex;align-items:center;gap:6px;margin-bottom:2px}
-.back-btn{background:none;border:none;cursor:pointer;padding:0;color:var(--text);display:flex;align-items:center}
+.back-btn{background:none;border:none;cursor:pointer;padding:0;color:var(--text);font-size:20px;display:flex;align-items:center}
 
 /* ── GNB ── */
 .gnb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #f0f0f0;display:grid;grid-template-columns:repeat(4,1fr);z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.gnb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px 4px 14px;border:none;background:none;cursor:pointer;color:#a3a3a3;transition:color .15s;width:100%}
+.gnb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:0 4px;border:none;background:none;cursor:pointer;color:#a3a3a3;transition:color .15s;width:100%;height:100%}
 .gnb-btn.active{color:var(--accent)}
-.gnb-btn [data-lucide]{width:28px;height:28px}
-.gnb-lbl{font-size:12px;font-weight:500;letter-spacing:-.01em}
-.gnb-btn.active .gnb-lbl{font-weight:700}
+.gnb-lbl{font-size:13px;font-weight:500;letter-spacing:-.02em}
+.gnb-btn.active .gnb-lbl{font-weight:800}
 
 /* ── 카드 ── */
 .card{background:var(--card);border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
@@ -57,38 +49,32 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 /* ── 그리드 버튼 ── */
 .btn-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 20px}
 .btn-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:16px 20px}
-.gbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px 8px;border-radius:14px;border:none;background:#f5f5f5;cursor:pointer;font-family:inherit;text-decoration:none;color:var(--text);min-height:78px;transition:background .1s,transform .1s}
+.gbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:18px 8px;border-radius:14px;border:none;background:#f5f5f5;cursor:pointer;font-family:inherit;text-decoration:none;color:var(--text);min-height:60px;transition:background .1s,transform .1s}
 .gbtn:active{background:#ebebeb;transform:scale(.97)}
-.gbtn [data-lucide]{width:22px;height:22px;color:#555}
-.gbtn .gtxt{font-size:12px;font-weight:700;color:#333}
+.gbtn .gtxt{font-size:13px;font-weight:700;color:#333}
 
 /* ── 리스트 로우 ── */
 .row{display:flex;align-items:center;gap:14px;padding:15px 20px;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none;color:inherit}
 .row:last-child{border-bottom:none}
 .row:active{background:#f5f5f5}
-.row-icon{width:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#333}
-.row-icon [data-lucide]{width:20px;height:20px}
 .row-body{flex:1;min-width:0}
 .row-title{font-size:15px;font-weight:600}
 .row-sub{font-size:11px;color:var(--sub);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row-arr{color:#aaa;display:flex;align-items:center;flex-shrink:0}
-.row-arr [data-lucide]{width:16px;height:16px}
 
 /* ── 할일 ── */
 .todo-inp-row{display:flex;gap:8px;padding:14px 20px 10px}
 .todo-inp-row input{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:inherit;background:var(--card)}
 .todo-inp-row input:focus{border-color:#1a1a1a}
 .todo-inp-row select{border:1.5px solid var(--border);border-radius:10px;padding:10px 8px;font-size:12px;background:var(--card);outline:none;color:var(--dim)}
-.add-btn{border:none;border-radius:10px;padding:11px 16px;background:#1a1a1a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:4px}
-.add-btn [data-lucide]{width:18px;height:18px}
+.add-btn{border:none;border-radius:10px;padding:11px 18px;background:#1a1a1a;color:#fff;font-size:18px;font-weight:400;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .todo-item{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--border);font-size:14px}
 .todo-item:last-child{border-bottom:none}
 .todo-item input[type=checkbox]{width:18px;height:18px;accent-color:#1a1a1a;flex-shrink:0;cursor:pointer}
 .todo-item.done .tt{text-decoration:line-through;color:#ccc}
 .tt{flex:1;line-height:1.4}
 .ttag{font-size:10px;padding:2px 7px;border-radius:8px;flex-shrink:0;background:#f5f5f5;color:#999;font-weight:600}
-.xbtn{background:none;border:none;color:#ddd;cursor:pointer;padding:0;display:flex;align-items:center}
-.xbtn [data-lucide]{width:14px;height:14px}
+.xbtn{background:none;border:none;color:#bbb;cursor:pointer;padding:0 2px;font-size:16px;display:flex;align-items:center}
 
 /* ── 이슈 ── */
 .issue-item{padding:13px 20px;border-bottom:1px solid var(--border);border-left:3px solid var(--border)}
@@ -106,7 +92,7 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 /* ── 캘린더 ── */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 8px}
 .cal-m{font-size:15px;font-weight:700}
-.cal-nbtn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:14px;cursor:pointer;display:flex;align-items:center;color:var(--dim)}.cal-nbtn [data-lucide]{width:16px;height:16px}
+.cal-nbtn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:18px;cursor:pointer;display:flex;align-items:center;color:var(--dim)}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:0 12px 8px;gap:2px}
 .cal-dow{font-size:9px;color:var(--sub);text-align:center;padding:3px 0;font-weight:600}
 .cal-day{font-size:12px;text-align:center;padding:7px 2px;border-radius:8px;position:relative}
@@ -122,9 +108,8 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 /* ── 탭 ── */
 .tabs{display:flex;gap:0;padding:12px 8px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid var(--border)}
 .tabs::-webkit-scrollbar{display:none}
-.tab{padding:8px 14px;font-size:13px;font-weight:500;border:none;border-bottom:2px solid transparent;background:none;white-space:nowrap;cursor:pointer;color:#a3a3a3;flex-shrink:0;margin-bottom:-1px;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:5px}
+.tab{padding:8px 14px;font-size:13px;font-weight:500;border:none;border-bottom:2px solid transparent;background:none;white-space:nowrap;cursor:pointer;color:#a3a3a3;flex-shrink:0;margin-bottom:-1px;transition:color .15s,border-color .15s}
 .tab.active{color:#1a1a1a;font-weight:700;border-bottom-color:#1a1a1a}
-.tab [data-lucide]{width:13px;height:13px;flex-shrink:0}
 .tc{display:none;padding:14px 20px}
 .tc.active{display:block}
 
@@ -299,7 +284,7 @@ textarea.finp{min-height:120px;resize:vertical}
         <option value="카톡방">카톡방</option>
         <option value="개인">개인</option>
       </select>
-      <button class="add-btn" onclick="addTodo()"><i data-lucide="plus"></i></button>
+      <button class="add-btn" onclick="addTodo()">+</button>
     </div>
     <div id="main-todo-list"></div>
   </div>
@@ -310,7 +295,7 @@ textarea.finp{min-height:120px;resize:vertical}
       <input id="issue-inp" type="text" placeholder="이슈 내용..." onkeydown="if(event.key==='Enter')addIssue()">
       <select id="issue-lv"><option value="high">긴급</option><option value="mid">보통</option><option value="low">낮음</option></select>
       <select id="issue-area"><option>테이스트트립</option><option>카톡방</option><option>놀생</option><option>개인</option></select>
-      <button class="add-btn" onclick="addIssue()"><i data-lucide="plus"></i></button>
+      <button class="add-btn" onclick="addIssue()">+</button>
     </div>
     <div id="issue-list"></div>
   </div>
@@ -318,9 +303,9 @@ textarea.finp{min-height:120px;resize:vertical}
   <div class="sec"><div class="sec-lbl">캘린더</div></div>
   <div class="card" style="margin:0 20px 16px">
     <div class="cal-nav">
-      <button class="cal-nbtn" onclick="changeMonth(-1)"><i data-lucide="chevron-left"></i></button>
+      <button class="cal-nbtn" onclick="changeMonth(-1)">‹</button>
       <span class="cal-m" id="cal-title"></span>
-      <button class="cal-nbtn" onclick="changeMonth(1)"><i data-lucide="chevron-right"></i></button>
+      <button class="cal-nbtn" onclick="changeMonth(1)">›</button>
     </div>
     <div class="cal-grid">
       <div class="cal-dow">일</div><div class="cal-dow">월</div><div class="cal-dow">화</div><div class="cal-dow">수</div><div class="cal-dow">목</div><div class="cal-dow">금</div><div class="cal-dow">토</div>
@@ -329,7 +314,7 @@ textarea.finp{min-height:120px;resize:vertical}
     <div class="sch-add">
       <input type="date" id="sch-date" style="flex:1">
       <input type="text" id="sch-text" placeholder="일정 내용" onkeydown="if(event.key==='Enter')addSchedule()" style="flex:2">
-      <button class="add-btn" onclick="addSchedule()"><i data-lucide="plus"></i></button>
+      <button class="add-btn" onclick="addSchedule()">+</button>
     </div>
     <div id="upcoming-list"></div>
   </div>
@@ -345,11 +330,9 @@ textarea.finp{min-height:120px;resize:vertical}
   <div class="sec" style="margin-top:8px"><div class="sec-lbl">놀생</div></div>
   <div class="card" style="margin:0 20px 14px">
     <div class="btn-grid-2">
-      <a class="gbtn" href="https://litt.ly/nol_life.official" target="_blank">
-        <i data-lucide="link-2"></i><span class="gtxt">리틀리</span>
+      <a class="gbtn" href="https://litt.ly/nol_life.official" target="_blank"><span class="gtxt">리틀리</span>
       </a>
-      <button class="gbtn" onclick="goSub('writing')">
-        <i data-lucide="pen-line"></i><span class="gtxt">작성법</span>
+      <button class="gbtn" onclick="goSub('writing')"><span class="gtxt">작성법</span>
       </button>
     </div>
   </div>
@@ -357,37 +340,30 @@ textarea.finp{min-height:120px;resize:vertical}
   <div class="sec"><div class="sec-lbl">테이스트트립</div></div>
   <div class="card" style="margin:0 20px 4px">
     <div class="btn-grid-3">
-      <a class="gbtn" href="https://litt.ly/spotontaste_tastetrip.official" target="_blank">
-        <i data-lucide="link"></i><span class="gtxt">리틀리</span>
+      <a class="gbtn" href="https://litt.ly/spotontaste_tastetrip.official" target="_blank"><span class="gtxt">리틀리</span>
       </a>
-      <a class="gbtn" href="https://sot-tastetrip.vercel.app/#/places" target="_blank">
-        <i data-lucide="globe"></i><span class="gtxt">라이브</span>
+      <a class="gbtn" href="https://sot-tastetrip.vercel.app/#/places" target="_blank"><span class="gtxt">라이브</span>
       </a>
-      <a class="gbtn" href="https://dev-sot-tastetrip.vercel.app/#/places" target="_blank">
-        <i data-lucide="terminal"></i><span class="gtxt">데브</span>
+      <a class="gbtn" href="https://dev-sot-tastetrip.vercel.app/#/places" target="_blank"><span class="gtxt">데브</span>
       </a>
     </div>
   </div>
   <div class="card" style="margin:0 20px 16px">
     <div class="row" onclick="goSub('tt-docs')">
-      <div class="row-icon"><i data-lucide="file-text"></i></div>
       <div class="row-body"><div class="row-title">개발 문서</div></div>
-      <div class="row-arr"><i data-lucide="chevron-right"></i></div>
+      <div class="row-arr">›</div>
     </div>
     <div class="row" onclick="goSub('tt-sns')">
-      <div class="row-icon"><i data-lucide="megaphone"></i></div>
       <div class="row-body"><div class="row-title">SNS / 마케팅</div></div>
-      <div class="row-arr"><i data-lucide="chevron-right"></i></div>
+      <div class="row-arr">›</div>
     </div>
     <div class="row" onclick="goSub('tt-govt')">
-      <div class="row-icon"><i data-lucide="landmark"></i></div>
       <div class="row-body"><div class="row-title">정부지원</div></div>
-      <div class="row-arr"><i data-lucide="chevron-right"></i></div>
+      <div class="row-arr">›</div>
     </div>
     <div class="row" onclick="goSub('tt-mine')">
-      <div class="row-icon"><i data-lucide="cpu"></i></div>
       <div class="row-body"><div class="row-title">텍스트마이닝</div></div>
-      <div class="row-arr"><i data-lucide="chevron-right"></i></div>
+      <div class="row-arr">›</div>
     </div>
   </div>
 </div>
@@ -400,11 +376,11 @@ textarea.finp{min-height:120px;resize:vertical}
   </div>
 
   <div class="tabs" id="kakao-tabs">
-    <div class="tab active" onclick="switchTab('kakao','dash',this)"><i data-lucide="bar-chart-2"></i>대시보드</div>
-    <div class="tab" onclick="switchTab('kakao','notice',this)"><i data-lucide="bell"></i>공지</div>
-    <div class="tab" onclick="switchTab('kakao','ops',this)"><i data-lucide="settings"></i>운영방안</div>
-    <div class="tab" onclick="switchTab('kakao','event',this)"><i data-lucide="calendar"></i>이벤트</div>
-    <div class="tab" onclick="switchTab('kakao','issue',this)"><i data-lucide="alert-triangle"></i>이슈</div>
+    <div class="tab active" onclick="switchTab('kakao','dash',this)">대시보드</div>
+    <div class="tab" onclick="switchTab('kakao','notice',this)">공지</div>
+    <div class="tab" onclick="switchTab('kakao','ops',this)">운영방안</div>
+    <div class="tab" onclick="switchTab('kakao','event',this)">이벤트</div>
+    <div class="tab" onclick="switchTab('kakao','issue',this)">이슈</div>
   </div>
 
   <!-- 대시보드 탭 -->
@@ -445,7 +421,7 @@ textarea.finp{min-height:120px;resize:vertical}
 
     <div class="sec-lbl" style="padding:0 0 8px">공지 메모</div>
     <div class="card" style="margin:0 0 14px">
-      <div class="inp-row"><input id="notice-inp" type="text" placeholder="공지 아이디어..." onkeydown="if(event.key==='Enter')addSimple('notice-list','notice-inp')"><button class="add-btn" onclick="addSimple('notice-list','notice-inp')"><i data-lucide="plus"></i></button></div>
+      <div class="inp-row"><input id="notice-inp" type="text" placeholder="공지 아이디어..." onkeydown="if(event.key==='Enter')addSimple('notice-list','notice-inp')"><button class="add-btn" onclick="addSimple('notice-list','notice-inp')">+</button></div>
       <div id="notice-list"></div>
     </div>
   </div>
@@ -478,7 +454,7 @@ textarea.finp{min-height:120px;resize:vertical}
 
     <div class="sec-lbl" style="padding:12px 0 8px">운영 메모</div>
     <div class="card" style="margin:0 0 14px">
-      <div class="inp-row"><input id="ops-inp" type="text" placeholder="운영 아이디어..." onkeydown="if(event.key==='Enter')addSimple('ops-list','ops-inp')"><button class="add-btn" onclick="addSimple('ops-list','ops-inp')"><i data-lucide="plus"></i></button></div>
+      <div class="inp-row"><input id="ops-inp" type="text" placeholder="운영 아이디어..." onkeydown="if(event.key==='Enter')addSimple('ops-list','ops-inp')"><button class="add-btn" onclick="addSimple('ops-list','ops-inp')">+</button></div>
       <div id="ops-list"></div>
     </div>
   </div>
@@ -502,7 +478,7 @@ textarea.finp{min-height:120px;resize:vertical}
 
     <div class="sec-lbl" style="padding:4px 0 8px">이벤트 아이디어 추가</div>
     <div class="card" style="margin:0 0 14px">
-      <div class="inp-row"><input id="ev-inp" type="text" placeholder="이벤트 아이디어..." onkeydown="if(event.key==='Enter')addSimple('ev-list','ev-inp')"><button class="add-btn" onclick="addSimple('ev-list','ev-inp')"><i data-lucide="plus"></i></button></div>
+      <div class="inp-row"><input id="ev-inp" type="text" placeholder="이벤트 아이디어..." onkeydown="if(event.key==='Enter')addSimple('ev-list','ev-inp')"><button class="add-btn" onclick="addSimple('ev-list','ev-inp')">+</button></div>
       <div id="ev-list"></div>
     </div>
   </div>
@@ -518,7 +494,7 @@ textarea.finp{min-height:120px;resize:vertical}
 
     <div class="sec-lbl" style="padding:0 0 8px">새 이슈 기록</div>
     <div class="card" style="margin:0 0 14px">
-      <div class="inp-row"><input id="new-iss-inp" type="text" placeholder="대화 내용 붙여넣기 또는 이슈 요약 입력..." onkeydown="if(event.key==='Enter')addSimple('new-iss-list','new-iss-inp')"><button class="add-btn" onclick="addSimple('new-iss-list','new-iss-inp')"><i data-lucide="plus"></i></button></div>
+      <div class="inp-row"><input id="new-iss-inp" type="text" placeholder="대화 내용 붙여넣기 또는 이슈 요약 입력..." onkeydown="if(event.key==='Enter')addSimple('new-iss-list','new-iss-inp')"><button class="add-btn" onclick="addSimple('new-iss-list','new-iss-inp')">+</button></div>
       <div id="new-iss-list"></div>
     </div>
   </div>
@@ -534,27 +510,25 @@ textarea.finp{min-height:120px;resize:vertical}
   <div class="sec" style="margin-top:8px"><div class="sec-lbl">교통사고</div></div>
   <div class="card" style="margin:0 20px 14px">
     <div class="row" onclick="goSub('acc')">
-      <div class="row-icon"><i data-lucide="clipboard-list"></i></div>
       <div class="row-body"><div class="row-title">기록 목록</div><div class="row-sub" id="acc-sub">기록 없음</div></div>
-      <div class="row-arr"><i data-lucide="chevron-right"></i></div>
+      <div class="row-arr">›</div>
     </div>
   </div>
 
   <div class="sec"><div class="sec-lbl">인맥</div></div>
   <div class="card" style="margin:0 20px 14px">
     <div class="row" onclick="goSub('network')">
-      <div class="row-icon"><i data-lucide="users"></i></div>
       <div class="row-body"><div class="row-title">인맥 목록</div><div class="row-sub" id="net-sub">기록 없음</div></div>
-      <div class="row-arr"><i data-lucide="chevron-right"></i></div>
+      <div class="row-arr">›</div>
     </div>
   </div>
 
   <div class="sec"><div class="sec-lbl">FNB마케터</div></div>
   <div class="card" style="margin:0 20px 16px">
     <div class="btn-grid-3">
-      <button class="gbtn" onclick="goSub('resume')"><i data-lucide="file-text"></i><span class="gtxt">이력서</span></button>
-      <button class="gbtn" onclick="goSub('cover')"><i data-lucide="edit-3"></i><span class="gtxt">자소서</span></button>
-      <button class="gbtn" onclick="goSub('sns-fl')"><i data-lucide="smartphone"></i><span class="gtxt">SNS</span></button>
+      <button class="gbtn" onclick="goSub('resume')"><span class="gtxt">이력서</span></button>
+      <button class="gbtn" onclick="goSub('cover')"><span class="gtxt">자소서</span></button>
+      <button class="gbtn" onclick="goSub('sns-fl')"><span class="gtxt">SNS</span></button>
     </div>
   </div>
 </div>
@@ -563,7 +537,7 @@ textarea.finp{min-height:120px;resize:vertical}
 <div class="page" id="pg-sub">
   <div class="hdr">
     <div class="back-row">
-      <button class="back-btn" onclick="goBack()"><i data-lucide="chevron-left"></i></button>
+      <button class="back-btn" onclick="goBack()">←</button>
       <div class="hdr-greeting" id="sub-title" style="font-size:17px"></div>
     </div>
   </div>
@@ -574,15 +548,14 @@ textarea.finp{min-height:120px;resize:vertical}
 
 <!-- GNB -->
 <nav class="gnb">
-  <button class="gnb-btn active" onclick="goPage('home')"><i data-lucide="home"></i><span class="gnb-lbl">홈</span></button>
-  <button class="gnb-btn" onclick="goPage('biz')"><i data-lucide="briefcase"></i><span class="gnb-lbl">사업</span></button>
-  <button class="gnb-btn" onclick="goPage('kakao')"><i data-lucide="message-circle"></i><span class="gnb-lbl">카톡방</span></button>
-  <button class="gnb-btn" onclick="goPage('personal')"><i data-lucide="user"></i><span class="gnb-lbl">나</span></button>
+  <button class="gnb-btn active" onclick="goPage('home')"><span class="gnb-lbl">홈</span></button>
+  <button class="gnb-btn" onclick="goPage('biz')"><span class="gnb-lbl">사업</span></button>
+  <button class="gnb-btn" onclick="goPage('kakao')"><span class="gnb-lbl">카톡방</span></button>
+  <button class="gnb-btn" onclick="goPage('personal')"><span class="gnb-lbl">나</span></button>
 </nav>
 
 <script>
 const S={get:(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
-function ri(){if(window.lucide)lucide.createIcons();}
 
 // ── 이슈 데이터 ──
 const ISSUES=[
@@ -667,7 +640,6 @@ function renderNoticeHist(){
       <div class="notice-hist-head" onclick="toggleNoticeHist(${n.id})">
         <span class="notice-hist-date">${n.date}</span>
         <span class="notice-hist-title">${n.title}</span>
-        <i data-lucide="chevron-down" id="nharr-${n.id}" style="width:14px;height:14px;color:#ccc;transition:transform .2s;flex-shrink:0"></i>
       </div>
       <div class="notice-detail" id="nhdet-${n.id}">${n.detail}</div>
     </div>
@@ -692,7 +664,6 @@ function renderIssueHist(){
         <span class="sev ${sevMap[i.sev]}">${sevLbl[i.sev]}</span>
         <span class="iss-hist-title">${i.title}</span>
         <span style="font-size:10px;color:var(--sub);flex-shrink:0">${i.status}</span>
-        <i data-lucide="chevron-down" id="iharr-${i.id}" style="width:14px;height:14px;color:#ccc;transition:transform .2s;flex-shrink:0"></i>
       </div>
       <div class="iss-detail" id="ihdet-${i.id}">${i.detail}</div>
     </div>
@@ -711,7 +682,7 @@ function renderMsgBank(){
   const el=document.getElementById('msg-bank-list');if(!el)return;
   const used=S.get('msg-used',[]);
   el.innerHTML=MSG_BANK.map(cat=>`
-    <div class="msg-cat"><i data-lucide="${MSG_ICONS[cat.sit]||'tag'}" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>${cat.sit}</div>
+    <div class="msg-cat">${cat.sit}</div>
     ${cat.msgs.map(m=>{
       const isUsed=used.includes(m.id);
       return `<div class="msg-card${isUsed?' used':''}" id="msgcard-${m.id}">
@@ -811,7 +782,6 @@ function goPage(id){
     prevPage=id;
   }
   document.getElementById('app').scrollTop=0;
-  ri();
 }
 function goSub(id){
   prevPage=PAGES.find(p=>p!=='sub'&&document.getElementById('pg-'+p)?.classList.contains('active'))||'home';
@@ -823,7 +793,6 @@ function switchTab(group,tab,el){
   el.classList.add('active');
   document.querySelectorAll(`[id^="${group}-"].tc`).forEach(c=>c.classList.remove('active'));
   document.getElementById(`${group}-${tab}`)?.classList.add('active');
-  ri();
 }
 
 const SUB_TITLES={writing:'작성법','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'교통사고',network:'인맥',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
@@ -839,21 +808,21 @@ function renderSub(id){
     network:subNetwork,
     resume:()=>`<div class="ta-page"><textarea id="ta-resume" placeholder="이력서 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-resume').value).then(()=>showToast('복사됐어요!'))">복사</button></div>`,
     cover:()=>`<div class="ta-page"><textarea id="ta-cover" placeholder="자소서 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-cover').value).then(()=>showToast('복사됐어요!'))">복사</button></div>`,
-    'sns-fl':()=>`<div class="form-wrap" style="margin-top:8px"><div style="display:flex;gap:8px"><input id="sns-fl-inp" class="finp" style="margin:0;flex:1" placeholder="SNS 운영 메모..."><button id="sns-fl-add" class="add-btn"><i data-lucide="plus"></i></button></div></div><div class="card" style="margin:10px 20px"><div id="sns-fl-list"></div></div>`,
+    'sns-fl':()=>`<div class="form-wrap" style="margin-top:8px"><div style="display:flex;gap:8px"><input id="sns-fl-inp" class="finp" style="margin:0;flex:1" placeholder="SNS 운영 메모..."><button id="sns-fl-add" class="add-btn">+</button></div></div><div class="card" style="margin:10px 20px"><div id="sns-fl-list"></div></div>`,
   };
   document.getElementById('sub-body').innerHTML=fn[id]?fn[id]():'<div class="empty">준비중</div>';
-  afterSub(id);ri();
+  afterSub(id);
 }
 
 function afterSub(id){
-  if(id==='acc'){document.getElementById('acc-save')?.addEventListener('click',()=>{const h=v('a-hosp');if(!h)return;const arr=S.get('accidents',[]);arr.unshift({hospital:h,pain:v('a-pain'),purpose:v('a-purpose'),date:v('a-date'),amount:v('a-amount'),memo:v('a-memo'),id:Date.now()});S.set('accidents',arr);updateAccSub();showToast('저장됐어요!');renderSub('acc');ri();});}
+  if(id==='acc'){document.getElementById('acc-save')?.addEventListener('click',()=>{const h=v('a-hosp');if(!h)return;const arr=S.get('accidents',[]);arr.unshift({hospital:h,pain:v('a-pain'),purpose:v('a-purpose'),date:v('a-date'),amount:v('a-amount'),memo:v('a-memo'),id:Date.now()});S.set('accidents',arr);updateAccSub();showToast('저장됐어요!');renderSub('acc');});}
   if(id==='network'){renderNetList();document.getElementById('net-search')?.addEventListener('input',renderNetList);document.getElementById('net-save')?.addEventListener('click',()=>{const n=v('n-name');if(!n)return;const arr=S.get('network',[]);arr.unshift({name:n,rel:v('n-rel'),org:v('n-org'),contact:v('n-contact'),memo:v('n-memo'),id:Date.now()});S.set('network',arr);['n-name','n-rel','n-org','n-contact','n-memo'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});updateNetSub();renderNetList();});}
   if(id==='resume'){const ta=document.getElementById('ta-resume');if(ta){ta.value=localStorage.getItem('resume')||'';ta.addEventListener('input',e=>localStorage.setItem('resume',e.target.value));}}
   if(id==='cover'){const ta=document.getElementById('ta-cover');if(ta){ta.value=localStorage.getItem('cover')||'';ta.addEventListener('input',e=>localStorage.setItem('cover',e.target.value));}}
   if(id==='sns-fl'){renderListInEl('sns-fl-list','sns-fl-items');document.getElementById('sns-fl-add')?.addEventListener('click',()=>{const inp=document.getElementById('sns-fl-inp'),t=inp.value.trim();if(!t)return;const arr=S.get('sns-fl-items',[]);arr.unshift({text:t,id:Date.now()});S.set('sns-fl-items',arr);inp.value='';renderListInEl('sns-fl-list','sns-fl-items');});}
-  if(id==='tt-sns'){renderSnsContent();document.getElementById('sns-tt-add')?.addEventListener('click',()=>{const inp=document.getElementById('sns-tt-inp'),t=inp.value.trim();if(!t)return;const arr=S.get('sns-tt-items',[]);arr.unshift({text:t,id:Date.now()});S.set('sns-tt-items',arr);inp.value='';renderListInEl('sns-tt-list','sns-tt-items');ri();});}
+  if(id==='tt-sns'){renderSnsContent();document.getElementById('sns-tt-add')?.addEventListener('click',()=>{const inp=document.getElementById('sns-tt-inp'),t=inp.value.trim();if(!t)return;const arr=S.get('sns-tt-items',[]);arr.unshift({text:t,id:Date.now()});S.set('sns-tt-items',arr);inp.value='';renderListInEl('sns-tt-list','sns-tt-items');});}
   if(id==='tt-govt'){renderGovtList();document.getElementById('govt-save')?.addEventListener('click',()=>{const n=v('g-name');if(!n)return;const arr=S.get('govt',[]);arr.unshift({name:n,deadline:v('g-dl'),status:document.getElementById('g-status')?.value||'관심',id:Date.now()});S.set('govt',arr);document.getElementById('g-name').value='';renderGovtList();});}
-  if(id==='writing'){document.getElementById('wt-save')?.addEventListener('click',()=>{const tag=v('wt-tag'),content=v('wt-body');if(!content)return;const arr=S.get('writings',[]);arr.unshift({tag,content,id:Date.now(),date:new Date().toLocaleDateString('ko-KR')});S.set('writings',arr);renderSub('writing');ri();});}
+  if(id==='writing'){document.getElementById('wt-save')?.addEventListener('click',()=>{const tag=v('wt-tag'),content=v('wt-body');if(!content)return;const arr=S.get('writings',[]);arr.unshift({tag,content,id:Date.now(),date:new Date().toLocaleDateString('ko-KR')});S.set('writings',arr);renderSub('writing');});}
   if(id==='tt-docs'){renderDocsList();}
 }
 function v(id){return document.getElementById(id)?.value||'';}
@@ -901,7 +870,6 @@ function subDocs(){
   const extra=S.get('docs-extra',[]);
   const rows=[...FIXED_DOCS,...extra.map(d=>({n:d.name,d:d.date?.slice(2,7)||'',path:''}))].map(d=>`
     <div class="row" onclick="navigator.clipboard.writeText(${JSON.stringify(d.path||d.n)}).then(()=>showToast('경로 복사됨'))">
-      <div class="row-icon"><i data-lucide="file-text"></i></div>
       <div class="row-body"><div class="row-title">${d.n}</div><div class="row-sub">${d.path||''}</div></div>
       <span style="font-size:11px;color:var(--sub)">${d.d}</span>
     </div>
@@ -912,7 +880,7 @@ function subDocs(){
       <div class="prompt-card-body" style="font-size:11px">"[문서명] 문서 요약해줘" / "[기능명] 어떻게 구현돼있어?" / "로드맵 현황 알려줘"</div>
     </div>
     <div class="card" style="margin:0 20px">${rows}</div>
-    <div class="form-wrap" style="margin-top:12px"><div style="display:flex;gap:8px"><input id="doc-inp" class="finp" style="margin:0;flex:1" placeholder="문서명 추가..."><button class="add-btn" onclick="addDoc()"><i data-lucide="plus"></i></button></div></div>
+    <div class="form-wrap" style="margin-top:12px"><div style="display:flex;gap:8px"><input id="doc-inp" class="finp" style="margin:0;flex:1" placeholder="문서명 추가..."><button class="add-btn" onclick="addDoc()">+</button></div></div>
   `;
 }
 function renderDocsList(){/* 문서 목록은 subDocs에서 직접 렌더 */}
@@ -973,7 +941,7 @@ function subSns(){
     </div>
     <div class="sec-lbl" style="padding:0 20px 8px">마케팅 메모</div>
     <div class="card" style="margin:0 20px 14px">
-      <div style="padding:10px 20px;display:flex;gap:8px"><input id="sns-tt-inp" class="finp" style="margin:0;flex:1" placeholder="콘텐츠/마케팅 메모..."><button id="sns-tt-add" class="add-btn"><i data-lucide="plus"></i></button></div>
+      <div style="padding:10px 20px;display:flex;gap:8px"><input id="sns-tt-inp" class="finp" style="margin:0;flex:1" placeholder="콘텐츠/마케팅 메모..."><button id="sns-tt-add" class="add-btn">+</button></div>
       <div id="sns-tt-list"></div>
     </div>
   `;
@@ -1015,7 +983,7 @@ function subGovt(){
     <div class="card" style="margin:0 20px 14px">
       <div class="p">
         <div style="font-size:13px;font-weight:800;margin-bottom:10px">정부지원 자동 탐색 — 주요 포털</div>
-        ${portals.map(p=>`<a href="${p.url}" target="_blank" class="link-row"><div><div style="font-size:13px;font-weight:600">${p.name}</div><div class="link-url">${p.url}</div></div><i data-lucide="external-link" style="width:14px;height:14px;color:var(--sub)"></i></a>`).join('')}
+        ${portals.map(p=>`<a href="${p.url}" target="_blank" class="link-row"><div><div style="font-size:13px;font-weight:600">${p.name}</div><div class="link-url">${p.url}</div></div></a>`).join('')}
       </div>
     </div>
     <div class="sec-lbl" style="padding:0 20px 8px">지원사업 추가</div>
@@ -1046,8 +1014,7 @@ function renderGovtList(){
 function renderListInEl(elId,stKey){
   const el=document.getElementById(elId);if(!el)return;
   const arr=S.get(stKey,[]);
-  el.innerHTML=arr.map(t=>`<div class="sns-item"><span class="sns-txt">${t.text}</span><button class="xbtn" onclick="delListItem('${stKey}','${elId}',${t.id})"><i data-lucide="x"></i></button></div>`).join('')||'<div class="empty">없음</div>';
-  ri();
+  el.innerHTML=arr.map(t=>`<div class="sns-item"><span class="sns-txt">${t.text}</span><button class="xbtn" onclick="delListItem('${stKey}','${elId}',${t.id})">×</button></div>`).join('')||'<div class="empty">없음</div>';
 }
 function delListItem(stKey,elId,id){S.set(stKey,S.get(stKey,[]).filter(t=>t.id!==id));renderListInEl(elId,stKey);}
 
@@ -1062,11 +1029,10 @@ function delTodo(id){S.set('main-todo-list',S.get('main-todo-list',[]).filter(t=
 function renderTodos(){
   const arr=S.get('main-todo-list',[]);
   const el=document.getElementById('main-todo-list');if(!el)return;
-  el.innerHTML=arr.map(t=>`<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt">${t.text}</span>${t.tag?`<span class="ttag">${t.tag}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})"><i data-lucide="x"></i></button></div>`).join('')||'<div class="empty">할일 없음</div>';
+  el.innerHTML=arr.map(t=>`<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt">${t.text}</span>${t.tag?`<span class="ttag">${t.tag}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`).join('')||'<div class="empty">할일 없음</div>';
   const remain=arr.filter(t=>!t.done);
   const pv=document.getElementById('todo-preview');
   if(pv)pv.textContent=remain.length?`남은 할일 ${remain.length}개 — ${remain.slice(0,2).map(t=>t.text).join(', ')}${remain.length>2?' …':''}`:'모든 할일 완료';
-  ri();
 }
 
 function addIssue(){
@@ -1078,10 +1044,9 @@ function delIssue(id){S.set('issues',S.get('issues',[]).filter(i=>i.id!==id));re
 function renderIssues(){
   const el=document.getElementById('issue-list');if(!el)return;
   const arr=S.get('issues',[]);
-  el.innerHTML=arr.map(i=>`<div class="issue-item ${i.level}"><div class="issue-txt"><span>${i.text}</span><button class="xbtn" onclick="delIssue(${i.id})"><i data-lucide="x"></i></button></div><div class="issue-meta">${i.area} · ${i.date}</div></div>`).join('')||'<div class="empty">이슈 없음</div>';
+  el.innerHTML=arr.map(i=>`<div class="issue-item ${i.level}"><div class="issue-txt"><span>${i.text}</span><button class="xbtn" onclick="delIssue(${i.id})">×</button></div><div class="issue-meta">${i.area} · ${i.date}</div></div>`).join('')||'<div class="empty">이슈 없음</div>';
   const bar=document.getElementById('issue-alert-bar');
   if(bar){const high=arr.filter(i=>i.level==='high');bar.textContent=high.length?`긴급 이슈 ${high.length}건 — ${high.map(i=>i.text).join(' / ')} — 분위기 전환 체크리스트 확인`:'현재 긴급 이슈 없음';}
-  ri();
 }
 
 let calDate=new Date();
@@ -1122,13 +1087,12 @@ function addSimple(listId,inputId){
 function delSimple(listId,id){S.set(listId,S.get(listId,[]).filter(t=>t.id!==id));renderSimple(listId);}
 function renderSimple(listId){
   const el=document.getElementById(listId);if(!el)return;
-  el.innerHTML=S.get(listId,[]).map(t=>`<div class="sns-item"><span class="sns-txt">${t.text}</span><button class="xbtn" onclick="delSimple('${listId}',${t.id})"><i data-lucide="x"></i></button></div>`).join('')||'<div class="empty">없음</div>';
-  ri();
+  el.innerHTML=S.get(listId,[]).map(t=>`<div class="sns-item"><span class="sns-txt">${t.text}</span><button class="xbtn" onclick="delSimple('${listId}',${t.id})">×</button></div>`).join('')||'<div class="empty">없음</div>';
 }
 
-function delWriting(id){S.set('writings',S.get('writings',[]).filter(w=>w.id!==id));renderSub('writing');ri();}
-function addDoc(){const inp=document.getElementById('doc-inp'),name=inp?.value.trim();if(!name)return;const arr=S.get('docs-extra',[]);arr.push({name,date:new Date().toISOString().slice(0,10),id:Date.now()});S.set('docs-extra',arr);inp.value='';renderSub('tt-docs');ri();}
-function delAcc(id){S.set('accidents',S.get('accidents',[]).filter(a=>a.id!==id));updateAccSub();renderSub('acc');ri();}
+function delWriting(id){S.set('writings',S.get('writings',[]).filter(w=>w.id!==id));renderSub('writing');}
+function addDoc(){const inp=document.getElementById('doc-inp'),name=inp?.value.trim();if(!name)return;const arr=S.get('docs-extra',[]);arr.push({name,date:new Date().toISOString().slice(0,10),id:Date.now()});S.set('docs-extra',arr);inp.value='';renderSub('tt-docs');}
+function delAcc(id){S.set('accidents',S.get('accidents',[]).filter(a=>a.id!==id));updateAccSub();renderSub('acc');}
 function delNet(id){S.set('network',S.get('network',[]).filter(n=>n.id!==id));updateNetSub();renderNetList();}
 function delGovt(id){S.set('govt',S.get('govt',[]).filter(g=>g.id!==id));renderGovtList();}
 
@@ -1146,7 +1110,6 @@ renderMsgBank();
 renderEventPlan();
 renderEventIdeas();
 initChks();
-ri();
 </script>
 </body>
 </html>
