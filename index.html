@@ -120,8 +120,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;back
 /* ── 탭 ── */
 .tabs{display:flex;gap:0;padding:12px 8px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid var(--border)}
 .tabs::-webkit-scrollbar{display:none}
-.tab{padding:8px 14px;font-size:13px;font-weight:500;border:none;border-bottom:2px solid transparent;background:none;white-space:nowrap;cursor:pointer;color:#a3a3a3;flex-shrink:0;margin-bottom:-1px;transition:color .15s,border-color .15s}
+.tab{padding:8px 14px;font-size:13px;font-weight:500;border:none;border-bottom:2px solid transparent;background:none;white-space:nowrap;cursor:pointer;color:#a3a3a3;flex-shrink:0;margin-bottom:-1px;transition:color .15s,border-color .15s;display:flex;align-items:center;gap:5px}
 .tab.active{color:#1a1a1a;font-weight:700;border-bottom-color:#1a1a1a}
+.tab [data-lucide]{width:13px;height:13px;flex-shrink:0}
 .tc{display:none;padding:14px 20px}
 .tc.active{display:block}
 
@@ -339,7 +340,7 @@ textarea.finp{min-height:120px;resize:vertical}
     <div class="hdr-date">놀생 · 테이스트트립</div>
   </div>
 
-  <div class="sec" style="margin-top:8px"><div class="sec-lbl">놀생</div></div>
+  <div class="sec" style="margin-top:8px"><div class="sec-lbl" style="display:flex;align-items:center;gap:5px"><i data-lucide="sprout" style="width:11px;height:11px"></i>놀생</div></div>
   <div class="card" style="margin:0 20px 14px">
     <div class="btn-grid-2">
       <a class="gbtn" href="https://litt.ly/nol_life.official" target="_blank">
@@ -351,7 +352,7 @@ textarea.finp{min-height:120px;resize:vertical}
     </div>
   </div>
 
-  <div class="sec"><div class="sec-lbl">테이스트트립</div></div>
+  <div class="sec"><div class="sec-lbl" style="display:flex;align-items:center;gap:5px"><i data-lucide="utensils" style="width:11px;height:11px"></i>테이스트트립</div></div>
   <div class="card" style="margin:0 20px 4px">
     <div class="btn-grid-3">
       <a class="gbtn" href="https://litt.ly/spotontaste_tastetrip.official" target="_blank">
@@ -397,11 +398,11 @@ textarea.finp{min-height:120px;resize:vertical}
   </div>
 
   <div class="tabs" id="kakao-tabs">
-    <div class="tab active" onclick="switchTab('kakao','dash',this)">대시보드</div>
-    <div class="tab" onclick="switchTab('kakao','notice',this)">공지</div>
-    <div class="tab" onclick="switchTab('kakao','ops',this)">운영방안</div>
-    <div class="tab" onclick="switchTab('kakao','event',this)">이벤트</div>
-    <div class="tab" onclick="switchTab('kakao','issue',this)">이슈</div>
+    <div class="tab active" onclick="switchTab('kakao','dash',this)"><i data-lucide="bar-chart-2"></i>대시보드</div>
+    <div class="tab" onclick="switchTab('kakao','notice',this)"><i data-lucide="bell"></i>공지</div>
+    <div class="tab" onclick="switchTab('kakao','ops',this)"><i data-lucide="settings"></i>운영방안</div>
+    <div class="tab" onclick="switchTab('kakao','event',this)"><i data-lucide="calendar"></i>이벤트</div>
+    <div class="tab" onclick="switchTab('kakao','issue',this)"><i data-lucide="alert-triangle"></i>이슈</div>
   </div>
 
   <!-- 대시보드 탭 -->
@@ -528,7 +529,7 @@ textarea.finp{min-height:120px;resize:vertical}
     <div class="hdr-date">교통사고 · 인맥 · FNB마케터</div>
   </div>
 
-  <div class="sec" style="margin-top:8px"><div class="sec-lbl">교통사고</div></div>
+  <div class="sec" style="margin-top:8px"><div class="sec-lbl" style="display:flex;align-items:center;gap:5px"><i data-lucide="car" style="width:11px;height:11px"></i>교통사고</div></div>
   <div class="card" style="margin:0 20px 14px">
     <div class="row" onclick="goSub('acc')">
       <div class="row-icon"><i data-lucide="clipboard-list"></i></div>
@@ -537,7 +538,7 @@ textarea.finp{min-height:120px;resize:vertical}
     </div>
   </div>
 
-  <div class="sec"><div class="sec-lbl">인맥</div></div>
+  <div class="sec"><div class="sec-lbl" style="display:flex;align-items:center;gap:5px"><i data-lucide="users" style="width:11px;height:11px"></i>인맥</div></div>
   <div class="card" style="margin:0 20px 14px">
     <div class="row" onclick="goSub('network')">
       <div class="row-icon"><i data-lucide="users"></i></div>
@@ -546,7 +547,7 @@ textarea.finp{min-height:120px;resize:vertical}
     </div>
   </div>
 
-  <div class="sec"><div class="sec-lbl">FNB마케터</div></div>
+  <div class="sec"><div class="sec-lbl" style="display:flex;align-items:center;gap:5px"><i data-lucide="briefcase" style="width:11px;height:11px"></i>FNB마케터</div></div>
   <div class="card" style="margin:0 20px 16px">
     <div class="btn-grid-3">
       <button class="gbtn" onclick="goSub('resume')"><i data-lucide="file-text"></i><span class="gtxt">이력서</span></button>
@@ -703,11 +704,12 @@ function toggleIssueHist(id){
 }
 
 // ── 메시지 뱅크 렌더링 ──
+const MSG_ICONS={'대화 유도':'message-circle','친목 흐름 전환':'shuffle','신규 멤버 환영':'user-plus','기여자 감사':'heart','지역 릴레이':'map-pin','시즌/이벤트':'calendar'};
 function renderMsgBank(){
   const el=document.getElementById('msg-bank-list');if(!el)return;
   const used=S.get('msg-used',[]);
   el.innerHTML=MSG_BANK.map(cat=>`
-    <div class="msg-cat">${cat.sit}</div>
+    <div class="msg-cat"><i data-lucide="${MSG_ICONS[cat.sit]||'tag'}" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"></i>${cat.sit}</div>
     ${cat.msgs.map(m=>{
       const isUsed=used.includes(m.id);
       return `<div class="msg-card${isUsed?' used':''}" id="msgcard-${m.id}">
