@@ -91,9 +91,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;back
 /* ── 이슈 ── */
 .issue-item{padding:13px 20px;border-bottom:1px solid var(--border);border-left:3px solid var(--border)}
 .issue-item:last-child{border-bottom:none}
-.issue-item.high{border-left-color:#e53e3e;background:#fff9f9}
-.issue-item.mid{border-left-color:#c9963a;background:#fffcf4}
-.issue-item.low{border-left-color:#bbb}
+.issue-item.high{border-left-color:var(--accent)}
+.issue-item.mid{border-left-color:#ccc}
+.issue-item.low{border-left-color:#e8e8e6}
 .issue-txt{font-size:13px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;font-weight:500}
 .issue-meta{font-size:10px;color:var(--sub);margin-top:3px}
 .inp-row{display:flex;gap:8px;padding:12px 20px;flex-wrap:nowrap;align-items:center}
@@ -205,7 +205,7 @@ textarea.finp{min-height:120px;resize:vertical}
 
 /* ── 메시지 뱅크 ── */
 .msg-cat{font-size:10px;font-weight:700;color:var(--sub);letter-spacing:.08em;text-transform:uppercase;padding:10px 0 6px;margin-top:4px}
-.msg-card{background:#fafaf8;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;position:relative}
+.msg-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;position:relative}
 .msg-card.used{opacity:.45}
 .msg-card-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .msg-sit{font-size:10px;font-weight:700;color:var(--accent);background:#fff0ea;padding:2px 8px;border-radius:6px;flex-shrink:0}
@@ -243,7 +243,7 @@ textarea.finp{min-height:120px;resize:vertical}
 .ev-done{color:#bbb}
 
 /* ── 이벤트 카드 ── */
-.ev-card{background:#fafaf8;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
+.ev-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
 .ev-card-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .ev-card-title{font-size:13px;font-weight:700;flex:1}
 
