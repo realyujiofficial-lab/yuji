@@ -28,11 +28,11 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .back-btn{background:none;border:none;cursor:pointer;padding:0;color:var(--text);font-size:20px;display:flex;align-items:center}
 
 /* ── GNB ── */
-.gnb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #f0f0f0;display:grid;grid-template-columns:repeat(4,1fr);z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.gnb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:0 4px;border:none;background:none;cursor:pointer;color:#a3a3a3;transition:color .15s;width:100%;height:100%}
+.gnb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid #f0f0f0;display:grid;grid-template-columns:repeat(4,1fr);z-index:100;padding-bottom:env(safe-area-inset-bottom);height:calc(64px + env(safe-area-inset-bottom))}
+.gnb-btn{display:flex;align-items:center;justify-content:center;border:none;background:none;cursor:pointer;color:#a3a3a3;transition:color .15s;width:100%;height:64px}
 .gnb-btn.active{color:var(--accent)}
-.gnb-lbl{font-size:13px;font-weight:500;letter-spacing:-.02em}
-.gnb-btn.active .gnb-lbl{font-weight:800}
+.gnb-lbl{font-size:15px;font-weight:600;letter-spacing:-.03em}
+.gnb-btn.active .gnb-lbl{font-weight:800;font-size:15px}
 
 /* ── 카드 ── */
 .card{background:var(--card);border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
@@ -551,7 +551,7 @@ textarea.finp{min-height:120px;resize:vertical}
   <button class="gnb-btn active" onclick="goPage('home')"><span class="gnb-lbl">홈</span></button>
   <button class="gnb-btn" onclick="goPage('biz')"><span class="gnb-lbl">사업</span></button>
   <button class="gnb-btn" onclick="goPage('kakao')"><span class="gnb-lbl">카톡방</span></button>
-  <button class="gnb-btn" onclick="goPage('personal')"><span class="gnb-lbl">나</span></button>
+  <button class="gnb-btn" onclick="goPage('personal')"><span class="gnb-lbl">유지</span></button>
 </nav>
 
 <script>
@@ -758,13 +758,23 @@ function showToast(msg){
   clearTimeout(t._to);t._to=setTimeout(()=>{t.style.opacity='0';},1800);
 }
 
-const GREETINGS=["유지현, 러블리해","넌 항상 잘하고 있어","내가 널 사랑해","오늘도 멋진 유지현","넌 멋져, 진짜로","너의 기준은 옳아 — 확실하게 표현해","하나씩 해나가면 돼, 넌 할 수 있어","유지현은 언제나 옳다","넌 이미 충분히 잘하고 있어","오카방도 테이스트트립도 다 잘 될 거야"];
+const GREETINGS=[
+  "유지현, 러블리해 🌸","넌 항상 잘하고 있어 ✨","내가 널 사랑해 💛","오늘도 멋진 유지현 🌟",
+  "넌 멋져, 진짜로 💪","너의 기준은 옳아 🎯","하나씩 해나가면 돼 🚶","유지현은 언제나 옳다 👑",
+  "넌 이미 충분히 잘하고 있어 🌿","오카방도 테이스트트립도 다 잘 될 거야 🚀","오늘 하루도 빛나 ☀️",
+  "유지현이 있으면 다 잘 돼 🍀","포기하지 마, 거의 다 왔어 🏃","넌 이 길의 정답이야 🗺️",
+  "힘든 날도 넌 잘 버텨왔어 🌙","유지현의 하루는 항상 의미 있어 🌈","작은 것도 다 이루어가고 있어 🌱",
+  "오늘도 유지현 화이팅 💥","넌 생각보다 훨씬 강해 🦋","꾸준한 유지현, 결국 이겨 🏆",
+  "걱정 말고 그냥 해봐 🎲","유지현은 잘 될 수밖에 없어 💎","오늘의 노력이 내일을 만들어 🛠️",
+  "넌 틀리지 않았어, 계속 가 🧭","유지현의 감각은 늘 맞아 👁️","잘 쉬는 것도 실력이야 ☕",
+  "너답게 하면 다 잘 돼 🎨","어떤 날도 유지현은 빛나 🌠","믿어, 넌 할 수 있어 🔥","유지현 파이팅!! 💫"
+];
 function getGreeting(){
   const issues=S.get('issues',[]).filter(i=>i.level==='high').length;
   if(issues>0)return "이슈 있어도 괜찮아, 넌 잘 해결할 수 있어";
   const todos=S.get('main-todo-list',[]).filter(t=>!t.done).length;
   if(todos>5)return "할일 많아도 하나씩이면 돼, 넌 할 수 있어";
-  return GREETINGS[new Date().getDay()%GREETINGS.length];
+  return GREETINGS[Math.floor(Math.random()*GREETINGS.length)];
 }
 document.getElementById('greeting').textContent=getGreeting();
 document.getElementById('today-date').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
