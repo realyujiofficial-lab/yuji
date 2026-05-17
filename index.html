@@ -2,805 +2,694 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>유지현 OS</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--bg:#f7f7f5;--card:#fff;--border:#e5e5e3;--text:#1a1a1a;--sub:#888;--accent:#2563eb;--red:#ef4444;--green:#22c55e;--yellow:#f59e0b;--purple:#7c3aed}
-body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);padding-bottom:72px;max-width:480px;margin:0 auto}
+:root{--bg:#f7f7f5;--card:#fff;--border:#e8e8e6;--text:#1a1a1a;--sub:#999;--accent:#2563eb;--red:#ef4444;--green:#22c55e;--yellow:#f59e0b;--purple:#7c3aed;--pink:#ec4899}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative}
 
-/* Header */
-.header{position:sticky;top:0;z-index:50;background:var(--bg);padding:16px 16px 8px;border-bottom:1px solid var(--border)}
-.header-row{display:flex;align-items:center;justify-content:space-between}
-.header-title{font-size:17px;font-weight:700}
-.header-date{font-size:11px;color:var(--sub)}
-.back-btn{font-size:20px;background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--accent)}
-
-/* Bottom nav */
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid var(--border);display:flex;z-index:100}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0 10px;font-size:9px;color:var(--sub);border:none;background:none;cursor:pointer;gap:3px;border-top:2px solid transparent;transition:.1s}
-.nav-btn .ni{font-size:22px}
-.nav-btn.active{color:var(--accent);border-top-color:var(--accent)}
-
-/* Pages */
-.page{display:none;padding:12px 16px}
+/* ── 레이아웃 ── */
+#app{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:64px}
+.page{display:none;min-height:100%}
 .page.active{display:block}
 
-/* Section */
-.sec{margin-bottom:20px}
-.sec-title{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;padding:0 2px}
+/* ── 헤더 ── */
+.hdr{padding:16px 16px 10px;background:var(--bg);position:sticky;top:0;z-index:10}
+.hdr-greeting{font-size:17px;font-weight:700;line-height:1.3;margin-bottom:2px}
+.hdr-date{font-size:11px;color:var(--sub)}
+.hdr-sub{font-size:12px;color:var(--sub);margin-top:4px}
+.back-row{display:flex;align-items:center;gap:8px;margin-bottom:2px}
+.back-btn{background:none;border:none;font-size:20px;color:var(--accent);cursor:pointer;padding:0;line-height:1}
 
-/* Card */
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.card+.card{margin-top:8px}
+/* ── 하단 네비 ── */
+.gnb{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);z-index:100}
+.gnb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0 10px;border:none;background:none;cursor:pointer;border-top:2px solid transparent;transition:.1s}
+.gnb-btn .gi{font-size:24px;line-height:1}
+.gnb-btn.active{border-top-color:var(--accent)}
+.gnb-btn.active .gi{filter:saturate(2)}
 
-/* Row item */
-.row{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border);gap:12px;cursor:pointer;text-decoration:none;color:inherit}
+/* ── 카드 ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:12px}
+.px{padding:0 16px}
+.py{padding:16px 0}
+.p{padding:16px}
+.sec{padding:0 16px;margin-bottom:4px}
+.sec-lbl{font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+
+/* ── 그리드 버튼 ── */
+.btn-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px}
+.btn-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:16px}
+.gbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:14px 8px;border-radius:12px;border:1px solid var(--border);background:#fafaf9;cursor:pointer;font-family:inherit;text-decoration:none;color:var(--text);min-height:72px;-webkit-tap-highlight-color:transparent}
+.gbtn:active{background:#f0f0ee}
+.gbtn .gicon{font-size:26px;line-height:1}
+.gbtn .gtxt{font-size:12px;font-weight:600;color:var(--text)}
+.gbtn .gsub{font-size:10px;color:var(--sub)}
+
+/* ── 리스트 로우 ── */
+.row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;text-decoration:none;color:inherit}
 .row:last-child{border-bottom:none}
 .row:active{background:#f5f5f3}
-.row-icon{font-size:22px;width:32px;text-align:center;flex-shrink:0}
+.row-icon{font-size:20px;width:28px;text-align:center;flex-shrink:0}
 .row-body{flex:1;min-width:0}
-.row-title{font-size:14px;font-weight:600;line-height:1.3}
+.row-title{font-size:14px;font-weight:600}
 .row-sub{font-size:11px;color:var(--sub);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row-arrow{color:#ccc;font-size:16px;flex-shrink:0}
-.row-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;flex-shrink:0}
-.b-live{background:#eff6ff;color:#2563eb}
-.b-dev{background:#fffbeb;color:#b45309}
-.b-link{background:#f0fdf4;color:#15803d}
+.row-arr{color:#ccc;font-size:18px;flex-shrink:0}
 
-/* Stat bar */
-.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center}
-.stat-num{font-size:22px;font-weight:700}
-.stat-lbl{font-size:10px;color:var(--sub);margin-top:2px}
+/* ── 통계 칩 ── */
+.stat-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 16px 4px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center}
+.stat-n{font-size:20px;font-weight:700}
+.stat-l{font-size:9px;color:var(--sub);margin-top:1px}
 
-/* Todo */
-.todo-input{display:flex;gap:8px;margin-bottom:10px}
-.todo-input input{flex:1;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;outline:none;font-family:inherit;background:var(--card)}
-.todo-input input:focus{border-color:var(--accent)}
-.todo-input select{border:1px solid var(--border);border-radius:8px;padding:10px;font-size:12px;background:var(--card);outline:none}
-.btn{border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
-.btn-p{background:var(--accent);color:#fff}
-.btn-g{background:var(--card);color:var(--sub);border:1px solid var(--border)}
-.todo-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);font-size:13px}
+/* ── 할일 ── */
+.todo-wrap{padding:0 16px 12px}
+.todo-inp-row{display:flex;gap:8px;margin-bottom:8px}
+.todo-inp-row input{flex:1;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;outline:none;font-family:inherit;background:var(--card)}
+.todo-inp-row select{border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;background:var(--card);outline:none}
+.add-btn{border:none;border-radius:10px;padding:10px 16px;background:var(--accent);color:#fff;font-size:18px;font-weight:700;cursor:pointer;flex-shrink:0}
+.todo-list{}
+.todo-item{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);font-size:13px}
 .todo-item:last-child{border-bottom:none}
-.todo-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);flex-shrink:0}
-.todo-item.done .tt{text-decoration:line-through;color:var(--sub)}
-.ttag{font-size:10px;padding:2px 6px;border-radius:8px;margin-left:auto;flex-shrink:0}
+.todo-item input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);flex-shrink:0;cursor:pointer}
+.todo-item.done .tt{text-decoration:line-through;color:#bbb}
+.tt{flex:1;line-height:1.4}
+.ttag{font-size:10px;padding:2px 6px;border-radius:8px;flex-shrink:0}
 .ttag-사업{background:#eff6ff;color:#2563eb}
 .ttag-테이스트트립{background:#fff7ed;color:#c2410c}
-.ttag-오카방{background:#fdf4ff;color:var(--purple)}
+.ttag-카톡방{background:#fdf4ff;color:var(--purple)}
 .ttag-개인{background:#f0fdf4;color:#15803d}
-.del-btn{background:none;border:none;color:#ddd;font-size:16px;cursor:pointer;padding:0 2px;flex-shrink:0}
-.del-btn:active{color:var(--red)}
+.xbtn{background:none;border:none;color:#ddd;font-size:15px;cursor:pointer;padding:0 2px;flex-shrink:0}
 
-/* Issue */
-.issue-item{padding:12px 14px;border-bottom:1px solid var(--border);border-left:3px solid}
+/* ── 이슈 ── */
+.issue-item{padding:11px 16px;border-bottom:1px solid var(--border);border-left:3px solid var(--border)}
 .issue-item:last-child{border-bottom:none}
-.issue-item.high{border-left-color:var(--red);background:#fff8f8}
-.issue-item.mid{border-left-color:var(--yellow);background:#fffcf0}
+.issue-item.high{border-left-color:var(--red);background:#fff9f9}
+.issue-item.mid{border-left-color:var(--yellow);background:#fffdf0}
 .issue-item.low{border-left-color:var(--green)}
-.issue-text{font-size:13px;font-weight:500}
+.issue-txt{font-size:13px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .issue-meta{font-size:10px;color:var(--sub);margin-top:3px}
+.inp-row{display:flex;gap:8px;padding:12px 16px}
+.inp-row input,.inp-row select{border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;background:var(--card);outline:none;font-family:inherit}
+.inp-row input{flex:1}
 
-/* Calendar */
-.cal-nav-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 8px}
+/* ── 캘린더 ── */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 8px}
 .cal-m{font-size:15px;font-weight:700}
-.cal-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 12px;font-size:14px;cursor:pointer}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:0 8px 8px}
-.cal-dow{font-size:10px;color:var(--sub);text-align:center;padding:4px 0}
-.cal-day{font-size:12px;text-align:center;padding:7px 2px;border-radius:6px;position:relative}
+.cal-nbtn{background:none;border:1px solid var(--border);border-radius:8px;padding:4px 12px;font-size:14px;cursor:pointer}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 8px;gap:2px}
+.cal-dow{font-size:9px;color:var(--sub);text-align:center;padding:3px 0}
+.cal-day{font-size:12px;text-align:center;padding:6px 2px;border-radius:6px;position:relative}
 .cal-day.today{background:var(--accent);color:#fff;font-weight:700}
 .cal-day.other{color:#ccc}
-.cal-dot{width:4px;height:4px;background:var(--purple);border-radius:50%;position:absolute;bottom:2px;left:50%;transform:translateX(-50%)}
-.sch-item{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:1px solid var(--border);font-size:12px}
+.cal-dot{width:4px;height:4px;background:var(--purple);border-radius:50%;position:absolute;bottom:1px;left:50%;transform:translateX(-50%)}
+.sch-add{display:flex;gap:8px;padding:10px 16px;border-top:1px solid var(--border)}
+.sch-add input{border:1px solid var(--border);border-radius:10px;padding:9px;font-size:12px;background:var(--card);outline:none;font-family:inherit}
+.sch-item{display:flex;justify-content:space-between;padding:8px 16px;border-bottom:1px solid var(--border);font-size:12px}
 .sch-item:last-child{border-bottom:none}
 .sch-date{color:var(--accent);font-weight:600;flex-shrink:0;margin-left:8px}
 
-/* Tabs */
-.tabs{display:flex;padding:0 16px;gap:8px;margin-bottom:12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* ── 오카방 탭 ── */
+.tabs{display:flex;gap:6px;padding:12px 16px 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .tabs::-webkit-scrollbar{display:none}
-.tab{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--card);white-space:nowrap;cursor:pointer;color:var(--sub)}
+.tab{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--card);white-space:nowrap;cursor:pointer;color:var(--sub);flex-shrink:0}
 .tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.tab-content{display:none}
-.tab-content.active{display:block}
+.tc{display:none;padding:12px 16px}
+.tc.active{display:block}
+.dashboard-frame{width:100%;border:none;border-radius:12px;background:var(--card);display:block}
 
-/* Markdown-ish content */
-.md-block{padding:14px 16px;font-size:13px;line-height:1.7;color:var(--text)}
-.md-block h3{font-size:14px;font-weight:700;margin:12px 0 6px;color:var(--text)}
-.md-block h4{font-size:13px;font-weight:600;margin:10px 0 4px}
-.md-block p{margin-bottom:8px}
-.md-block ul{padding-left:18px;margin-bottom:8px}
-.md-block li{margin-bottom:4px}
-.md-block .chip{display:inline-block;background:#eff6ff;color:var(--accent);border-radius:6px;padding:2px 8px;font-size:11px;font-weight:600;margin:2px}
-.md-block blockquote{background:#f7f7f5;border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;font-size:12px;color:var(--sub);margin:8px 0;white-space:pre-wrap}
-.notice-box{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px;font-size:13px;line-height:1.7;margin-bottom:10px}
-.notice-box .nb-title{font-weight:700;margin-bottom:6px;font-size:14px}
-.issue-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border)}
-.issue-row:last-child{border-bottom:none}
-.severity{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:700;flex-shrink:0}
-.s-high{background:#fee2e2;color:#b91c1c}
-.s-mid{background:#fef9c3;color:#854d0e}
-.s-low{background:#dcfce7;color:#166534}
-.s-done{background:#f3f4f6;color:#6b7280}
-.issue-name{font-size:13px;font-weight:500;flex:1}
-.issue-time{font-size:11px;color:var(--sub);flex-shrink:0}
+/* ── 공지/이슈/이벤트 콘텐츠 ── */
+.notice-box{background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:14px;margin-bottom:10px;font-size:13px;line-height:1.8}
+.notice-box h4{font-weight:700;margin-bottom:6px}
+.copy-btn{width:100%;margin-top:8px;border:none;border-radius:8px;padding:10px;background:#f3f4f6;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.copy-btn:active{background:#e5e7eb}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{display:inline-block;background:#eff6ff;color:var(--accent);border-radius:8px;padding:3px 9px;font-size:11px;font-weight:600}
+.md-ul{padding-left:18px;margin:6px 0 10px}
+.md-ul li{font-size:13px;line-height:1.6;margin-bottom:3px}
+.ev-item{padding:12px 0;border-bottom:1px solid var(--border)}
+.ev-item:last-child{border-bottom:none}
+.ev-title{font-size:13px;font-weight:700;margin-bottom:3px}
+.ev-desc{font-size:12px;color:var(--sub);line-height:1.5}
+.iss-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.iss-row:last-child{border-bottom:none}
+.sev{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:700;flex-shrink:0}
+.sev-high{background:#fee2e2;color:#b91c1c}
+.sev-mid{background:#fef9c3;color:#854d0e}
+.sev-low{background:#dcfce7;color:#166534}
+.iss-name{font-size:12px;flex:1;line-height:1.4}
+.iss-st{font-size:10px;color:var(--sub);flex-shrink:0}
+.sitbar{font-size:12px;color:var(--sub);background:#f0fdf4;border-left:3px solid var(--green);padding:10px 12px;border-radius:0 8px 8px 0;margin-bottom:10px}
 
-/* Accident table */
-.acc-table{width:100%;font-size:12px;border-collapse:collapse}
-.acc-table th{font-size:10px;color:var(--sub);font-weight:600;padding:8px 10px;border-bottom:2px solid var(--border);text-align:left}
-.acc-table td{padding:10px 10px;border-bottom:1px solid var(--border);vertical-align:top}
-.acc-table tr:last-child td{border-bottom:none}
+/* ── 입력 폼 ── */
+.form-wrap{padding:0 16px}
+.finp{width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:inherit;background:var(--card);display:block;margin-bottom:10px}
+.finp:focus{border-color:var(--accent)}
+.finp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.finp-grid .finp{margin-bottom:0}
+.fsel{border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:13px;background:var(--card);outline:none;width:100%;margin-bottom:10px;font-family:inherit}
+.submit-btn{width:100%;border:none;border-radius:12px;padding:14px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px}
+.submit-btn:active{background:#1d4ed8}
+textarea.finp{min-height:120px;resize:vertical}
 
-/* Network */
-.net-item{padding:12px 14px;border-bottom:1px solid var(--border)}
+/* ── 교통사고 ── */
+.acc-item{padding:12px 16px;border-bottom:1px solid var(--border)}
+.acc-item:last-child{border-bottom:none}
+.acc-top{font-size:14px;font-weight:600}
+.acc-info{font-size:11px;color:var(--sub);margin-top:3px}
+
+/* ── 인맥 ── */
+.net-item{padding:12px 16px;border-bottom:1px solid var(--border)}
 .net-item:last-child{border-bottom:none}
+.net-top{display:flex;align-items:center;justify-content:space-between}
 .net-name{font-size:14px;font-weight:600}
+.net-rel{font-size:10px;background:#eff6ff;color:var(--accent);padding:2px 7px;border-radius:8px;font-weight:600}
 .net-info{font-size:11px;color:var(--sub);margin-top:3px}
 
-/* Govt */
-.govt-item{padding:12px 14px;border-bottom:1px solid var(--border)}
+/* ── 텍스트에어리어 페이지 ── */
+.ta-page{padding:16px}
+.ta-page textarea{width:100%;border:1px solid var(--border);border-radius:12px;padding:14px;font-size:14px;font-family:inherit;outline:none;resize:none;min-height:calc(100vh - 200px);background:var(--card)}
+.ta-page textarea:focus{border-color:var(--accent)}
+.cpy-btn{width:100%;margin-top:10px;border:none;border-radius:12px;padding:13px;background:#f3f4f6;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+
+/* ── 빈 상태 ── */
+.empty{text-align:center;padding:24px;color:var(--sub);font-size:13px}
+
+/* ── 정부지원 ── */
+.govt-item{padding:12px 16px;border-bottom:1px solid var(--border)}
 .govt-item:last-child{border-bottom:none}
-.govt-name{font-size:13px;font-weight:600}
-.govt-meta{font-size:11px;color:var(--sub);margin-top:3px}
-.g-status{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:700;float:right}
-.g-관심{background:#eff6ff;color:#2563eb}
-.g-준비중{background:#fffbeb;color:#b45309}
-.g-제출{background:#f0fdf4;color:#15803d}
-.g-완료{background:#f3f4f6;color:#6b7280}
+.govt-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.govt-name{font-size:13px;font-weight:600;flex:1}
+.govt-st{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:700;flex-shrink:0}
+.g관심{background:#eff6ff;color:#2563eb}
+.g준비중{background:#fffbeb;color:#b45309}
+.g제출{background:#f0fdf4;color:#15803d}
+.g완료{background:#f3f4f6;color:#6b7280}
+.govt-dl{font-size:11px;color:var(--sub);margin-top:3px}
 
-/* Writing */
-.writing-item{padding:12px 14px;border-bottom:1px solid var(--border)}
-.writing-item:last-child{border-bottom:none}
-.writing-tag{font-size:11px;color:var(--accent);font-weight:600;margin-bottom:4px}
-.writing-content{font-size:12px;line-height:1.6;white-space:pre-wrap}
-
-/* Input full */
-.input-full{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;outline:none;font-family:inherit;background:var(--card);display:block;margin-bottom:8px}
-.input-full:focus{border-color:var(--accent)}
-.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-textarea.input-full{min-height:100px;resize:vertical}
-
-/* Form card */
-.form-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
-
-/* Event list */
-.event-item{padding:12px 14px;border-bottom:1px solid var(--border)}
-.event-item:last-child{border-bottom:none}
-.event-title{font-size:13px;font-weight:600;margin-bottom:3px}
-.event-desc{font-size:12px;color:var(--sub);line-height:1.5}
+/* ── SNS ── */
+.sns-item{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sns-item:last-child{border-bottom:none}
+.sns-txt{flex:1;font-size:13px}
 </style>
 </head>
 <body>
+<div id="app">
 
-<!-- ─── 메인 홈 ─── -->
-<div class="page active" id="page-home">
-<div class="header">
-  <div class="header-row">
-    <div class="header-title">안녕하세요 유지현님 👋</div>
+<!-- ══ 홈 ══ -->
+<div class="page active" id="pg-home">
+  <div class="hdr">
+    <div class="hdr-greeting" id="greeting"></div>
+    <div class="hdr-date" id="today-date"></div>
+    <div class="hdr-sub" id="todo-preview"></div>
   </div>
-  <div class="header-date" id="today-date"></div>
+
+  <div class="stat-bar" id="main-stats"></div>
+
+  <div class="sec" style="margin-top:12px"><div class="sec-lbl">📋 할일</div></div>
+  <div class="card" style="margin:0 16px 12px">
+    <div class="todo-inp-row" style="padding:12px 16px 0">
+      <input id="main-todo-inp" type="text" placeholder="새 할일..." onkeydown="if(event.key==='Enter')addTodo()">
+      <select id="main-todo-tag">
+        <option value="사업">사업</option>
+        <option value="테이스트트립">테이스트트립</option>
+        <option value="카톡방">카톡방</option>
+        <option value="개인">개인</option>
+      </select>
+      <button class="add-btn" onclick="addTodo()">+</button>
+    </div>
+    <div class="todo-list" id="main-todo-list" style="padding-bottom:4px"></div>
+  </div>
+
+  <div class="sec"><div class="sec-lbl">⚠️ 이슈</div></div>
+  <div class="card" style="margin:0 16px 12px">
+    <div class="inp-row">
+      <input id="issue-inp" type="text" placeholder="이슈 내용..." onkeydown="if(event.key==='Enter')addIssue()">
+      <select id="issue-lv"><option value="high">긴급</option><option value="mid">보통</option><option value="low">낮음</option></select>
+      <select id="issue-area"><option>테이스트트립</option><option>카톡방</option><option>놀생</option><option>개인</option></select>
+      <button class="add-btn" onclick="addIssue()">+</button>
+    </div>
+    <div id="issue-list" style="padding-bottom:4px"></div>
+  </div>
+
+  <div class="sec"><div class="sec-lbl">📅 캘린더</div></div>
+  <div class="card" style="margin:0 16px 16px">
+    <div class="cal-nav">
+      <button class="cal-nbtn" onclick="changeMonth(-1)">‹</button>
+      <span class="cal-m" id="cal-title"></span>
+      <button class="cal-nbtn" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-grid">
+      <div class="cal-dow">일</div><div class="cal-dow">월</div><div class="cal-dow">화</div><div class="cal-dow">수</div><div class="cal-dow">목</div><div class="cal-dow">금</div><div class="cal-dow">토</div>
+    </div>
+    <div class="cal-grid" id="cal-body"></div>
+    <div class="sch-add">
+      <input type="date" id="sch-date" style="flex:1">
+      <input type="text" id="sch-text" placeholder="일정" onkeydown="if(event.key==='Enter')addSchedule()" style="flex:2">
+      <button class="add-btn" onclick="addSchedule()">+</button>
+    </div>
+    <div id="upcoming-list"></div>
+  </div>
 </div>
-<div style="padding:12px 16px">
-  <div class="stat-row" id="main-stats"></div>
 
-  <div class="sec">
-    <div class="sec-title">📋 할일</div>
-    <div class="form-card" style="margin-bottom:8px">
-      <div class="todo-input">
-        <input id="main-todo-input" type="text" placeholder="새 할일..." onkeydown="if(event.key==='Enter')addTodo('main-todo-list')">
-        <select id="main-todo-tag">
-          <option value="사업">사업</option>
-          <option value="테이스트트립">테이스트트립</option>
-          <option value="오카방">오카방</option>
-          <option value="개인">개인</option>
-        </select>
-        <button class="btn btn-p" onclick="addTodo('main-todo-list')">+</button>
-      </div>
-    </div>
-    <div class="card"><div id="main-todo-list"></div></div>
+<!-- ══ 사업 ══ -->
+<div class="page" id="pg-biz">
+  <div class="hdr">
+    <div class="hdr-greeting">사업 💼</div>
+    <div class="hdr-date">놀생 · 테이스트트립</div>
   </div>
 
-  <div class="sec">
-    <div class="sec-title">⚠️ 이슈</div>
-    <div class="form-card" style="margin-bottom:8px">
-      <div class="todo-input" style="margin-bottom:0">
-        <input id="issue-input" type="text" placeholder="이슈 내용..." onkeydown="if(event.key==='Enter')addIssue()">
-        <select id="issue-level"><option value="high">긴급</option><option value="mid">보통</option><option value="low">낮음</option></select>
-        <select id="issue-area"><option value="테이스트트립">테이스트트립</option><option value="오카방">오카방</option><option value="놀생">놀생</option><option value="개인">개인</option></select>
-        <button class="btn btn-p" onclick="addIssue()">+</button>
-      </div>
+  <div class="sec" style="margin-top:8px"><div class="sec-lbl">🌱 놀생</div></div>
+  <div class="card" style="margin:0 16px 14px">
+    <div class="btn-grid-2">
+      <a class="gbtn" href="https://litt.ly/nol_life.official" target="_blank">
+        <span class="gicon">🌿</span><span class="gtxt">리틀리</span>
+      </a>
+      <button class="gbtn" onclick="goSub('writing')">
+        <span class="gicon">📝</span><span class="gtxt">작성법</span>
+      </button>
     </div>
-    <div class="card"><div id="issue-list"></div></div>
   </div>
 
-  <div class="sec">
-    <div class="sec-title">📅 캘린더</div>
+  <div class="sec"><div class="sec-lbl">✈️ 테이스트트립</div></div>
+  <div class="card" style="margin:0 16px 4px">
+    <div class="btn-grid-3">
+      <a class="gbtn" href="https://litt.ly/spotontaste_tastetrip.official" target="_blank">
+        <span class="gicon">🔗</span><span class="gtxt">리틀리</span>
+      </a>
+      <a class="gbtn" href="https://sot-tastetrip.vercel.app/#/places" target="_blank">
+        <span class="gicon">🌐</span><span class="gtxt">라이브</span>
+      </a>
+      <a class="gbtn" href="https://dev-sot-tastetrip.vercel.app/#/places" target="_blank">
+        <span class="gicon">🛠</span><span class="gtxt">데브</span>
+      </a>
+    </div>
+  </div>
+  <div class="card" style="margin:0 16px 16px">
+    <div class="row" onclick="goSub('tt-docs')"><span class="row-icon">📄</span><div class="row-body"><div class="row-title">개발 문서</div></div><span class="row-arr">›</span></div>
+    <div class="row" onclick="goSub('tt-sns')"><span class="row-icon">📢</span><div class="row-body"><div class="row-title">SNS / 마케팅</div></div><span class="row-arr">›</span></div>
+    <div class="row" onclick="goSub('tt-govt')"><span class="row-icon">🏛</span><div class="row-body"><div class="row-title">정부지원</div></div><span class="row-arr">›</span></div>
+    <div class="row" onclick="goSub('tt-mine')"><span class="row-icon">🤖</span><div class="row-body"><div class="row-title">텍스트마이닝</div></div><span class="row-arr">›</span></div>
+  </div>
+</div>
+
+<!-- ══ 카톡방 ══ -->
+<div class="page" id="pg-kakao">
+  <div class="hdr">
+    <div class="hdr-greeting">카톡방 💬</div>
+    <div class="hdr-date">현지인 맛집 · 여행</div>
+  </div>
+
+  <div class="tabs" id="kakao-tabs">
+    <div class="tab active" onclick="switchTab('kakao','dash')">대시보드</div>
+    <div class="tab" onclick="switchTab('kakao','notice')">공지</div>
+    <div class="tab" onclick="switchTab('kakao','ops')">운영방안</div>
+    <div class="tab" onclick="switchTab('kakao','event')">이벤트</div>
+    <div class="tab" onclick="switchTab('kakao','issue')">이슈</div>
+  </div>
+
+  <!-- 대시보드 탭 -->
+  <div class="tc active" id="kakao-dash" style="padding:12px 16px 0">
+    <iframe id="okaband-iframe" src="okaband.html" class="dashboard-frame" style="height:calc(100vh - 160px)" scrolling="yes"></iframe>
+  </div>
+
+  <!-- 공지 탭 -->
+  <div class="tc" id="kakao-notice">
+    <div class="sitbar" id="issue-alert-bar"></div>
+    <div class="notice-box">
+      <h4>📣 방향 공지 초안</h4>
+      <div style="font-size:12px;line-height:1.9">안녕하세요 여러분 😊<br><br>오카방은 <b>직접 가본 맛집·핫플·여행 정보를 나누는 공간</b>이에요.<br>친목도 좋은데, 핵심은 <b>실제 경험 기반 정보</b>예요 🗺️<br><br>앞으로도 좋은 정보 많이 나눠요 🍜✈️</div>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText('안녕하세요 여러분 😊\n\n오카방은 직접 가본 맛집·핫플·여행 정보를 나누는 공간이에요.\n친목도 좋은데, 핵심은 실제 경험 기반 정보예요 🗺️\n\n앞으로도 좋은 정보 많이 나눠요 🍜✈️').then(()=>alert('복사됐어요!'))">📋 복사</button>
+    </div>
     <div class="card">
-      <div class="cal-nav-row">
-        <button class="cal-btn" onclick="changeMonth(-1)">‹</button>
-        <span class="cal-m" id="cal-title"></span>
-        <button class="cal-btn" onclick="changeMonth(1)">›</button>
-      </div>
-      <div class="cal-grid">
-        <div class="cal-dow">일</div><div class="cal-dow">월</div><div class="cal-dow">화</div><div class="cal-dow">수</div><div class="cal-dow">목</div><div class="cal-dow">금</div><div class="cal-dow">토</div>
-      </div>
-      <div class="cal-grid" id="cal-body"></div>
-      <div style="padding:12px 14px 8px;border-top:1px solid var(--border)">
-        <div class="todo-input" style="margin-bottom:8px">
-          <input type="date" id="sch-date" class="input-full" style="margin:0;flex:1">
-          <input type="text" id="sch-text" placeholder="일정" onkeydown="if(event.key==='Enter')addSchedule()" style="flex:2;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;outline:none;font-family:inherit;background:var(--card)">
-          <button class="btn btn-p" onclick="addSchedule()">+</button>
-        </div>
-        <div id="upcoming-list"></div>
-      </div>
+      <div class="row" style="cursor:default"><span class="row-icon">💬</span><div class="row-body"><div class="row-title">친목 대화가 길어질 때</div><div class="row-sub">"재밌는 이야기 감사해요 😊 이 근처 맛집도 알면 공유해줘요!"</div></div></div>
+      <div class="row" style="cursor:default"><span class="row-icon">❓</span><div class="row-body"><div class="row-title">방향 질문이 들어올 때</div><div class="row-sub">"경험 기반 정보 공유가 메인이에요. 진짜 경험 중심으로요!"</div></div></div>
+      <div class="row" style="cursor:default"><span class="row-icon">✨</span><div class="row-body"><div class="row-title">분위기 전환이 필요할 때</div><div class="row-sub">"이번 주 어디 다녀오셨어요? 핫플 추천받고 싶어요 🙌"</div></div></div>
     </div>
-  </div>
-</div>
-</div>
-
-<!-- ─── 사업 ─── -->
-<div class="page" id="page-biz">
-<div class="header">
-  <div class="header-title">사업</div>
-</div>
-<div style="padding:12px 16px">
-
-  <div class="sec">
-    <div class="sec-title">🌱 놀생</div>
+    <div class="sec" style="margin-top:14px"><div class="sec-lbl">공지 메모</div></div>
     <div class="card">
-      <a class="row" href="https://litt.ly/nol_life.official" target="_blank">
-        <span class="row-icon">🌿</span>
-        <div class="row-body"><div class="row-title">놀생 리틀리</div><div class="row-sub">litt.ly/nol_life.official</div></div>
-        <span class="row-badge b-link">LITTLY</span>
-      </a>
-      <div class="row" onclick="goSub('nolsaeng-writing')">
-        <span class="row-icon">📝</span>
-        <div class="row-body"><div class="row-title">작성법 관리</div><div class="row-sub">내 입력 방식, 스타일, 규칙</div></div>
-        <span class="row-arrow">›</span>
-      </div>
+      <div class="inp-row"><input id="notice-inp" type="text" placeholder="공지 아이디어..." onkeydown="if(event.key==='Enter')addSimple('notice-list','notice-inp')"><button class="add-btn" onclick="addSimple('notice-list','notice-inp')">+</button></div>
+      <div id="notice-list"></div>
     </div>
   </div>
 
-  <div class="sec">
-    <div class="sec-title">✈️ 테이스트트립</div>
+  <!-- 운영방안 탭 -->
+  <div class="tc" id="kakao-ops">
     <div class="card">
-      <a class="row" href="https://litt.ly/spotontaste_tastetrip.official" target="_blank">
-        <span class="row-icon">🔗</span>
-        <div class="row-body"><div class="row-title">테이스트트립 리틀리</div><div class="row-sub">litt.ly/spotontaste_tastetrip.official</div></div>
-        <span class="row-badge b-link">LITTLY</span>
-      </a>
-      <a class="row" href="https://sot-tastetrip.vercel.app/#/places" target="_blank">
-        <span class="row-icon">🌐</span>
-        <div class="row-body"><div class="row-title">라이브</div><div class="row-sub">sot-tastetrip.vercel.app</div></div>
-        <span class="row-badge b-live">LIVE</span>
-      </a>
-      <a class="row" href="https://dev-sot-tastetrip.vercel.app/#/places" target="_blank">
-        <span class="row-icon">🛠</span>
-        <div class="row-body"><div class="row-title">데브</div><div class="row-sub">dev-sot-tastetrip.vercel.app</div></div>
-        <span class="row-badge b-dev">DEV</span>
-      </a>
-      <div class="row" onclick="goSub('tastetrip-docs')">
-        <span class="row-icon">📄</span>
-        <div class="row-body"><div class="row-title">개발 문서</div><div class="row-sub">명세서, 로드맵, ERD, 카테고리</div></div>
-        <span class="row-arrow">›</span>
+      <div class="p">
+        <div class="chip-row"><span class="chip">경험 기반</span><span class="chip">장소 중심</span><span class="chip">광고 배제</span><span class="chip">적당한 온기</span><span class="chip">친목 지양</span></div>
+        <div style="font-size:12px;font-weight:700;margin-bottom:6px;color:var(--sub)">멤버가 원하는 것 TOP 5</div>
+        <ul class="md-ul">
+          <li>🥇 현지인 추천 여행 정보 강화 (11명)</li>
+          <li>🥈 지역별 추천 아카이브 (9명)</li>
+          <li>🥉 축제·시즌 한정 정보 (8명)</li>
+          <li>4위 여행 할인/제휴 혜택 (6명)</li>
+          <li>5위 소규모 여행 모임 (6명)</li>
+        </ul>
+        <div style="font-size:12px;font-weight:700;margin-bottom:6px;color:var(--sub)">운영 방향 TOP 3</div>
+        <ul class="md-ul">
+          <li>🥇 여행 정보 + 가벼운 소통 (9명)</li>
+          <li>🥈 질문·답변 중심 (6명)</li>
+          <li>🥉 추천 장소 후기 공유 (5명)</li>
+        </ul>
       </div>
-      <div class="row" onclick="goSub('tastetrip-sns')">
-        <span class="row-icon">📢</span>
-        <div class="row-body"><div class="row-title">SNS/콘텐츠 + 마케팅</div><div class="row-sub" id="sns-count-sub"></div></div>
-        <span class="row-arrow">›</span>
-      </div>
-      <div class="row" onclick="goSub('tastetrip-govt')">
-        <span class="row-icon">🏛</span>
-        <div class="row-body"><div class="row-title">정부지원 사업</div><div class="row-sub" id="govt-count-sub"></div></div>
-        <span class="row-arrow">›</span>
-      </div>
-      <div class="row" onclick="goSub('tastetrip-mining')">
-        <span class="row-icon">🤖</span>
-        <div class="row-body"><div class="row-title">텍스트마이닝 + 랜딩페이지</div><div class="row-sub">파이프라인 실행 · 대시보드</div></div>
-        <span class="row-arrow">›</span>
-      </div>
+    </div>
+    <div class="sec" style="margin-top:14px"><div class="sec-lbl">운영 메모</div></div>
+    <div class="card">
+      <div class="inp-row"><input id="ops-inp" type="text" placeholder="운영 아이디어..." onkeydown="if(event.key==='Enter')addSimple('ops-list','ops-inp')"><button class="add-btn" onclick="addSimple('ops-list','ops-inp')">+</button></div>
+      <div id="ops-list"></div>
     </div>
   </div>
 
-</div>
-</div>
-
-<!-- ─── 오카방 ─── -->
-<div class="page" id="page-okaband">
-<div class="header">
-  <div class="header-title">💬 현지인맛집/여행 카톡방</div>
-</div>
-
-<div class="tabs" id="okaband-tabs" style="padding-top:12px">
-  <div class="tab active" onclick="switchTab('okaband','dashboard')">📊 대시보드</div>
-  <div class="tab" onclick="switchTab('okaband','notice')">📣 공지</div>
-  <div class="tab" onclick="switchTab('okaband','ops')">🗂 운영방안</div>
-  <div class="tab" onclick="switchTab('okaband','event')">🎉 이벤트</div>
-  <div class="tab" onclick="switchTab('okaband','issue')">⚠️ 이슈</div>
-</div>
-
-<div style="padding:0 16px 12px">
-
-<!-- 대시보드 탭 -->
-<div class="tab-content active" id="okaband-dashboard">
-  <div style="text-align:center;padding:16px 0 20px">
-    <button class="btn btn-p" style="width:100%;padding:14px;font-size:15px" onclick="window.open('okaband.html','_blank')">📊 오카방 대시보드 열기</button>
-  </div>
-  <div class="sec">
-    <div class="sec-title">📋 오카방 할일</div>
-    <div class="form-card" style="margin-bottom:8px">
-      <div class="todo-input" style="margin-bottom:0">
-        <input id="ok-todo-input" type="text" placeholder="오카방 할일..." onkeydown="if(event.key==='Enter')addTodoSimple('ok-todo-list','ok-todo-input')">
-        <button class="btn btn-p" onclick="addTodoSimple('ok-todo-list','ok-todo-input')">+</button>
+  <!-- 이벤트 탭 -->
+  <div class="tc" id="kakao-event">
+    <div class="card">
+      <div class="p">
+        <div class="ev-item"><div class="ev-title">🖼 계절 커버사진 교체 (분기 1회)</div><div class="ev-desc">봄·여름·가을·겨울 초 Canva 제작. "진짜 경험을 나누는 사람들" 슬로건</div></div>
+        <div class="ev-item"><div class="ev-title">🗺 지역 현지인 릴레이 (월 1회)</div><div class="ev-desc">매월 1일 또는 15일 지역 지목 → @태그 릴레이. 현지인이 진짜 가는 곳!</div></div>
+        <div class="ev-item"><div class="ev-title">🌿 계절 특집 핫플 공지 (분기 1회)</div><div class="ev-desc">봄=벚꽃코스 / 여름=계곡+밥집 / 가을=단풍드라이브 / 겨울=야경+온천</div></div>
+        <div class="ev-item"><div class="ev-title">👥 소규모 번개 모임 (분기 1회)</div><div class="ev-desc">당일 또는 1박2일. 설문에서 6명 원함 확인.</div></div>
+        <div class="ev-item" style="border:none"><div class="ev-title">📸 후기 인증 이벤트</div><div class="ev-desc">사진+짧은 후기 공유 → 참여자 추첨 소정의 선물</div></div>
       </div>
     </div>
-    <div class="card"><div id="ok-todo-list"></div></div>
-  </div>
-</div>
-
-<!-- 공지 탭 -->
-<div class="tab-content" id="okaband-notice">
-  <div class="notice-box" style="margin-top:4px">
-    <div class="nb-title">📣 방향 공지 초안 (복사해서 카톡방에 바로 발송)</div>
-    <div style="font-size:12px;line-height:1.8;margin-bottom:10px">안녕하세요 여러분 😊<br><br>오카방은 처음부터 <b>직접 가본 맛집·핫플·여행 정보를 나누는 공간</b>으로 운영해왔어요.<br><br>친목도 물론 좋은데, 이 방의 핵심은 <b>실제 경험 기반 정보</b>예요.<br>광고나 체험단 느낌보다, 진짜 가봤던 곳 이야기가 모이는 공간이 목표랍니다 🗺️<br><br>앞으로도 좋은 정보 많이 나눠요 🍜✈️</div>
-    <button class="btn btn-g" style="width:100%;font-size:12px" onclick="navigator.clipboard.writeText('안녕하세요 여러분 😊\n\n오카방은 처음부터 직접 가본 맛집·핫플·여행 정보를 나누는 공간으로 운영해왔어요.\n\n친목도 물론 좋은데, 이 방의 핵심은 실제 경험 기반 정보예요.\n광고나 체험단 느낌보다, 진짜 가봤던 곳 이야기가 모이는 공간이 목표랍니다 🗺️\n\n앞으로도 좋은 정보 많이 나눠요 🍜✈️').then(()=>alert('복사됐어요!'))">📋 공지 복사</button>
-  </div>
-  <div class="card" style="margin-top:10px">
-    <div class="md-block">
-      <h3>상황별 대응 멘트</h3>
-      <div class="issue-row"><span class="row-body"><b>친목 대화가 길어질 때</b><br><span style="font-size:12px;color:var(--sub)">"재밌는 이야기 감사해요 😊 혹시 이 근처 맛집도 알면 공유해줘요!"</span></span></div>
-      <div class="issue-row"><span class="row-body"><b>방향 질문이 들어올 때</b><br><span style="font-size:12px;color:var(--sub)">"오카방은 경험 기반 정보 공유가 메인이에요. 광고 아닌 진짜 경험 중심으로요!"</span></span></div>
-      <div class="issue-row"><span class="row-body"><b>분위기 전환이 필요할 때</b><br><span style="font-size:12px;color:var(--sub)">"이번 주 어디 다녀오셨어요? 요즘 날씨에 딱 맞는 핫플 추천받고 싶어요 🙌"</span></span></div>
+    <div class="sec" style="margin-top:14px"><div class="sec-lbl">이벤트 아이디어 추가</div></div>
+    <div class="card">
+      <div class="inp-row"><input id="ev-inp" type="text" placeholder="이벤트 아이디어..." onkeydown="if(event.key==='Enter')addSimple('ev-list','ev-inp')"><button class="add-btn" onclick="addSimple('ev-list','ev-inp')">+</button></div>
+      <div id="ev-list"></div>
     </div>
   </div>
-  <div class="sec" style="margin-top:14px">
-    <div class="sec-title">📝 내 공지 메모</div>
-    <div class="form-card" style="margin-bottom:8px">
-      <div class="todo-input" style="margin-bottom:0">
-        <input id="notice-input" type="text" placeholder="공지 아이디어 메모..." onkeydown="if(event.key==='Enter')addTodoSimple('notice-list','notice-input')">
-        <button class="btn btn-p" onclick="addTodoSimple('notice-list','notice-input')">+</button>
+
+  <!-- 이슈 탭 -->
+  <div class="tc" id="kakao-issue">
+    <div class="card">
+      <div class="p">
+        <div class="iss-row"><span class="sev sev-high">높음</span><span class="iss-name">260516 옴팡 추방 후 공개 비난</span><span class="iss-st">종결</span></div>
+        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">260301 닉변 요청 후 집중 이탈 (35명)</span><span class="iss-st">종결</span></div>
+        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">241029 수다방 분리 배경</span><span class="iss-st">종결</span></div>
+        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">241016 송파거주자 이탈</span><span class="iss-st">⚠️미확인</span></div>
+        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">241015 옴팡 연애수다 이탈</span><span class="iss-st">종결</span></div>
+        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">240806 유료서비스 논란</span><span class="iss-st">종결</span></div>
+        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">240221 성적 발언 + 이탈</span><span class="iss-st">종결</span></div>
+        <div class="iss-row"><span class="sev sev-mid">중간</span><span class="iss-name">230601 대규모 강퇴/이탈</span><span class="iss-st">종결</span></div>
+        <div class="iss-row" style="border:none"><span class="sev sev-low">낮음</span><span class="iss-name">220916 코인 광고 계정 침입</span><span class="iss-st">종결</span></div>
       </div>
     </div>
-    <div class="card"><div id="notice-list"></div></div>
-  </div>
-</div>
-
-<!-- 운영방안 탭 -->
-<div class="tab-content" id="okaband-ops">
-  <div class="card" style="margin-top:4px">
-    <div class="md-block">
-      <h3>운영 핵심 원칙</h3>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
-        <span class="chip">경험 기반 정보</span><span class="chip">장소 중심 흐름</span><span class="chip">광고/체험단 배제</span><span class="chip">적당한 온기</span><span class="chip">과도한 친목 지양</span>
-      </div>
-      <h3>설문 결과 — 멤버가 원하는 것 TOP 5</h3>
-      <ul>
-        <li>🥇 현지인 추천 여행 정보 강화 (11명)</li>
-        <li>🥈 지역별로 정리된 추천 아카이브 (9명)</li>
-        <li>🥉 축제·시즌 한정 정보 (8명)</li>
-        <li>4위 여행 할인 / 제휴 혜택 (6명)</li>
-        <li>5위 소규모 여행 모임 (6명)</li>
-      </ul>
-      <h3 style="margin-top:12px">운영 방향 TOP 3</h3>
-      <ul>
-        <li>🥇 여행 정보 나눔 + 가벼운 일상 소통 (9명)</li>
-        <li>🥈 질문·답변 중심 여행 정보 공유 (6명)</li>
-        <li>🥉 추천 장소 후기 공유 (5명)</li>
+    <div style="margin:14px 0 10px;padding:12px 14px;background:#fff7ed;border-radius:12px;font-size:12px;line-height:1.7;border:1px solid #fed7aa">
+      <div style="font-weight:700;margin-bottom:6px">🔥 분위기 전환 체크리스트</div>
+      <ul class="md-ul">
+        <li>정보 중심 대화 유도 (여행/맛집 질문 던지기)</li>
+        <li>계절 릴레이 이벤트 바로 시작</li>
+        <li>커버사진 교체로 리프레시</li>
+        <li>방향 공지 재발송 (부드럽게)</li>
+        <li>활발한 멤버에게 개인톡 감사 인사</li>
       </ul>
     </div>
-  </div>
-  <div class="sec" style="margin-top:14px">
-    <div class="sec-title">📝 운영 메모</div>
-    <div class="form-card" style="margin-bottom:8px">
-      <div class="todo-input" style="margin-bottom:0">
-        <input id="ops-input" type="text" placeholder="운영 아이디어/메모..." onkeydown="if(event.key==='Enter')addTodoSimple('ops-list','ops-input')">
-        <button class="btn btn-p" onclick="addTodoSimple('ops-list','ops-input')">+</button>
-      </div>
-    </div>
-    <div class="card"><div id="ops-list"></div></div>
-  </div>
-</div>
-
-<!-- 이벤트 탭 -->
-<div class="tab-content" id="okaband-event">
-  <div class="card" style="margin-top:4px">
-    <div class="event-item">
-      <div class="event-title">🖼 계절 테마 커버사진 교체 (분기 1회)</div>
-      <div class="event-desc">봄(3월)·여름(6월)·가을(9월)·겨울(12월) 초에 Canva로 제작. 방 이름 + "진짜 경험을 나누는 사람들" 슬로건</div>
-    </div>
-    <div class="event-item">
-      <div class="event-title">🗺 지역 현지인 릴레이 (월 1회)</div>
-      <div class="event-desc">매월 1일 or 15일에 지역 지목 → @태그로 릴레이 요청. "이번 달 릴레이 지역: #인천 — 현지인이 진짜 가는 곳 공유해주세요!"</div>
-    </div>
-    <div class="event-item">
-      <div class="event-title">🌿 계절 특집 핫플 공지 (분기 1회)</div>
-      <div class="event-desc">봄=벚꽃 맛집코스 / 여름=계곡해변+밥집 / 가을=단풍드라이브 / 겨울=연말야경+온천</div>
-    </div>
-    <div class="event-item">
-      <div class="event-title">👥 소규모 번개 모임 (분기 1회)</div>
-      <div class="event-desc">설문 5위 요청. 당일 또는 1박2일. 관심 6명 확인됨.</div>
-    </div>
-    <div class="event-item">
-      <div class="event-title">📸 후기 인증 이벤트</div>
-      <div class="event-desc">다녀온 곳 사진+짧은 후기 공유 → 참여자 중 추첨 소정의 선물</div>
-    </div>
-  </div>
-  <div class="sec" style="margin-top:14px">
-    <div class="sec-title">➕ 이벤트 아이디어 추가</div>
-    <div class="form-card" style="margin-bottom:8px">
-      <div class="todo-input" style="margin-bottom:0">
-        <input id="event-input" type="text" placeholder="이벤트 아이디어..." onkeydown="if(event.key==='Enter')addTodoSimple('event-list','event-input')">
-        <button class="btn btn-p" onclick="addTodoSimple('event-list','event-input')">+</button>
-      </div>
-    </div>
-    <div class="card"><div id="event-list"></div></div>
-  </div>
-</div>
-
-<!-- 이슈 탭 -->
-<div class="tab-content" id="okaband-issue">
-  <div class="card" style="margin-top:4px">
-    <div class="issue-row">
-      <span class="severity s-high">높음</span>
-      <div class="issue-name">260516 옴팡 추방 후 공개 비난</div>
-      <span class="issue-time">종결</span>
-    </div>
-    <div class="issue-row">
-      <span class="severity s-mid">중간</span>
-      <div class="issue-name">260301 닉변 요청 후 집중 이탈 (35명)</div>
-      <span class="issue-time">종결</span>
-    </div>
-    <div class="issue-row">
-      <span class="severity s-mid">중간</span>
-      <div class="issue-name">241029 수다방 분리 배경</div>
-      <span class="issue-time">종결</span>
-    </div>
-    <div class="issue-row">
-      <span class="severity s-mid">중간</span>
-      <div class="issue-name">241016 송파거주자 옴팡 발언에 이탈</div>
-      <span class="issue-time">⚠️ 미확인</span>
-    </div>
-    <div class="issue-row">
-      <span class="severity s-mid">중간</span>
-      <div class="issue-name">241015 옴팡 연애수다 + 멤버 이탈</div>
-      <span class="issue-time">종결</span>
-    </div>
-    <div class="issue-row">
-      <span class="severity s-mid">중간</span>
-      <div class="issue-name">240806 유료서비스 논란</div>
-      <span class="issue-time">종결</span>
-    </div>
-    <div class="issue-row">
-      <span class="severity s-mid">중간</span>
-      <div class="issue-name">240221 성적 발언 + 다수 이탈</div>
-      <span class="issue-time">종결</span>
-    </div>
-    <div class="issue-row">
-      <span class="severity s-mid">중간</span>
-      <div class="issue-name">230601 대규모 강퇴/이탈</div>
-      <span class="issue-time">종결</span>
-    </div>
-    <div class="issue-row">
-      <span class="severity s-low">낮음</span>
-      <div class="issue-name">220916 코인 광고 계정 침입</div>
-      <span class="issue-time">종결</span>
-    </div>
-  </div>
-  <div class="md-block" style="padding-top:12px">
-    <h4>260516 옴팡 이슈 요약</h4>
-    <blockquote>오후 1:00 추방 → 오후 3:15 새 닉네임(죠디맛집)으로 재입장 → 공개 비난 글 게시("독재", "기만") 후 자진 퇴장 → 운영자 해명 공지 → 오후 9:01 앞으로의 운영 방향 공지</blockquote>
-    <h4>분위기 전환 체크리스트</h4>
-    <ul>
-      <li>정보 중심 대화 유도 (여행/맛집 질문 던지기)</li>
-      <li>계절 릴레이 이벤트 바로 시작</li>
-      <li>커버사진 교체로 분위기 리프레시</li>
-      <li>방향 공지 재발송 (부드럽게)</li>
-      <li>활발한 멤버에게 개인톡으로 감사 인사</li>
-    </ul>
-  </div>
-  <div class="sec" style="margin-top:8px">
-    <div class="sec-title">➕ 새 이슈 기록</div>
-    <div class="form-card" style="margin-bottom:8px">
-      <div class="todo-input" style="margin-bottom:0">
-        <input id="new-issue-input" type="text" placeholder="이슈 내용..." onkeydown="if(event.key==='Enter')addTodoSimple('new-issue-list','new-issue-input')">
-        <button class="btn btn-p" onclick="addTodoSimple('new-issue-list','new-issue-input')">+</button>
-      </div>
-    </div>
-    <div class="card"><div id="new-issue-list"></div></div>
-  </div>
-</div>
-
-</div><!-- /okaband page content -->
-</div>
-
-<!-- ─── 개인 ─── -->
-<div class="page" id="page-personal">
-<div class="header">
-  <div class="header-title">개인</div>
-</div>
-<div style="padding:12px 16px">
-
-  <div class="sec">
-    <div class="sec-title">🏥 교통사고</div>
+    <div class="sec"><div class="sec-lbl">새 이슈 기록</div></div>
     <div class="card">
-      <div class="row" onclick="goSub('accident-list-view')">
-        <span class="row-icon">📋</span>
-        <div class="row-body"><div class="row-title">기록 목록</div><div class="row-sub" id="acc-count-sub">기록 없음</div></div>
-        <span class="row-arrow">›</span>
-      </div>
-      <div class="row" onclick="goSub('accident-add')">
-        <span class="row-icon">➕</span>
-        <div class="row-body"><div class="row-title">기록 추가</div><div class="row-sub">병원 · 아픈곳 · 목적 · 날짜 · 금액</div></div>
-        <span class="row-arrow">›</span>
-      </div>
+      <div class="inp-row"><input id="new-iss-inp" type="text" placeholder="이슈 내용..." onkeydown="if(event.key==='Enter')addSimple('new-iss-list','new-iss-inp')"><button class="add-btn" onclick="addSimple('new-iss-list','new-iss-inp')">+</button></div>
+      <div id="new-iss-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 개인 ══ -->
+<div class="page" id="pg-personal">
+  <div class="hdr">
+    <div class="hdr-greeting">개인 🌸</div>
+    <div class="hdr-date">교통사고 · 인맥 · FNB마케터</div>
+  </div>
+
+  <div class="sec" style="margin-top:8px"><div class="sec-lbl">🏥 교통사고</div></div>
+  <div class="card" style="margin:0 16px 14px">
+    <div class="row" onclick="goSub('acc')">
+      <span class="row-icon">📋</span>
+      <div class="row-body"><div class="row-title">기록 목록</div><div class="row-sub" id="acc-sub">기록 없음</div></div>
+      <span class="row-arr">›</span>
     </div>
   </div>
 
-  <div class="sec">
-    <div class="sec-title">👥 인맥리스트</div>
-    <div class="card">
-      <div class="row" onclick="goSub('network-view')">
-        <span class="row-icon">👤</span>
-        <div class="row-body"><div class="row-title">인맥 보기</div><div class="row-sub" id="net-count-sub">기록 없음</div></div>
-        <span class="row-arrow">›</span>
-      </div>
-      <div class="row" onclick="goSub('network-add')">
-        <span class="row-icon">➕</span>
-        <div class="row-body"><div class="row-title">인맥 추가</div><div class="row-sub">이름 · 관계 · 소속 · 연락처</div></div>
-        <span class="row-arrow">›</span>
-      </div>
+  <div class="sec"><div class="sec-lbl">👥 인맥</div></div>
+  <div class="card" style="margin:0 16px 14px">
+    <div class="row" onclick="goSub('network')">
+      <span class="row-icon">👤</span>
+      <div class="row-body"><div class="row-title">인맥 목록</div><div class="row-sub" id="net-sub">기록 없음</div></div>
+      <span class="row-arr">›</span>
     </div>
   </div>
 
-  <div class="sec">
-    <div class="sec-title">💼 FNB마케터 프리랜서</div>
-    <div class="card">
-      <div class="row" onclick="goSub('resume-view')">
-        <span class="row-icon">📄</span>
-        <div class="row-body"><div class="row-title">이력서</div></div>
-        <span class="row-arrow">›</span>
-      </div>
-      <div class="row" onclick="goSub('cover-view')">
-        <span class="row-icon">✍️</span>
-        <div class="row-body"><div class="row-title">자소서</div></div>
-        <span class="row-arrow">›</span>
-      </div>
-      <div class="row" onclick="goSub('sns-freelance-view')">
-        <span class="row-icon">📱</span>
-        <div class="row-body"><div class="row-title">SNS 운영 메모</div></div>
-        <span class="row-arrow">›</span>
-      </div>
+  <div class="sec"><div class="sec-lbl">💼 FNB마케터</div></div>
+  <div class="card" style="margin:0 16px 16px">
+    <div class="btn-grid-3">
+      <button class="gbtn" onclick="goSub('resume')"><span class="gicon">📄</span><span class="gtxt">이력서</span></button>
+      <button class="gbtn" onclick="goSub('cover')"><span class="gicon">✍️</span><span class="gtxt">자소서</span></button>
+      <button class="gbtn" onclick="goSub('sns-fl')"><span class="gicon">📱</span><span class="gtxt">SNS</span></button>
     </div>
   </div>
-
-</div>
 </div>
 
-<!-- ─── 서브 페이지들 ─── -->
-<div class="page" id="page-sub">
-<div class="header">
-  <div class="header-row">
-    <button class="back-btn" onclick="goBack()">‹</button>
-    <div class="header-title" id="sub-title"></div>
-    <div style="width:32px"></div>
+<!-- ══ 서브 페이지 ══ -->
+<div class="page" id="pg-sub">
+  <div class="hdr">
+    <div class="back-row">
+      <button class="back-btn" onclick="goBack()">‹</button>
+      <div class="hdr-greeting" id="sub-title" style="font-size:16px"></div>
+    </div>
   </div>
-</div>
-<div id="sub-content" style="padding:12px 16px"></div>
+  <div id="sub-body"></div>
 </div>
 
-<!-- ─── Bottom Nav ─── -->
-<nav class="bottom-nav">
-  <button class="nav-btn active" onclick="goPage('home')"><span class="ni">🏠</span>홈</button>
-  <button class="nav-btn" onclick="goPage('biz')"><span class="ni">💼</span>사업</button>
-  <button class="nav-btn" onclick="goPage('okaband')"><span class="ni">💬</span>오카방</button>
-  <button class="nav-btn" onclick="goPage('personal')"><span class="ni">👤</span>개인</button>
+</div><!-- /app -->
+
+<!-- GNB -->
+<nav class="gnb">
+  <button class="gnb-btn active" onclick="goPage('home')"><span class="gi">🏠</span></button>
+  <button class="gnb-btn" onclick="goPage('biz')"><span class="gi">💼</span></button>
+  <button class="gnb-btn" onclick="goPage('kakao')"><span class="gi">💬</span></button>
+  <button class="gnb-btn" onclick="goPage('personal')"><span class="gi">👤</span></button>
 </nav>
 
 <script>
 const S={get:(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
 
-// ── 페이지 라우팅 ──
-const PAGES=['home','biz','okaband','personal','sub'];
-let prevPage='home', curSub='';
-function goPage(id){
-  PAGES.forEach(p=>document.getElementById('page-'+p)?.classList.remove('active'));
-  document.getElementById('page-'+id)?.classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const idx={home:0,biz:1,okaband:2,personal:3};
-  if(idx[id]!==undefined)document.querySelectorAll('.nav-btn')[idx[id]]?.classList.add('active');
-  prevPage=id;
-  window.scrollTo(0,0);
+// ── 인사말 ──
+const GREETINGS=[
+  "유지현 러블리해 💕",
+  "넌 항상 잘하고 있어 ✨",
+  "내가 널 사랑해 🧡",
+  "오늘도 멋진 유지현 🌟",
+  "넌 멋져, 진짜로 🔥",
+  "너의 기준은 옳아 — 확실하게 표현해 💪",
+  "잘하고 있어, 하나씩 해나가면 돼 🌈",
+  "유지현은 언제나 옳다 ✊",
+  "넌 이미 충분히 잘하고 있어 🌸",
+  "오카방도 테이스트트립도 다 잘 될 거야 🗺️",
+];
+function getGreeting(){
+  const issues=S.get('issues',[]).filter(i=>i.level==='high').length;
+  if(issues>0)return "이슈 있어도 괜찮아, 넌 잘 해결할 수 있어 💪";
+  const todos=S.get('main-todo-list',[]).filter(t=>!t.done).length;
+  if(todos>5)return "할일 많아도 하나씩이면 돼, 넌 할 수 있어 🌟";
+  return GREETINGS[new Date().getDay()%GREETINGS.length];
 }
-function goSub(subId){
-  prevPage=PAGES.find(p=>document.getElementById('page-'+p)?.classList.contains('active'))||'home';
-  curSub=subId;
-  renderSub(subId);
+document.getElementById('greeting').textContent=getGreeting();
+document.getElementById('today-date').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+document.getElementById('sch-date').value=new Date().toISOString().slice(0,10);
+
+// ── 페이지 라우팅 ──
+const PAGES=['home','biz','kakao','personal','sub'];
+let prevPage='home';
+function goPage(id){
+  PAGES.forEach(p=>document.getElementById('pg-'+p)?.classList.remove('active'));
+  document.getElementById('pg-'+id)?.classList.add('active');
+  document.querySelectorAll('.gnb-btn').forEach(b=>b.classList.remove('active'));
+  const idx={home:0,biz:1,kakao:2,personal:3};
+  if(idx[id]!==undefined)document.querySelectorAll('.gnb-btn')[idx[id]]?.classList.add('active');
+  if(id!=='sub')prevPage=id;
+  document.getElementById('app').scrollTop=0;
+}
+function goSub(id){
+  prevPage=PAGES.find(p=>p!=='sub'&&document.getElementById('pg-'+p)?.classList.contains('active'))||'home';
+  renderSub(id);
   goPage('sub');
 }
-function goBack(){goPage(prevPage)}
+function goBack(){goPage(prevPage);}
 
-// ── 탭 전환 ──
+// ── 탭 ──
 function switchTab(group,tab){
   document.querySelectorAll(`#${group}-tabs .tab`).forEach(t=>t.classList.remove('active'));
   event.target.classList.add('active');
-  document.querySelectorAll(`[id^="${group}-"]`).forEach(c=>{
-    if(c.classList.contains('tab-content'))c.classList.remove('active');
-  });
+  document.querySelectorAll(`[id^="${group}-"].tc`).forEach(c=>c.classList.remove('active'));
   document.getElementById(`${group}-${tab}`)?.classList.add('active');
 }
 
-// ── 서브페이지 렌더 ──
+// ── 서브 렌더 ──
 const SUB_TITLES={
-  'nolsaeng-writing':'📝 작성법 관리',
-  'tastetrip-docs':'📄 개발 문서',
-  'tastetrip-sns':'📢 SNS/콘텐츠',
-  'tastetrip-govt':'🏛 정부지원',
-  'tastetrip-mining':'🤖 텍스트마이닝',
-  'accident-list-view':'🏥 교통사고 기록',
-  'accident-add':'🏥 기록 추가',
-  'network-view':'👥 인맥리스트',
-  'network-add':'👥 인맥 추가',
-  'resume-view':'📄 이력서',
-  'cover-view':'✍️ 자소서',
-  'sns-freelance-view':'📱 SNS 메모',
+  writing:'📝 작성법',
+  'tt-docs':'📄 개발 문서',
+  'tt-sns':'📢 SNS / 마케팅',
+  'tt-govt':'🏛 정부지원',
+  'tt-mine':'🤖 텍스트마이닝',
+  acc:'🏥 교통사고',
+  network:'👥 인맥',
+  resume:'📄 이력서',
+  cover:'✍️ 자소서',
+  'sns-fl':'📱 SNS 메모',
 };
 function renderSub(id){
   document.getElementById('sub-title').textContent=SUB_TITLES[id]||'';
-  const c=document.getElementById('sub-content');
-  const fns={
-    'nolsaeng-writing': subWriting,
-    'tastetrip-docs': subDocs,
-    'tastetrip-sns': subSns,
-    'tastetrip-govt': subGovt,
-    'tastetrip-mining': subMining,
-    'accident-list-view': subAccList,
-    'accident-add': subAccAdd,
-    'network-view': subNetView,
-    'network-add': subNetAdd,
-    'resume-view': subResume,
-    'cover-view': subCover,
-    'sns-freelance-view': subSnsFreelance,
+  const b=document.getElementById('sub-body');
+  const fn={
+    writing:()=>subWriting(),
+    'tt-docs':()=>subDocs(),
+    'tt-sns':()=>subSns(),
+    'tt-govt':()=>subGovt(),
+    'tt-mine':()=>`<div class="form-wrap" style="margin-top:16px;display:flex;flex-direction:column;gap:10px"><button class="submit-btn" onclick="alert('터미널: bash run_all_files.sh')">▶ 파이프라인 실행</button><button class="submit-btn" style="background:#f3f4f6;color:var(--text)" onclick="window.open('okaband.html','_blank')">📊 대시보드 열기</button><button class="submit-btn" style="background:#f3f4f6;color:var(--text)">🌐 랜딩페이지</button></div>`,
+    acc:()=>subAcc(),
+    network:()=>subNetwork(),
+    resume:()=>subTextarea('resume','이력서'),
+    cover:()=>subTextarea('cover','자소서'),
+    'sns-fl':()=>subSnsFl(),
   };
-  if(fns[id])c.innerHTML=fns[id]();
-  else c.innerHTML='<p style="color:var(--sub)">준비중</p>';
-  bindSubEvents(id);
+  b.innerHTML=fn[id]?fn[id]():'<div class="empty">준비중</div>';
+  afterSubRender(id);
 }
-function bindSubEvents(id){
-  if(id==='accident-add'){
-    document.getElementById('acc-save-btn')?.addEventListener('click',()=>{
-      const hospital=document.getElementById('s-hospital').value.trim();if(!hospital)return;
-      const arr=S.get('accidents',[]);arr.unshift({hospital,pain:document.getElementById('s-pain').value,purpose:document.getElementById('s-purpose').value,date:document.getElementById('s-date').value,amount:document.getElementById('s-amount').value,memo:document.getElementById('s-memo').value,id:Date.now()});S.set('accidents',arr);
-      updateAccStats();alert('저장됐어요!');goBack();
+function afterSubRender(id){
+  if(id==='acc'){
+    document.getElementById('acc-save')?.addEventListener('click',()=>{
+      const h=document.getElementById('a-hosp').value.trim();if(!h)return;
+      const arr=S.get('accidents',[]);arr.unshift({hospital:h,pain:v('a-pain'),purpose:v('a-purpose'),date:v('a-date'),amount:v('a-amount'),memo:v('a-memo'),id:Date.now()});S.set('accidents',arr);
+      updateAccSub();alert('저장됐어요!');renderSub('acc');
     });
   }
-  if(id==='network-add'){
-    document.getElementById('net-save-btn')?.addEventListener('click',()=>{
-      const name=document.getElementById('s-net-name').value.trim();if(!name)return;
-      const arr=S.get('network',[]);arr.unshift({name,rel:document.getElementById('s-net-rel').value,org:document.getElementById('s-net-org').value,contact:document.getElementById('s-net-contact').value,memo:document.getElementById('s-net-memo').value,id:Date.now()});S.set('network',arr);
-      updateNetStats();alert('추가됐어요!');goBack();
+  if(id==='network'){
+    renderNetList();
+    document.getElementById('net-search')?.addEventListener('input',renderNetList);
+    document.getElementById('net-save')?.addEventListener('click',()=>{
+      const n=v('n-name');if(!n)return;
+      const arr=S.get('network',[]);arr.unshift({name:n,rel:v('n-rel'),org:v('n-org'),contact:v('n-contact'),memo:v('n-memo'),id:Date.now()});S.set('network',arr);
+      ['n-name','n-rel','n-org','n-contact','n-memo'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
+      updateNetSub();renderNetList();
     });
   }
-  if(id==='resume-view'){document.getElementById('resume-ta').value=localStorage.getItem('resume')||'';document.getElementById('resume-ta').addEventListener('change',e=>localStorage.setItem('resume',e.target.value));}
-  if(id==='cover-view'){document.getElementById('cover-ta').value=localStorage.getItem('cover')||'';document.getElementById('cover-ta').addEventListener('change',e=>localStorage.setItem('cover',e.target.value));}
-  if(id==='sns-freelance-view'){
-    renderTodosInEl('sns-fl-list-el','sns-fl-list');
-    document.getElementById('sns-fl-add-btn')?.addEventListener('click',()=>{
-      const inp=document.getElementById('sns-fl-input');const text=inp.value.trim();if(!text)return;
-      const arr=S.get('sns-fl-list',[]);arr.unshift({text,done:false,id:Date.now()});S.set('sns-fl-list',arr);inp.value='';renderTodosInEl('sns-fl-list-el','sns-fl-list');
+  if(id==='resume'){const ta=document.getElementById('ta-resume');if(ta){ta.value=localStorage.getItem('resume')||'';ta.addEventListener('input',e=>localStorage.setItem('resume',e.target.value));}}
+  if(id==='cover'){const ta=document.getElementById('ta-cover');if(ta){ta.value=localStorage.getItem('cover')||'';ta.addEventListener('input',e=>localStorage.setItem('cover',e.target.value));}}
+  if(id==='sns-fl'){
+    renderListInEl('sns-fl-list','sns-fl-items');
+    document.getElementById('sns-fl-add')?.addEventListener('click',()=>{
+      const inp=document.getElementById('sns-fl-inp'),t=inp.value.trim();if(!t)return;
+      const arr=S.get('sns-fl-items',[]);arr.unshift({text:t,done:false,id:Date.now()});S.set('sns-fl-items',arr);inp.value='';renderListInEl('sns-fl-list','sns-fl-items');
     });
   }
-  if(id==='tastetrip-sns'){
-    renderTodosInEl('sns-list-el','sns-list');
-    document.getElementById('sns-add-btn')?.addEventListener('click',()=>{
-      const inp=document.getElementById('sns-input');const text=inp.value.trim();if(!text)return;
-      const arr=S.get('sns-list',[]);arr.unshift({text,done:false,id:Date.now()});S.set('sns-list',arr);inp.value='';renderTodosInEl('sns-list-el','sns-list');
+  if(id==='tt-sns'){
+    renderListInEl('sns-tt-list','sns-tt-items');
+    document.getElementById('sns-tt-add')?.addEventListener('click',()=>{
+      const inp=document.getElementById('sns-tt-inp'),t=inp.value.trim();if(!t)return;
+      const arr=S.get('sns-tt-items',[]);arr.unshift({text:t,done:false,id:Date.now()});S.set('sns-tt-items',arr);inp.value='';renderListInEl('sns-tt-list','sns-tt-items');
     });
   }
-  if(id==='tastetrip-govt'){
-    renderGovtInEl();
-    document.getElementById('govt-add-btn')?.addEventListener('click',()=>{
-      const name=document.getElementById('s-govt-name').value.trim();if(!name)return;
-      const arr=S.get('govt',[]);arr.unshift({name,deadline:document.getElementById('s-govt-deadline').value,status:document.getElementById('s-govt-status').value,id:Date.now()});S.set('govt',arr);
-      document.getElementById('s-govt-name').value='';renderGovtInEl();updateGovtStats();
+  if(id==='tt-govt'){
+    renderGovtList();
+    document.getElementById('govt-save')?.addEventListener('click',()=>{
+      const n=v('g-name');if(!n)return;
+      const arr=S.get('govt',[]);arr.unshift({name:n,deadline:v('g-dl'),status:document.getElementById('g-status')?.value||'관심',id:Date.now()});S.set('govt',arr);
+      document.getElementById('g-name').value='';renderGovtList();
     });
-  }
-  if(id==='network-view'){
-    renderNetworkInEl();
-    document.getElementById('net-search-el')?.addEventListener('input',renderNetworkInEl);
   }
 }
+function v(id){return document.getElementById(id)?.value||'';}
 
-// Sub content generators
+// Sub content
 function subWriting(){
   const arr=S.get('writings',[]);
-  const items=arr.map(w=>`<div class="writing-item"><div class="writing-tag">${w.tag||'기타'} · ${w.date}</div><div class="writing-content">${w.content}</div><button onclick="delWriting(${w.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:4px">삭제</button></div>`).join('');
-  return `<div class="form-card" style="margin-bottom:10px"><input id="wt-tag" class="input-full" placeholder="카테고리 (예: SNS글쓰기)"><textarea id="wt-content" class="input-full" placeholder="작성법 내용..."></textarea><button class="btn btn-p" style="width:100%" onclick="saveWriting()">저장</button></div><div class="card">${items||'<div style="padding:16px;color:var(--sub);font-size:13px;text-align:center">기록 없음</div>'}</div>`;
+  const items=arr.map(w=>`<div style="padding:12px 16px;border-bottom:1px solid var(--border)"><div style="font-size:11px;color:var(--accent);font-weight:700;margin-bottom:4px">${w.tag||'기타'} · ${w.date}</div><div style="font-size:13px;line-height:1.6;white-space:pre-wrap">${w.content}</div><button onclick="delWriting(${w.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:4px">삭제</button></div>`).join('');
+  return `<div class="form-wrap" style="margin-top:8px"><input id="wt-tag" class="finp" placeholder="카테고리 (예: SNS글쓰기)"><textarea id="wt-body" class="finp" placeholder="작성법 내용..."></textarea><button class="submit-btn" onclick="saveWriting()">저장</button></div>${arr.length?`<div class="card" style="margin:12px 16px">${items}</div>`:'<div class="empty">기록 없음</div>'}`;
 }
 function subDocs(){
   const extra=S.get('docs-extra',[]);
-  const staticDocs=[{n:'테이블정의서_ERD.xlsx',d:'2026-02-12'},{n:'개발정의.docx',d:'2026-04-13'},{n:'개발명세서.docx',d:'2026-04-15'},{n:'MVP_현황명세서.md',d:'2026-04-29'},{n:'프로덕트_로드맵.md',d:'2026-04-29'},{n:'카테고리3단계구조.xlsx',d:'2026-05-15'},{n:'통합문서.xlsx',d:'2026-05-15'}];
-  const rows=[...staticDocs,...extra].map(d=>`<div class="row"><span class="row-icon">📄</span><div class="row-body"><div class="row-title">${d.n||d.name}</div></div><span style="font-size:11px;color:var(--sub)">${d.d||d.date}</span></div>`).join('');
-  return `<div class="card">${rows}</div><div style="margin-top:10px;display:flex;gap:8px"><input id="doc-add-input" class="input-full" style="margin:0;flex:1" placeholder="문서명 추가..."><button class="btn btn-p" onclick="addDoc()">+</button></div>`;
+  const fixed=[{n:'테이블정의서_ERD.xlsx',d:'26.02'},{n:'개발정의.docx',d:'26.04'},{n:'개발명세서.docx',d:'26.04'},{n:'MVP_현황명세서.md',d:'26.04'},{n:'프로덕트_로드맵.md',d:'26.04'},{n:'카테고리3단계구조.xlsx',d:'26.05'},{n:'통합문서.xlsx',d:'26.05'}];
+  const rows=[...fixed,...extra.map(d=>({n:d.name,d:d.date?.slice(2,7)||''}))].map(d=>`<div class="row" style="cursor:default"><span class="row-icon">📄</span><div class="row-body"><div class="row-title">${d.n}</div></div><span style="font-size:11px;color:var(--sub)">${d.d}</span></div>`).join('');
+  return `<div class="card" style="margin:8px 16px">${rows}</div><div class="form-wrap"><div style="display:flex;gap:8px"><input id="doc-inp" class="finp" style="margin:0;flex:1" placeholder="문서명 추가..."><button class="add-btn" onclick="addDoc()">+</button></div></div>`;
 }
 function subSns(){
-  return `<div class="form-card" style="margin-bottom:10px"><div style="display:flex;gap:8px"><input id="sns-input" class="input-full" style="margin:0;flex:1" placeholder="콘텐츠/마케팅 메모..."><button id="sns-add-btn" class="btn btn-p">+</button></div></div><div class="card"><div id="sns-list-el"></div></div>`;
+  return `<div class="form-wrap" style="margin-top:8px"><div style="display:flex;gap:8px"><input id="sns-tt-inp" class="finp" style="margin:0;flex:1" placeholder="콘텐츠/마케팅 메모..."><button id="sns-tt-add" class="add-btn">+</button></div></div><div class="card" style="margin:10px 16px"><div id="sns-tt-list"></div></div>`;
 }
 function subGovt(){
-  return `<div class="form-card" style="margin-bottom:10px"><input id="s-govt-name" class="input-full" placeholder="지원사업명"><div style="display:flex;gap:8px;margin-bottom:8px"><input id="s-govt-deadline" type="date" class="input-full" style="margin:0;flex:1"><select id="s-govt-status" style="flex:1;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;background:var(--card);outline:none"><option>관심</option><option>준비중</option><option>제출</option><option>완료</option></select></div><button id="govt-add-btn" class="btn btn-p" style="width:100%">추가</button></div><div class="card" id="govt-items-el"></div>`;
+  return `<div class="form-wrap" style="margin-top:8px"><input id="g-name" class="finp" placeholder="지원사업명 *"><div style="display:flex;gap:8px;margin-bottom:10px"><input id="g-dl" type="date" class="finp" style="margin:0;flex:1"><select id="g-status" class="fsel" style="margin:0;flex:1"><option>관심</option><option>준비중</option><option>제출</option><option>완료</option></select></div><button id="govt-save" class="submit-btn">추가</button></div><div class="card" style="margin:12px 16px"><div id="govt-list"></div></div>`;
 }
-function subMining(){
-  return `<div style="display:flex;flex-direction:column;gap:10px"><button class="btn btn-p" style="width:100%;padding:14px;font-size:15px" onclick="alert('터미널: bash run_all_files.sh')">▶ 파이프라인 실행</button><button class="btn btn-g" style="width:100%;padding:14px" onclick="window.open('okaband.html','_blank')">📊 오카방 대시보드</button><button class="btn btn-g" style="width:100%;padding:14px" onclick="alert('랜딩페이지 URL을 등록하세요')">🌐 랜딩페이지</button></div>`;
-}
-function subAccList(){
+function subAcc(){
   const arr=S.get('accidents',[]);
   const total=arr.reduce((s,a)=>s+(Number(a.amount)||0),0);
-  const statHtml=`<div class="stat-row" style="margin-bottom:14px"><div class="stat"><div class="stat-num">${arr.length}</div><div class="stat-lbl">총 방문</div></div><div class="stat" style="grid-column:span 3"><div class="stat-num">${total.toLocaleString()}원</div><div class="stat-lbl">총 진료비</div></div></div>`;
-  if(!arr.length)return statHtml+`<p style="color:var(--sub);text-align:center;font-size:13px">기록 없음</p>`;
-  const rows=arr.map(a=>`<div class="net-item"><div class="net-name">${a.hospital} <span style="font-size:11px;color:var(--sub)">${a.date||''}</span></div><div class="net-info">${a.pain||'-'} · ${a.purpose||'-'} · ${a.amount?Number(a.amount).toLocaleString()+'원':'-'}</div>${a.memo?`<div class="net-info">${a.memo}</div>`:''}<button onclick="delAcc(${a.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:4px">삭제</button></div>`).join('');
-  return statHtml+`<div class="card">${rows}</div>`;
+  const statbar=arr.length?`<div style="display:flex;gap:10px;padding:0 16px 12px"><div class="stat" style="flex:1"><div class="stat-n">${arr.length}</div><div class="stat-l">총 방문</div></div><div class="stat" style="flex:2"><div class="stat-n" style="font-size:15px">${total.toLocaleString()}원</div><div class="stat-l">총 진료비</div></div></div>`:'';
+  const list=arr.map(a=>`<div class="acc-item"><div class="acc-top">${a.hospital} <span style="font-size:11px;color:var(--sub);font-weight:400">${a.date||''}</span></div><div class="acc-info">${[a.pain,a.purpose,a.amount?Number(a.amount).toLocaleString()+'원':''].filter(Boolean).join(' · ')}</div>${a.memo?`<div class="acc-info">${a.memo}</div>`:''}<button onclick="delAcc(${a.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:4px">삭제</button></div>`).join('');
+  return `${statbar}<div class="card" style="margin:0 16px 14px">${list||'<div class="empty">기록 없음</div>'}</div><div style="padding:0 16px"><div class="sec-lbl" style="margin-bottom:8px">+ 기록 추가</div><div class="finp-grid"><input id="a-hosp" class="finp" style="margin:0" placeholder="병원명 *"><input id="a-pain" class="finp" style="margin:0" placeholder="아픈 곳"></div><div class="finp-grid"><input id="a-purpose" class="finp" style="margin:0" placeholder="목적"><input id="a-date" type="date" class="finp" style="margin:0"></div><div class="finp-grid"><input id="a-amount" type="number" class="finp" style="margin:0" placeholder="금액(원)"><input id="a-memo" class="finp" style="margin:0" placeholder="메모"></div><button id="acc-save" class="submit-btn">저장</button></div>`;
 }
-function subAccAdd(){
-  return `<div class="form-card"><input id="s-hospital" class="input-full" placeholder="병원명 *"><div class="input-grid"><input id="s-pain" class="input-full" style="margin:0" placeholder="아픈 곳"><input id="s-purpose" class="input-full" style="margin:0" placeholder="목적"></div><div class="input-grid"><input id="s-date" type="date" class="input-full" style="margin:0"><input id="s-amount" type="number" class="input-full" style="margin:0" placeholder="금액(원)"></div><input id="s-memo" class="input-full" placeholder="메모"><button id="acc-save-btn" class="btn btn-p" style="width:100%">저장</button></div>`;
+function subNetwork(){
+  return `<div class="form-wrap" style="margin-top:4px"><input id="net-search" class="finp" placeholder="🔍 검색..."><div class="card" style="margin-bottom:12px"><div id="net-list"></div></div><div class="sec-lbl" style="margin-bottom:8px">+ 인맥 추가</div><div class="finp-grid"><input id="n-name" class="finp" style="margin:0" placeholder="이름 *"><input id="n-rel" class="finp" style="margin:0" placeholder="관계"></div><div class="finp-grid"><input id="n-org" class="finp" style="margin:0" placeholder="소속/회사"><input id="n-contact" class="finp" style="margin:0" placeholder="연락처"></div><input id="n-memo" class="finp" placeholder="메모"><button id="net-save" class="submit-btn">추가</button></div>`;
 }
-function subNetView(){
-  const arr=S.get('network',[]);
-  return `<input id="net-search-el" class="input-full" placeholder="검색..."><div class="card" id="net-items-el">${arr.length?'':'<div style="padding:16px;color:var(--sub);font-size:13px;text-align:center">기록 없음</div>'}</div>`;
+function subTextarea(key,label){
+  return `<div class="ta-page"><textarea id="ta-${key}" placeholder="${label} 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-${key}').value).then(()=>alert('복사됐어요!'))">📋 복사</button></div>`;
 }
-function renderNetworkInEl(){
-  const q=(document.getElementById('net-search-el')?.value||'').toLowerCase();
-  const arr=S.get('network',[]).filter(n=>!q||n.name.includes(q)||n.rel?.includes(q)||n.org?.includes(q));
-  const el=document.getElementById('net-items-el');if(!el)return;
-  el.innerHTML=arr.map(n=>`<div class="net-item"><div class="net-name">${n.name} <span class="row-badge b-link">${n.rel||''}</span></div><div class="net-info">${n.org||''} ${n.contact?'· '+n.contact:''}</div>${n.memo?`<div class="net-info">${n.memo}</div>`:''}<button onclick="delNetwork(${n.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:4px">삭제</button></div>`).join('')||'<div style="padding:16px;color:var(--sub);font-size:13px;text-align:center">검색 결과 없음</div>';
+function subSnsFl(){
+  return `<div class="form-wrap" style="margin-top:8px"><div style="display:flex;gap:8px"><input id="sns-fl-inp" class="finp" style="margin:0;flex:1" placeholder="SNS 운영 메모/아이디어..."><button id="sns-fl-add" class="add-btn">+</button></div></div><div class="card" style="margin:10px 16px"><div id="sns-fl-list"></div></div>`;
 }
-function subNetAdd(){
-  return `<div class="form-card"><input id="s-net-name" class="input-full" placeholder="이름 *"><div class="input-grid"><input id="s-net-rel" class="input-full" style="margin:0" placeholder="관계 (예: 멘토)"><input id="s-net-org" class="input-full" style="margin:0" placeholder="소속/회사"></div><input id="s-net-contact" class="input-full" placeholder="연락처/SNS"><input id="s-net-memo" class="input-full" placeholder="메모"><button id="net-save-btn" class="btn btn-p" style="width:100%">추가</button></div>`;
-}
-function subResume(){return `<textarea id="resume-ta" class="input-full" style="min-height:60vh" placeholder="이력서 내용..."></textarea><button class="btn btn-g" style="width:100%;margin-top:8px" onclick="navigator.clipboard.writeText(document.getElementById('resume-ta').value).then(()=>alert('복사됐어요!'))">복사</button>`;}
-function subCover(){return `<textarea id="cover-ta" class="input-full" style="min-height:60vh" placeholder="자소서 내용..."></textarea><button class="btn btn-g" style="width:100%;margin-top:8px" onclick="navigator.clipboard.writeText(document.getElementById('cover-ta').value).then(()=>alert('복사됐어요!'))">복사</button>`;}
-function subSnsFreelance(){return `<div class="form-card" style="margin-bottom:10px"><div style="display:flex;gap:8px"><input id="sns-fl-input" class="input-full" style="margin:0;flex:1" placeholder="SNS 운영 메모/아이디어..."><button id="sns-fl-add-btn" class="btn btn-p">+</button></div></div><div class="card"><div id="sns-fl-list-el"></div></div>`;}
 
-// ── 공통 Todo 함수들 ──
-function addTodo(listKey){
-  const input=document.getElementById('main-todo-input'),text=input.value.trim();if(!text)return;
-  const tag=document.getElementById('main-todo-tag')?.value||'';
-  const arr=S.get(listKey,[]);arr.unshift({text,tag,done:false,id:Date.now()});S.set(listKey,arr);
-  input.value='';renderTodos(listKey);updateStats();
+// ── 리스트 렌더 ──
+function renderNetList(){
+  const q=(document.getElementById('net-search')?.value||'').toLowerCase();
+  const arr=S.get('network',[]).filter(n=>!q||n.name.includes(q)||n.rel?.includes(q)||n.org?.includes(q));
+  const el=document.getElementById('net-list');if(!el)return;
+  el.innerHTML=arr.map(n=>`<div class="net-item"><div class="net-top"><span class="net-name">${n.name}</span>${n.rel?`<span class="net-rel">${n.rel}</span>`:''}</div><div class="net-info">${[n.org,n.contact].filter(Boolean).join(' · ')}</div>${n.memo?`<div class="net-info">${n.memo}</div>`:''}<button onclick="delNet(${n.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:2px">삭제</button></div>`).join('')||'<div class="empty">기록 없음</div>';
 }
-function addTodoSimple(listKey,inputId){
-  const input=document.getElementById(inputId),text=input?.value.trim();if(!text)return;
-  const arr=S.get(listKey,[]);arr.unshift({text,done:false,id:Date.now()});S.set(listKey,arr);
-  input.value='';renderTodos(listKey);
+function renderGovtList(){
+  const el=document.getElementById('govt-list');if(!el)return;
+  const arr=S.get('govt',[]);
+  el.innerHTML=arr.map(g=>`<div class="govt-item"><div class="govt-top"><span class="govt-name">${g.name}</span><span class="govt-st g${g.status}">${g.status}</span></div><div class="govt-dl">${g.deadline||'마감일 미정'}</div><button onclick="delGovt(${g.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:2px">삭제</button></div>`).join('')||'<div class="empty">없음</div>';
 }
-function toggleTodo(k,id){const arr=S.get(k,[]),i=arr.findIndex(t=>t.id===id);if(i>=0){arr[i].done=!arr[i].done;S.set(k,arr);renderTodos(k);updateStats();}}
-function delTodo(k,id){S.set(k,S.get(k,[]).filter(t=>t.id!==id));renderTodos(k);updateStats();}
-function renderTodos(k){
-  const el=document.getElementById(k);if(!el)return;
-  const arr=S.get(k,[]);
-  if(!arr.length){el.innerHTML='<div style="padding:14px;color:var(--sub);font-size:12px;text-align:center">없음</div>';return;}
-  el.innerHTML=arr.map(t=>`<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo('${k}',${t.id})"><span class="tt" style="flex:1">${t.text}</span>${t.tag?`<span class="ttag ttag-${t.tag}">${t.tag}</span>`:''}<button class="del-btn" onclick="delTodo('${k}',${t.id})">✕</button></div>`).join('');
-}
-function renderTodosInEl(elId,storageKey){
+function renderListInEl(elId,stKey){
   const el=document.getElementById(elId);if(!el)return;
-  const arr=S.get(storageKey,[]);
-  if(!arr.length){el.innerHTML='<div style="padding:14px;color:var(--sub);font-size:12px;text-align:center">없음</div>';return;}
-  el.innerHTML=arr.map(t=>`<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodoEl('${elId}','${storageKey}',${t.id})"><span class="tt" style="flex:1">${t.text}</span><button class="del-btn" onclick="delTodoEl('${elId}','${storageKey}',${t.id})">✕</button></div>`).join('');
+  const arr=S.get(stKey,[]);
+  el.innerHTML=arr.map(t=>`<div class="sns-item"><span class="sns-txt${t.done?' done':''}" style="${t.done?'text-decoration:line-through;color:#bbb':''}">${t.text}</span><button class="xbtn" onclick="delListItem('${stKey}','${elId}',${t.id})">✕</button></div>`).join('')||'<div class="empty">없음</div>';
 }
-function toggleTodoEl(elId,k,id){const arr=S.get(k,[]),i=arr.findIndex(t=>t.id===id);if(i>=0){arr[i].done=!arr[i].done;S.set(k,arr);renderTodosInEl(elId,k);}}
-function delTodoEl(elId,k,id){S.set(k,S.get(k,[]).filter(t=>t.id!==id));renderTodosInEl(elId,k);}
+function delListItem(stKey,elId,id){S.set(stKey,S.get(stKey,[]).filter(t=>t.id!==id));renderListInEl(elId,stKey);}
+
+// ── 할일 ──
+function addTodo(){
+  const inp=document.getElementById('main-todo-inp'),text=inp.value.trim();if(!text)return;
+  const tag=document.getElementById('main-todo-tag').value;
+  const arr=S.get('main-todo-list',[]);arr.unshift({text,tag,done:false,id:Date.now()});S.set('main-todo-list',arr);
+  inp.value='';renderTodos();updateStats();updateGreeting();
+}
+function toggleTodo(id){
+  const arr=S.get('main-todo-list',[]),i=arr.findIndex(t=>t.id===id);if(i>=0){arr[i].done=!arr[i].done;S.set('main-todo-list',arr);}renderTodos();updateStats();
+}
+function delTodo(id){S.set('main-todo-list',S.get('main-todo-list',[]).filter(t=>t.id!==id));renderTodos();updateStats();}
+function renderTodos(){
+  const arr=S.get('main-todo-list',[]);
+  const el=document.getElementById('main-todo-list');
+  if(!arr.length){el.innerHTML='<div class="empty">할일 없음</div>';return;}
+  el.innerHTML=arr.map(t=>`<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt">${t.text}</span>${t.tag?`<span class="ttag ttag-${t.tag}">${t.tag}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">✕</button></div>`).join('');
+  // 헤더 프리뷰
+  const remain=arr.filter(t=>!t.done);
+  const pv=document.getElementById('todo-preview');
+  if(pv)pv.textContent=remain.length?`남은 할일 ${remain.length}개: ${remain.slice(0,2).map(t=>t.text).join(', ')}${remain.length>2?' …':''}` : '✓ 모든 할일 완료!';
+}
 
 // ── 이슈 ──
 function addIssue(){
-  const text=document.getElementById('issue-input').value.trim();if(!text)return;
-  const arr=S.get('issues',[]);arr.unshift({text,level:document.getElementById('issue-level').value,area:document.getElementById('issue-area').value,id:Date.now(),date:new Date().toLocaleDateString('ko-KR')});S.set('issues',arr);
-  document.getElementById('issue-input').value='';renderIssues();updateStats();
+  const inp=document.getElementById('issue-inp'),text=inp.value.trim();if(!text)return;
+  const arr=S.get('issues',[]);arr.unshift({text,level:document.getElementById('issue-lv').value,area:document.getElementById('issue-area').value,id:Date.now(),date:new Date().toLocaleDateString('ko-KR')});S.set('issues',arr);
+  inp.value='';renderIssues();updateStats();updateGreeting();
 }
-function delIssue(id){S.set('issues',S.get('issues',[]).filter(i=>i.id!==id));renderIssues();updateStats();}
+function delIssue(id){S.set('issues',S.get('issues',[]).filter(i=>i.id!==id));renderIssues();updateStats();updateGreeting();}
 function renderIssues(){
-  const el=document.getElementById('issue-list');if(!el)return;
+  const el=document.getElementById('issue-list');
   const arr=S.get('issues',[]);
-  if(!arr.length){el.innerHTML='<div style="padding:14px;color:var(--sub);font-size:12px;text-align:center">이슈 없음 ✓</div>';return;}
-  el.innerHTML=arr.map(i=>`<div class="issue-item ${i.level}"><div class="issue-text">${i.text} <button class="del-btn" onclick="delIssue(${i.id})">✕</button></div><div class="issue-meta">${i.area} · ${i.date}</div></div>`).join('');
+  if(!arr.length){el.innerHTML='<div class="empty">이슈 없음 ✓</div>';return;}
+  el.innerHTML=arr.map(i=>`<div class="issue-item ${i.level}"><div class="issue-txt"><span>${i.text}</span><button class="xbtn" onclick="delIssue(${i.id})">✕</button></div><div class="issue-meta">${i.area} · ${i.date}</div></div>`).join('');
+  // 공지탭 알림바
+  const bar=document.getElementById('issue-alert-bar');
+  if(bar){const high=arr.filter(i=>i.level==='high');bar.textContent=high.length?`⚠️ 긴급 이슈 ${high.length}건 — ${high.map(i=>i.text).join(' / ')} — 분위기 전환 체크리스트 확인하세요`:'✓ 현재 긴급 이슈 없음';}
 }
 
 // ── 캘린더 ──
@@ -810,16 +699,15 @@ function renderCal(){
   document.getElementById('cal-title').textContent=`${y}년 ${m+1}월`;
   const first=new Date(y,m,1).getDay(),last=new Date(y,m+1,0).getDate();
   const todayStr=new Date().toISOString().slice(0,10);
-  const schedules=S.get('schedules',[]);
+  const schs=S.get('schedules',[]);
   let html='';
   for(let i=0;i<first;i++)html+=`<div class="cal-day other">${new Date(y,m,0).getDate()-first+i+1}</div>`;
   for(let d=1;d<=last;d++){
     const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const hasEv=schedules.some(s=>s.date===ds);
-    html+=`<div class="cal-day${ds===todayStr?' today':''}">${d}${hasEv&&ds!==todayStr?'<div class="cal-dot"></div>':''}</div>`;
+    const has=schs.some(s=>s.date===ds);
+    html+=`<div class="cal-day${ds===todayStr?' today':''}">${d}${has&&ds!==todayStr?'<div class="cal-dot"></div>':''}</div>`;
   }
-  document.getElementById('cal-body').innerHTML=html;
-  renderUpcoming();
+  document.getElementById('cal-body').innerHTML=html;renderUpcoming();
 }
 function changeMonth(d){calDate.setMonth(calDate.getMonth()+d);renderCal();}
 function addSchedule(){
@@ -830,54 +718,48 @@ function addSchedule(){
 function renderUpcoming(){
   const today=new Date().toISOString().slice(0,10);
   const arr=S.get('schedules',[]).filter(s=>s.date>=today).slice(0,4);
-  const el=document.getElementById('upcoming-list');if(!el)return;
-  el.innerHTML=arr.map(s=>`<div class="sch-item"><span>${s.text}</span><span class="sch-date">${s.date}</span></div>`).join('')||'<div style="padding:8px;color:var(--sub);font-size:12px">예정 일정 없음</div>';
+  document.getElementById('upcoming-list').innerHTML=arr.map(s=>`<div class="sch-item"><span>${s.text}</span><span class="sch-date">${s.date}</span></div>`).join('')||'<div style="padding:10px 16px;font-size:12px;color:var(--sub)">예정 일정 없음</div>';
 }
 
-// ── Stats ──
+// ── 통계 ──
 function updateStats(){
   const todos=S.get('main-todo-list',[]),done=todos.filter(t=>t.done).length,remain=todos.filter(t=>!t.done).length,issues=S.get('issues',[]).length,sch=S.get('schedules',[]).filter(s=>s.date>=new Date().toISOString().slice(0,10)).length;
-  document.getElementById('main-stats').innerHTML=`<div class="stat"><div class="stat-num">${remain}</div><div class="stat-lbl">할일</div></div><div class="stat"><div class="stat-num">${done}</div><div class="stat-lbl">완료</div></div><div class="stat"><div class="stat-num">${issues}</div><div class="stat-lbl">이슈</div></div><div class="stat"><div class="stat-num">${sch}</div><div class="stat-lbl">일정</div></div>`;
+  document.getElementById('main-stats').innerHTML=`<div class="stat"><div class="stat-n">${remain}</div><div class="stat-l">할일</div></div><div class="stat"><div class="stat-n">${done}</div><div class="stat-l">완료</div></div><div class="stat"><div class="stat-n">${issues}</div><div class="stat-l">이슈</div></div><div class="stat"><div class="stat-n">${sch}</div><div class="stat-l">일정</div></div>`;
 }
-function updateAccStats(){const arr=S.get('accidents',[]);const el=document.getElementById('acc-count-sub');if(el)el.textContent=arr.length?`${arr.length}건 · ${arr.reduce((s,a)=>s+(Number(a.amount)||0),0).toLocaleString()}원`:'기록 없음';}
-function updateNetStats(){const arr=S.get('network',[]);const el=document.getElementById('net-count-sub');if(el)el.textContent=arr.length?`${arr.length}명`:'기록 없음';}
-function updateGovtStats(){const arr=S.get('govt',[]);const el=document.getElementById('govt-count-sub');if(el)el.textContent=arr.length?`${arr.length}건`:'기록 없음';}
+function updateGreeting(){document.getElementById('greeting').textContent=getGreeting();}
+function updateAccSub(){const arr=S.get('accidents',[]);const el=document.getElementById('acc-sub');if(el)el.textContent=arr.length?`${arr.length}건 · ${arr.reduce((s,a)=>s+(Number(a.amount)||0),0).toLocaleString()}원`:'기록 없음';}
+function updateNetSub(){const arr=S.get('network',[]);const el=document.getElementById('net-sub');if(el)el.textContent=arr.length?`${arr.length}명`:'기록 없음';}
 
-// ── Govt in sub ──
-function renderGovtInEl(){
-  const el=document.getElementById('govt-items-el');if(!el)return;
-  const arr=S.get('govt',[]);
-  el.innerHTML=arr.map(g=>`<div class="govt-item"><span class="g-status g-${g.status}">${g.status}</span><div class="govt-name">${g.name}</div><div class="govt-meta">${g.deadline||'마감일 미정'}</div><button onclick="delGovt(${g.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:4px">삭제</button></div>`).join('')||'<div style="padding:14px;color:var(--sub);font-size:12px;text-align:center">없음</div>';
+// ── 간단 리스트 ──
+function addSimple(listId,inputId){
+  const inp=document.getElementById(inputId),text=inp?.value.trim();if(!text)return;
+  const arr=S.get(listId,[]);arr.unshift({text,id:Date.now()});S.set(listId,arr);inp.value='';renderSimple(listId);
 }
-function delGovt(id){S.set('govt',S.get('govt',[]).filter(g=>g.id!==id));renderGovtInEl();updateGovtStats();}
-
-// ── Accident ──
-function delAcc(id){S.set('accidents',S.get('accidents',[]).filter(a=>a.id!==id));renderSub('accident-list-view');updateAccStats();}
-
-// ── Network ──
-function delNetwork(id){S.set('network',S.get('network',[]).filter(n=>n.id!==id));renderNetworkInEl();updateNetStats();}
-
-// ── Docs ──
-function addDoc(){
-  const inp=document.getElementById('doc-add-input');const name=inp?.value.trim();if(!name)return;
-  const arr=S.get('docs-extra',[]);arr.push({name,date:new Date().toISOString().slice(0,10),id:Date.now()});S.set('docs-extra',arr);
-  inp.value='';renderSub('tastetrip-docs');
+function delSimple(listId,id){S.set(listId,S.get(listId,[]).filter(t=>t.id!==id));renderSimple(listId);}
+function renderSimple(listId){
+  const el=document.getElementById(listId);if(!el)return;
+  const arr=S.get(listId,[]);
+  el.innerHTML=arr.map(t=>`<div class="sns-item"><span class="sns-txt">${t.text}</span><button class="xbtn" onclick="delSimple('${listId}',${t.id})">✕</button></div>`).join('')||'<div class="empty">없음</div>';
 }
 
-// ── Writing ──
+// ── 삭제 함수들 ──
+function delWriting(id){S.set('writings',S.get('writings',[]).filter(w=>w.id!==id));renderSub('writing');}
 function saveWriting(){
-  const tag=document.getElementById('wt-tag')?.value.trim(),content=document.getElementById('wt-content')?.value.trim();if(!content)return;
+  const tag=document.getElementById('wt-tag')?.value.trim(),content=document.getElementById('wt-body')?.value.trim();if(!content)return;
   const arr=S.get('writings',[]);arr.unshift({tag,content,id:Date.now(),date:new Date().toLocaleDateString('ko-KR')});S.set('writings',arr);
-  renderSub('nolsaeng-writing');
+  renderSub('writing');
 }
-function delWriting(id){S.set('writings',S.get('writings',[]).filter(w=>w.id!==id));renderSub('nolsaeng-writing');}
+function addDoc(){
+  const inp=document.getElementById('doc-inp'),name=inp?.value.trim();if(!name)return;
+  const arr=S.get('docs-extra',[]);arr.push({name,date:new Date().toISOString().slice(0,10),id:Date.now()});S.set('docs-extra',arr);inp.value='';renderSub('tt-docs');
+}
+function delAcc(id){S.set('accidents',S.get('accidents',[]).filter(a=>a.id!==id));updateAccSub();renderSub('acc');}
+function delNet(id){S.set('network',S.get('network',[]).filter(n=>n.id!==id));updateNetSub();renderNetList();}
+function delGovt(id){S.set('govt',S.get('govt',[]).filter(g=>g.id!==id));renderGovtList();}
 
-// ── Init ──
-document.getElementById('today-date').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
-document.getElementById('sch-date').value=new Date().toISOString().slice(0,10);
-renderCal();updateStats();renderIssues();updateAccStats();updateNetStats();updateGovtStats();
-['main-todo-list','ok-todo-list','notice-list','ops-list','event-list','new-issue-list'].forEach(renderTodos);
-const snsCountSub=document.getElementById('sns-count-sub');if(snsCountSub){const n=S.get('sns-list',[]).length;snsCountSub.textContent=n?`${n}개`:'콘텐츠/마케팅 메모';}
+// ── 초기화 ──
+renderTodos();renderIssues();renderCal();updateStats();updateAccSub();updateNetSub();
+['notice-list','ops-list','ev-list','new-iss-list'].forEach(renderSimple);
 </script>
 </body>
 </html>
