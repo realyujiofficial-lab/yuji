@@ -182,7 +182,7 @@ async function load() {
   document.getElementById('sync-info').textContent = '업데이트 중...';
   let d;
   try {
-    const r = await fetch('data.json?t='+Date.now(), {cache:'no-store'});
+    const r = await fetch('https://raw.githubusercontent.com/yuji-boop/yuji/main/data.json?t='+Date.now(), {cache:'no-store'});
     d = await r.json();
   } catch(e) {
     document.getElementById('sync-info').textContent = '데이터 로드 실패';
