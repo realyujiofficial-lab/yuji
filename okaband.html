@@ -182,7 +182,9 @@ async function load() {
   document.getElementById('sync-info').textContent = '업데이트 중...';
   let d;
   try {
-    const r = await fetch('https://raw.githubusercontent.com/yuji-boop/yuji/main/data.json?t='+Date.now(), {cache:'no-store'});
+    const SUPA_URL='https://yseynfdirbnlygwpygvp.supabase.co';
+    const SUPA_KEY='SUPABASE_KEY_REDACTED';
+    const r = await fetch(SUPA_URL+'/storage/v1/object/okaband-data/data.json?t='+Date.now(), {cache:'no-store',headers:{'Authorization':'Bearer '+SUPA_KEY}});
     d = await r.json();
   } catch(e) {
     document.getElementById('sync-info').textContent = '데이터 로드 실패';
