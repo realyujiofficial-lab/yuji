@@ -2998,66 +2998,67 @@
     }
   },
   "at_risk": {
-    "경기/바쁜베짱이": {
-      "msgs": 716,
-      "last": "2026년 03월 02일",
-      "days_silent": 76
+    "하늘": {
+      "msgs": 57,
+      "days_silent": 1081
     },
-    "서울종로 / 나라": {
-      "msgs": 190,
-      "last": "2026년 04월 10일",
-      "days_silent": 37
+    "얼룩기타": {
+      "msgs": 43,
+      "days_silent": 1081
     },
-    "서울 강북/맛집/볼매": {
+    "✨이 현지✨": {
+      "msgs": 500,
+      "days_silent": 1079
+    },
+    "지우": {
+      "msgs": 59,
+      "days_silent": 1078
+    },
+    "🔥핫두기👍/경북/40": {
+      "msgs": 82,
+      "days_silent": 1051
+    },
+    "트레블": {
+      "msgs": 46,
+      "days_silent": 1037
+    },
+    "나야나": {
+      "msgs": 60,
+      "days_silent": 949
+    },
+    "쩝쩝": {
       "msgs": 120,
-      "last": "2026년 04월 02일",
-      "days_silent": 45
+      "days_silent": 948
     },
-    "서울 노원구/맛집/얌얌얌": {
-      "msgs": 40,
-      "last": "2026년 04월 04일",
-      "days_silent": 43
+    "량요": {
+      "msgs": 62,
+      "days_silent": 841
     },
-    "서울 관악구/ 전국 맛집": {
-      "msgs": 39,
-      "last": "2026년 03월 14일",
-      "days_silent": 64
+    "알로에": {
+      "msgs": 91,
+      "days_silent": 832
     },
-    "(알 수 없음)": {
-      "msgs": 38,
-      "last": "2026년 03월 01일",
-      "days_silent": 77
+    "춘천 먹보": {
+      "msgs": 93,
+      "days_silent": 827
     },
-    "서울관악구/로컬/파워뜨루": {
-      "msgs": 37,
-      "last": "2026년 03월 02일",
-      "days_silent": 76
+    "치맥하는 제이지": {
+      "msgs": 43,
+      "days_silent": 823
     },
-    "고양 덕양 / 맛집 / 프로미": {
-      "msgs": 29,
-      "last": "2026년 02월 26일",
-      "days_silent": 80
+    "화나서 방방 뛰는 튜브": {
+      "msgs": 73,
+      "days_silent": 789
     },
-    "고양시 / 맛집 / 프로미": {
-      "msgs": 29,
-      "last": "2026년 02월 26일",
-      "days_silent": 80
+    "ㅋㅋㅋㅋ": {
+      "msgs": 110,
+      "days_silent": 779
     },
-    "경기하남/강심장": {
-      "msgs": 20,
-      "last": "2026년 03월 24일",
-      "days_silent": 54
-    },
-    "경기 화성 동탄구/로컬/네오": {
-      "msgs": 16,
-      "last": "2026년 04월 16일",
-      "days_silent": 31
-    },
-    "경기도 용인시 수지구/ 뉴스/ 네오": {
-      "msgs": 10,
-      "last": "2026년 03월 01일",
-      "days_silent": 77
+    "류즈": {
+      "msgs": 71,
+      "days_silent": 779
     }
   },
-  "recent_7d_avg": 134.6
+  "recent_7d_avg": 122,
+  "member_count": 81
 }

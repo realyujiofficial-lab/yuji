@@ -3,20 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>카톡방</title>
+<title>오카방 대시보드</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;scrollbar-width:none;-ms-overflow-style:none}
 *::-webkit-scrollbar{display:none}
-body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;background:#f2f2ef;color:#1a1a1a;font-size:14px;padding:16px}
-.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;background:#f2f2ef;color:#1a1a1a;font-size:14px;padding:0 0 80px}
+.top-bar{background:#fff;padding:16px 16px 12px;position:sticky;top:0;z-index:10;border-bottom:1px solid #f0f0f0}
+.top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
+.page-title{font-size:18px;font-weight:800}
+.sync-info{font-size:11px;color:#bbb}
+.upload-btn{background:#FF6B35;color:#fff;border:none;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.upload-btn:active{opacity:.8}
+
+.wrap{padding:12px 12px 0}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
 .num-box{background:#fff;border-radius:12px;padding:12px 8px;text-align:center}
 .num{font-size:22px;font-weight:800}
 .lbl{font-size:10px;color:#aaa;margin-top:2px}
 .block{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px}
-.block-title{font-size:11px;color:#bbb;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
-.status{font-size:13px;line-height:1.6;color:#444}
-.chart-wrap{height:120px}
+.block-title{font-size:11px;color:#bbb;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600}
+.badge-red{background:#ffebee;color:#c62828}
+.badge-green{background:#e8f5e9;color:#2e7d32}
+.badge-yellow{background:#fff8e1;color:#b07000}
+.status{font-size:13px;line-height:1.7;color:#444}
+.chart-wrap{height:110px}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th{text-align:left;color:#aaa;font-size:11px;padding:4px 6px;border-bottom:1px solid #eee}
 td{padding:7px 6px;border-bottom:1px solid #f5f5f5;color:#1a1a1a}
@@ -25,79 +37,282 @@ tr:last-child td{border:none}
 .d30{background:#fff8e1;color:#a07000}
 .d60{background:#ffe8e8;color:#c0392b}
 .d90{background:#f0f0f0;color:#999}
-.empty{color:#bbb;font-size:12px;padding:6px 0}
+.empty{color:#bbb;font-size:12px;padding:6px 0;text-align:center}
+.issue-item{padding:8px 0;border-bottom:1px solid #f5f5f5}
+.issue-item:last-child{border:none}
+.issue-date{font-size:10px;color:#bbb;margin-bottom:2px}
+.issue-flag{font-size:12px;font-weight:600;color:#c62828}
+.issue-note{font-size:11px;color:#666;margin-top:2px;line-height:1.5}
+.day-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f5f5f5;font-size:12px}
+.day-row:last-child{border:none}
+.day-date{width:60px;color:#888;flex-shrink:0}
+.day-bar-wrap{flex:1;background:#f5f5f5;border-radius:4px;height:6px;overflow:hidden}
+.day-bar{height:6px;background:#FF6B35;border-radius:4px;transition:width .3s}
+.day-msgs{width:30px;text-align:right;color:#555;font-weight:600}
+.day-flag{font-size:10px;color:#c62828;font-weight:600;margin-left:4px}
+.tab-wrap{display:flex;gap:6px;margin-bottom:10px}
+.tab{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;border:none;background:#f0f0f0;color:#888;cursor:pointer}
+.tab.active{background:#FF6B35;color:#fff}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.topics-wrap{display:flex;flex-wrap:wrap;gap:6px}
+.topic-chip{background:#f5f5f5;border-radius:20px;padding:4px 10px;font-size:11px;color:#555;font-weight:500}
+.refresh-row{text-align:center;padding:8px 0}
+.refresh-btn{background:none;border:1px solid #eee;border-radius:8px;padding:6px 14px;font-size:11px;color:#aaa;cursor:pointer}
+.refresh-btn:active{background:#f5f5f5}
 </style>
 </head>
 <body>
+
+<div class="top-bar">
+  <div class="top-row">
+    <div class="page-title">오카방 대시보드</div>
+    <a class="upload-btn" href="upload.html">+ 대화 업로드</a>
+  </div>
+  <div class="sync-info" id="sync-info">데이터 로딩 중...</div>
+</div>
+
+<div class="wrap">
+
+<!-- 핵심 지표 -->
 <div class="row3">
-  <div class="num-box"><div class="num" id="v-msgs">-</div><div class="lbl">오늘 메시지</div></div>
-  <div class="num-box"><div class="num" id="v-users">-</div><div class="lbl">오늘 참여자</div></div>
+  <div class="num-box"><div class="num" id="v-msgs">-</div><div class="lbl">최근 메시지</div></div>
+  <div class="num-box"><div class="num" id="v-users">-</div><div class="lbl">최근 참여자</div></div>
   <div class="num-box"><div class="num" id="v-avg">-</div><div class="lbl">7일 평균</div></div>
 </div>
 
+<!-- 방 상태 -->
 <div class="block">
-  <div class="block-title">방 상태</div>
+  <div class="block-title">방 상태 <span class="badge" id="status-badge">-</span></div>
   <div class="status" id="status-text">분석 중...</div>
 </div>
 
-<div class="block">
-  <div class="block-title">최근 14일</div>
-  <div class="chart-wrap"><canvas id="chart"></canvas></div>
+<!-- 탭: 추이 / 분석 / 이슈 -->
+<div class="tab-wrap">
+  <button class="tab active" onclick="switchTab('trend',this)">추이</button>
+  <button class="tab" onclick="switchTab('analysis',this)">분석</button>
+  <button class="tab" onclick="switchTab('issue',this)">이슈</button>
+  <button class="tab" onclick="switchTab('member',this)">멤버</button>
 </div>
 
-<div class="block">
-  <div class="block-title">활성 멤버 TOP10</div>
-  <table><thead><tr><th>#</th><th>닉네임</th><th>메시지</th><th>마지막</th></tr></thead>
-  <tbody id="t-active"><tr><td colspan="4" class="empty">로딩 중...</td></tr></tbody></table>
+<!-- 추이 탭 -->
+<div class="tab-panel active" id="tab-trend">
+  <div class="block" style="margin-bottom:10px">
+    <div class="block-title">최근 14일 메시지</div>
+    <div class="chart-wrap"><canvas id="chart"></canvas></div>
+  </div>
+  <div class="block">
+    <div class="block-title">일별 상세</div>
+    <div id="day-list"></div>
+  </div>
 </div>
 
-<div class="block">
-  <div class="block-title">이탈 위험</div>
-  <table><thead><tr><th>닉네임</th><th>총</th><th>침묵</th></tr></thead>
-  <tbody id="t-risk"><tr><td colspan="3" class="empty">로딩 중...</td></tr></tbody></table>
+<!-- 분석 탭 -->
+<div class="tab-panel" id="tab-analysis">
+  <div class="block">
+    <div class="block-title">최근 활동 요약</div>
+    <div id="analysis-text" class="status">-</div>
+  </div>
+  <div class="block">
+    <div class="block-title">최근 토픽</div>
+    <div class="topics-wrap" id="topics-wrap"></div>
+  </div>
+  <div class="block">
+    <div class="block-title">최근 새 멤버</div>
+    <div id="new-members"></div>
+  </div>
 </div>
+
+<!-- 이슈 탭 -->
+<div class="tab-panel" id="tab-issue">
+  <div class="block">
+    <div class="block-title">이슈 기록 <span class="badge badge-red" id="issue-count">-</span></div>
+    <div id="issue-list"></div>
+  </div>
+</div>
+
+<!-- 멤버 탭 -->
+<div class="tab-panel" id="tab-member">
+  <div class="block">
+    <div class="block-title">활성 멤버 TOP 10</div>
+    <table><thead><tr><th>#</th><th>닉네임</th><th>메시지</th><th>마지막</th></tr></thead>
+    <tbody id="t-active"><tr><td colspan="4" class="empty">로딩 중...</td></tr></tbody></table>
+  </div>
+  <div class="block">
+    <div class="block-title">이탈 위험 <span class="badge badge-red" id="risk-count">0</span></div>
+    <table><thead><tr><th>닉네임</th><th>총</th><th>침묵</th></tr></thead>
+    <tbody id="t-risk"><tr><td colspan="3" class="empty">로딩 중...</td></tr></tbody></table>
+  </div>
+</div>
+
+<div class="refresh-row">
+  <button class="refresh-btn" onclick="load()">새로고침</button>
+</div>
+
+</div><!-- /wrap -->
 
 <script>
-async function load(){
+let chartInst = null;
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function relDate(dateStr) {
+  try {
+    const m = dateStr.match(/(\d+)년 (\d+)월 (\d+)일/);
+    if (!m) return dateStr;
+    const d = new Date(+m[1], +m[2]-1, +m[3]);
+    const diff = Math.floor((Date.now() - d) / 86400000);
+    if (diff === 0) return '오늘';
+    if (diff === 1) return '어제';
+    return `${diff}일 전`;
+  } catch { return dateStr; }
+}
+
+function shortDate(dateStr) {
+  const m = dateStr.match(/(\d+)월 (\d+)일/);
+  return m ? m[1]+'/'+m[2] : dateStr;
+}
+
+async function load() {
+  document.getElementById('sync-info').textContent = '업데이트 중...';
   let d;
-  try{const r=await fetch('data.json?t='+Date.now());d=await r.json();}
-  catch(e){
-    document.getElementById('status-text').textContent='data.json 없음';
-    document.getElementById('t-active').innerHTML='<tr><td colspan="4" class="empty">데이터 없음</td></tr>';
-    document.getElementById('t-risk').innerHTML='<tr><td colspan="3" class="empty">데이터 없음</td></tr>';
+  try {
+    const r = await fetch('data.json?t='+Date.now(), {cache:'no-store'});
+    d = await r.json();
+  } catch(e) {
+    document.getElementById('sync-info').textContent = '데이터 로드 실패';
     return;
   }
 
-  const dates=d.all_dates||[],daily=d.daily||{};
-  const latest=dates[dates.length-1],today=latest?daily[latest]:null;
-  document.getElementById('v-msgs').textContent=today?today.msgs:'-';
-  document.getElementById('v-users').textContent=today?today.users:'-';
-  document.getElementById('v-avg').textContent=d.recent_7d_avg||'-';
+  const dates = d.all_dates || [], daily = d.daily || {};
+  const latest = dates[dates.length-1];
+  const today = latest ? daily[latest] : null;
+  const generatedAt = d.generated_at || '-';
 
-  const avg=d.recent_7d_avg||0,msgs=today?today.msgs:0,risk=Object.keys(d.at_risk||{}).length;
-  const st=avg>=50&&msgs>=20?`양호 — 일평균 ${avg}개, 오늘 ${msgs}개`
-    :avg>=20||msgs>=10?`주의 — 일평균 ${avg}개. 이탈 위험 ${risk}명`
-    :`개입 필요 — 일평균 ${avg}개 저조. 이탈 위험 ${risk}명`;
-  document.getElementById('status-text').textContent=st;
+  document.getElementById('sync-info').textContent = `마지막 업데이트: ${generatedAt}`;
+  document.getElementById('v-msgs').textContent = today ? today.msgs : '-';
+  document.getElementById('v-users').textContent = today ? today.users : '-';
+  document.getElementById('v-avg').textContent = d.recent_7d_avg || '-';
 
-  const l14=dates.slice(-14);
-  new Chart(document.getElementById('chart'),{
-    type:'bar',
-    data:{labels:l14.map(d=>{const m=d.match(/(\d+)월 (\d+)일/);return m?m[1]+'/'+m[2]:d;}),
-      datasets:[{data:l14.map(d=>daily[d]?daily[d].msgs:0),backgroundColor:'#FF6B35',borderRadius:4}]},
-    options:{plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#aaa'}},y:{beginAtZero:true,ticks:{font:{size:9},color:'#aaa'},grid:{color:'#f5f5f5'}}},responsive:true,maintainAspectRatio:false}
+  // 방 상태
+  const avg = d.recent_7d_avg || 0;
+  const msgs = today ? today.msgs : 0;
+  const riskCount = Object.keys(d.at_risk || {}).length;
+  let stText, stBadge, stClass;
+  if (avg >= 80 && msgs >= 30) {
+    stText = `활성 — 7일 평균 ${avg}개, 최근 ${msgs}개 메시지. 방이 건강하게 운영되고 있어요.`;
+    stBadge = '활성'; stClass = 'badge-green';
+  } else if (avg >= 30 || msgs >= 15) {
+    stText = `보통 — 7일 평균 ${avg}개. 이탈 위험 멤버 ${riskCount}명 주의 필요.`;
+    stBadge = '보통'; stClass = 'badge-yellow';
+  } else {
+    stText = `저조 — 7일 평균 ${avg}개. 방 활성화 필요. 이탈 위험 ${riskCount}명.`;
+    stBadge = '저조'; stClass = 'badge-red';
+  }
+  document.getElementById('status-text').textContent = stText;
+  const sb = document.getElementById('status-badge');
+  sb.textContent = stBadge; sb.className = 'badge ' + stClass;
+
+  // 차트 (14일)
+  const l14 = dates.slice(-14);
+  const maxMsgs = Math.max(...l14.map(dt => daily[dt]?.msgs || 0), 1);
+  if (chartInst) chartInst.destroy();
+  chartInst = new Chart(document.getElementById('chart'), {
+    type: 'bar',
+    data: {
+      labels: l14.map(shortDate),
+      datasets: [{
+        data: l14.map(dt => daily[dt]?.msgs || 0),
+        backgroundColor: l14.map(dt => daily[dt]?.issue_flag ? '#ef9a9a' : '#FF6B35'),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      plugins: {legend:{display:false}},
+      scales: {
+        x: {grid:{display:false}, ticks:{font:{size:9}, color:'#aaa', maxRotation:0}},
+        y: {beginAtZero:true, ticks:{font:{size:9}, color:'#aaa'}, grid:{color:'#f5f5f5'}}
+      },
+      responsive:true, maintainAspectRatio:false
+    }
   });
 
-  const top10=Object.entries(d.user_stats||{}).slice(0,10);
-  document.getElementById('t-active').innerHTML=top10.length
-    ?top10.map(([n,i],x)=>`<tr><td style="color:#bbb">${x+1}</td><td style="font-weight:600">${n}</td><td>${i.msgs}</td><td style="color:#aaa">${i.last||'-'}</td></tr>`).join('')
-    :'<tr><td colspan="4" class="empty">없음</td></tr>';
+  // 일별 상세 (최근 14일 역순)
+  const dayList = document.getElementById('day-list');
+  dayList.innerHTML = l14.slice().reverse().map(dt => {
+    const info = daily[dt] || {};
+    const pct = Math.round((info.msgs || 0) / maxMsgs * 100);
+    const flag = info.issue_flag && info.issue_flag !== 'null' && info.issue_flag !== null
+      ? `<span class="day-flag">⚠ ${info.issue_flag}</span>` : '';
+    return `<div class="day-row">
+      <span class="day-date">${shortDate(dt)}</span>
+      <div class="day-bar-wrap"><div class="day-bar" style="width:${pct}%"></div></div>
+      <span class="day-msgs">${info.msgs || 0}</span>
+      ${flag}
+    </div>`;
+  }).join('');
 
-  const risks=Object.entries(d.at_risk||{});
-  document.getElementById('t-risk').innerHTML=risks.length
-    ?risks.map(([n,i])=>{const c=i.days_silent>=60?'d60':i.days_silent>=30?'d30':'d90';return`<tr><td style="font-weight:600">${n}</td><td>${i.msgs}</td><td><span class="silent ${c}">${i.days_silent}일</span></td></tr>`;}).join('')
-    :'<tr><td colspan="3" class="empty">이탈 위험 없음</td></tr>';
+  // 분석 탭
+  const last3 = dates.slice(-3);
+  const last3Topics = [];
+  const newMembersList = [];
+  last3.forEach(dt => {
+    const info = daily[dt] || {};
+    (info.topics || []).forEach(t => { if (!last3Topics.includes(t)) last3Topics.push(t); });
+    (info.member_events?.join || []).forEach(m => { newMembersList.push({date: dt, name: m}); });
+  });
+  document.getElementById('analysis-text').textContent =
+    `최근 3일: ${last3.map(dt => `${shortDate(dt)} ${daily[dt]?.msgs || 0}개`).join(' · ')}`;
+  document.getElementById('topics-wrap').innerHTML = last3Topics.length
+    ? last3Topics.map(t => `<span class="topic-chip">${t}</span>`).join('')
+    : '<span style="color:#bbb;font-size:12px">토픽 없음</span>';
+  document.getElementById('new-members').innerHTML = newMembersList.length
+    ? newMembersList.map(m => `<div class="day-row"><span class="day-date">${shortDate(m.date)}</span><span>${m.name}</span></div>`).join('')
+    : '<div class="empty">최근 신입 없음</div>';
+
+  // 이슈 탭
+  const issues = dates.slice().reverse().filter(dt => {
+    const f = daily[dt]?.issue_flag;
+    return f && f !== 'null' && f !== null && f !== '옴팡추방+1일_정상화';
+  }).slice(0, 15);
+  document.getElementById('issue-count').textContent = issues.length;
+  document.getElementById('issue-list').innerHTML = issues.length
+    ? issues.map(dt => {
+        const info = daily[dt] || {};
+        return `<div class="issue-item">
+          <div class="issue-date">${dt} (${relDate(dt)})</div>
+          <div class="issue-flag">⚠ ${info.issue_flag}</div>
+          <div class="issue-note">${info.ops_note || ''}</div>
+        </div>`;
+      }).join('')
+    : '<div class="empty">최근 이슈 없음</div>';
+
+  // 멤버 탭 - 활성 TOP10
+  const top10 = Object.entries(d.user_stats || {})
+    .sort((a,b) => b[1].msgs - a[1].msgs).slice(0, 10);
+  document.getElementById('t-active').innerHTML = top10.length
+    ? top10.map(([n,i],x) =>
+        `<tr><td style="color:#bbb">${x+1}</td><td style="font-weight:600">${n.split('/').pop()}</td><td>${i.msgs}</td><td style="color:#aaa">${relDate(i.last||'')}</td></tr>`
+      ).join('')
+    : '<tr><td colspan="4" class="empty">없음</td></tr>';
+
+  // 이탈 위험
+  const risks = Object.entries(d.at_risk || {})
+    .sort((a,b) => b[1].days_silent - a[1].days_silent);
+  document.getElementById('risk-count').textContent = risks.length;
+  document.getElementById('t-risk').innerHTML = risks.length
+    ? risks.map(([n,i]) => {
+        const c = i.days_silent >= 90 ? 'd90' : i.days_silent >= 60 ? 'd60' : 'd30';
+        return `<tr><td style="font-weight:600">${n.split('/').pop()}</td><td>${i.msgs}</td><td><span class="silent ${c}">${i.days_silent}일</span></td></tr>`;
+      }).join('')
+    : '<tr><td colspan="3" class="empty">이탈 위험 없음</td></tr>';
 }
+
 load();
 </script>
 </body>
