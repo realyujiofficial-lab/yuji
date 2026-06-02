@@ -600,9 +600,12 @@ textarea.finp{min-height:120px;resize:vertical}
 <!-- ══ 서브 ══ -->
 <div class="page" id="pg-sub">
   <div class="hdr">
-    <div class="back-row">
-      <button class="back-btn" onclick="goBack()">←</button>
-      <div class="hdr-greeting" id="sub-title" style="font-size:17px"></div>
+    <div class="back-row" style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="back-btn" onclick="goBack()">←</button>
+        <div class="hdr-greeting" id="sub-title" style="font-size:17px"></div>
+      </div>
+      <div id="sub-hdr-actions" style="display:flex;gap:6px"></div>
     </div>
   </div>
   <div id="sub-body"></div>
@@ -893,6 +896,13 @@ function renderSub(id){
 }
 
 function afterSub(id){
+  const hdrActions=document.getElementById('sub-hdr-actions');
+  if(hdrActions){
+    hdrActions.innerHTML=id==='acc'
+      ?`<button onclick="loadAccFromSupabase()" style="font-size:11px;background:#f5f5f5;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:700">↻</button>
+         <button onclick="syncAccToSupabase()" style="font-size:11px;background:#1a1a1a;color:#fff;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:700">저장</button>`
+      :'';
+  }
   if(id==='acc'){
     document.getElementById('acc-save')?.addEventListener('click',()=>{
       const h=v('a-hosp');if(!h)return;
@@ -1111,11 +1121,10 @@ function subAcc(){
   const ownCost=arr.filter(a=>a.ins==='본인치료비').reduce((s,a)=>s+(Number(a.amount)||0),0);
   const LIMIT=5000000;
   const limitPct=Math.min(100,Math.round(ownCost/LIMIT*100));
-
   const DEFAULT_DOCS=[
-    {id:1,name:'진단서',done:false},{id:2,name:'MRI/CT 판독결과지',done:false},
+    {id:1,name:'진단서',done:false},{id:2,name:'MRI/CT',done:false},
     {id:3,name:'입퇴원확인서',done:false},{id:4,name:'진료비 영수증',done:false},
-    {id:5,name:'교통사고 사실확인원',done:false},{id:6,name:'근무확인서',done:false},
+    {id:5,name:'사실확인원',done:false},{id:6,name:'근무확인서',done:false},
     {id:7,name:'향후치료비 추정서',done:false},{id:8,name:'통증일지',done:false},
   ];
   const docs=S.get('acc_docs',DEFAULT_DOCS);
@@ -1129,14 +1138,16 @@ function subAcc(){
       </div>
       <div class="acc-info">${[a.dept,a.treatment,a.pain].filter(Boolean).join(' · ')}${a.amount?' · '+Number(a.amount).toLocaleString()+'원':''}</div>
       ${a.memo?`<div class="acc-info">${a.memo}</div>`:''}
-      <button onclick="delAcc(${a.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:2px">삭제</button>
+      <button onclick="delAcc(${a.id})" style="font-size:11px;color:#ccc;background:none;border:none;cursor:pointer;margin-top:2px">삭제</button>
     </div>`).join('');
 
   const symList=syms.map(s=>`
-    <div class="sym-item">
-      <div class="sym-top">${s.date} · 통증 ${s.level||'-'}/10${s.mood?` · ${s.mood}`:''}</div>
-      <div class="sym-info">${[s.parts,s.memo].filter(Boolean).join(' — ')}</div>
-      <button onclick="delSym(${s.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:2px">삭제</button>
+    <div class="acc-item">
+      <div class="acc-top">${s.date} <span style="font-size:11px;font-weight:400;color:var(--sub)">${s.mood||''}</span>
+        <span style="font-size:11px;color:var(--accent);font-weight:700;margin-left:auto">통증 ${s.level}/10</span>
+      </div>
+      <div class="acc-info">${[s.parts,s.memo].filter(Boolean).join(' — ')}</div>
+      <button onclick="delSym(${s.id})" style="font-size:11px;color:#ccc;background:none;border:none;cursor:pointer;margin-top:2px">삭제</button>
     </div>`).join('');
 
   const docList=docs.map(d=>`
@@ -1146,80 +1157,67 @@ function subAcc(){
     </div>`).join('');
 
   return `
-    <div style="display:flex;gap:8px;padding:8px 20px 12px">
-      <button onclick="loadAccFromSupabase()" style="flex:1;padding:10px;background:#f5f5f5;border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700">불러오기</button>
-      <button onclick="syncAccToSupabase()" style="flex:1;padding:10px;background:#1a1a1a;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700">백업 저장</button>
-    </div>
-
-    <div class="sec-lbl" style="padding:0 20px 8px">사고 개요</div>
-    <div class="card" style="margin:0 20px 14px"><div class="p">
-      <div class="acc-overview-grid">
-        <div class="acc-ov-item"><span class="acc-ov-label">사고일</span><span class="acc-ov-val">2025.09.25</span></div>
-        <div class="acc-ov-item"><span class="acc-ov-label">사고유형</span><span class="acc-ov-val">카카오 T 바이크</span></div>
-        <div class="acc-ov-item"><span class="acc-ov-label">보험사</span><span class="acc-ov-val">DB손해보험/SIMG</span></div>
-        <div class="acc-ov-item"><span class="acc-ov-label">총 진료비</span><span class="acc-ov-val">${total.toLocaleString()}원</span></div>
+    <!-- 개요 + 한도 한 카드 -->
+    <div class="card" style="margin:8px 20px 14px"><div class="p" style="padding-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+        <div>
+          <div style="font-size:12px;color:var(--sub)">2025.09.25 · 카카오바이크 · DB손해보험</div>
+          <div style="font-size:20px;font-weight:800;margin-top:2px">${total?total.toLocaleString()+'원':'진료비 기록 없음'}</div>
+        </div>
+        <div style="font-size:11px;background:#f5f5f5;padding:4px 10px;border-radius:8px;font-weight:700">${arr.length}건</div>
       </div>
-    </div></div>
-
-    <div class="sec-lbl" style="padding:0 20px 8px">보험 한도 현황</div>
-    <div class="card" style="margin:0 20px 14px"><div class="p">
-      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
-        <span style="font-weight:700">본인치료비</span>
-        <span style="color:var(--sub)">${ownCost.toLocaleString()} / 500만원</span>
-      </div>
+      <div style="font-size:12px;font-weight:700;margin-bottom:4px">본인치료비 <span style="color:var(--sub);font-weight:400">${ownCost.toLocaleString()} / 500만원</span></div>
       <div class="acc-limit-bar"><div class="acc-limit-fill" style="width:${limitPct}%"></div></div>
-      <div style="font-size:11px;color:var(--sub);margin-top:4px">${limitPct}% 사용 · 잔여 ${Math.max(0,LIMIT-ownCost).toLocaleString()}원</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px">
-        ${[['대인배상','1억'],['대물배상','1천만'],['방문횟수',arr.length+'건']].map(([l,v])=>`<div style="background:#f5f5f5;border-radius:8px;padding:8px;text-align:center"><div style="font-weight:700;font-size:13px">${v}</div><div style="font-size:10px;color:var(--sub);margin-top:2px">${l}</div></div>`).join('')}
-      </div>
     </div></div>
 
-    <div class="sec-lbl" style="padding:0 20px 8px">서류 체크리스트 <span style="font-size:11px;font-weight:400;color:var(--sub)">${docsDone}/${docs.length}</span></div>
+    <!-- 서류 체크 -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px 8px">
+      <div class="sec-lbl" style="padding:0">서류 체크 <span style="font-size:11px;font-weight:400;color:var(--sub)">${docsDone}/${docs.length}</span></div>
+    </div>
     <div class="card" style="margin:0 20px 14px">${docList}</div>
 
+    <!-- 방문 일지 -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px 8px">
-      <div class="sec-lbl" style="padding:0">방문 일지 <span style="font-size:11px;font-weight:400;color:var(--sub)">${arr.length}건</span></div>
-      <button onclick="document.getElementById('csv-wrap').style.display=document.getElementById('csv-wrap').style.display==='none'?'block':'none'" style="font-size:11px;background:#f5f5f5;border:none;padding:5px 10px;border-radius:8px;cursor:pointer;font-weight:700">CSV 업로드</button>
+      <div class="sec-lbl" style="padding:0">방문 일지</div>
+      <button onclick="document.getElementById('csv-wrap').style.display=document.getElementById('csv-wrap').style.display==='none'?'block':'none'" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer">CSV ↑</button>
     </div>
     <div id="csv-wrap" style="display:none;margin:0 20px 12px">
-      <div style="font-size:12px;color:var(--sub);margin-bottom:6px;line-height:1.5">형식: 날짜,병원명,진료과,치료내용,비용,증상,보험,메모</div>
-      <div style="font-size:11px;background:#f5f5f5;padding:8px 12px;border-radius:8px;margin-bottom:8px;font-family:monospace;color:var(--dim)">2025-09-25,강철병원,정형외과,엑스레이,0,팔꿈치통증,자보,입원</div>
-      <textarea id="csv-input" style="width:100%;height:100px;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;resize:none;font-family:inherit" placeholder="CSV 내용 붙여넣기..."></textarea>
-      <button onclick="importCsvData()" class="submit-btn" style="margin-top:8px">업로드</button>
+      <div style="font-size:11px;background:#f5f5f5;padding:8px 12px;border-radius:8px;margin-bottom:6px;font-family:monospace;color:var(--dim)">날짜,병원,진료과,치료,비용,증상,보험,메모</div>
+      <textarea id="csv-input" style="width:100%;height:80px;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;resize:none;font-family:inherit" placeholder="CSV 붙여넣기..."></textarea>
+      <button onclick="importCsvData()" class="submit-btn" style="margin-top:6px">업로드</button>
     </div>
     <div class="card" style="margin:0 20px 14px">${visitList||'<div class="empty">기록 없음</div>'}</div>
     <div class="form-wrap">
-      <div class="sec-lbl" style="margin-bottom:10px">방문 추가</div>
       <div class="finp-grid">
         <input id="a-hosp" class="finp" style="margin:0" placeholder="병원명">
         <input id="a-date" type="date" class="finp" style="margin:0">
       </div>
       <div class="finp-grid">
-        <input id="a-dept" class="finp" style="margin:0" placeholder="진료과">
         <input id="a-treatment" class="finp" style="margin:0" placeholder="치료내용">
+        <input id="a-pain" class="finp" style="margin:0" placeholder="증상">
       </div>
       <div class="finp-grid">
-        <input id="a-pain" class="finp" style="margin:0" placeholder="증상/아픈 곳">
+        <select id="a-ins" class="fsel" style="margin:0"><option value="">보험</option><option value="자보">자보</option><option value="실비">실비</option><option value="본인치료비">본인치료비</option><option value="본인부담">본인부담</option></select>
         <input id="a-amount" type="number" class="finp" style="margin:0" placeholder="비용(원)">
       </div>
-      <div class="finp-grid">
-        <select id="a-ins" class="fsel" style="margin:0"><option value="">보험구분</option><option value="자보">자동차보험</option><option value="실비">실비</option><option value="본인치료비">본인치료비</option><option value="본인부담">본인부담</option></select>
-        <input id="a-memo" class="finp" style="margin:0" placeholder="메모">
-      </div>
+      <input id="a-dept" class="finp" placeholder="진료과 (선택)">
+      <input id="a-memo" class="finp" placeholder="메모 (선택)">
       <button id="acc-save" class="submit-btn">저장</button>
     </div>
 
+    <!-- 증상 일지 -->
     <div class="sec-lbl" style="padding:0 20px 8px">증상 일지 <span style="font-size:11px;font-weight:400;color:var(--sub)">위자료 근거</span></div>
     <div class="card" style="margin:0 20px 14px">${symList||'<div class="empty">기록 없음</div>'}</div>
     <div class="form-wrap">
-      <div class="sec-lbl" style="margin-bottom:10px">증상 추가</div>
       <div class="finp-grid">
         <input id="s-date" type="date" class="finp" style="margin:0">
         <select id="s-level" class="fsel" style="margin:0">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}">통증 ${n}/10</option>`).join('')}</select>
       </div>
-      <input id="s-parts" class="finp" placeholder="아픈 부위 (예: 팔꿈치·허리·턱)">
-      <select id="s-mood" class="fsel"><option value="">기분/상태</option><option value="불안">불안</option><option value="우울">우울</option><option value="보통">보통</option><option value="회복중">회복중</option><option value="많이나아짐">많이 나아짐</option></select>
-      <input id="s-memo" class="finp" placeholder="메모">
+      <div class="finp-grid">
+        <input id="s-parts" class="finp" style="margin:0" placeholder="아픈 부위">
+        <select id="s-mood" class="fsel" style="margin:0"><option value="">상태</option><option value="불안">불안</option><option value="우울">우울</option><option value="보통">보통</option><option value="회복중">회복중</option><option value="많이나아짐">많이 나아짐</option></select>
+      </div>
+      <input id="s-memo" class="finp" placeholder="메모 (선택)">
       <button id="sym-save" class="submit-btn">증상 저장</button>
     </div>
   `;
