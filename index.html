@@ -1466,6 +1466,15 @@ function openNetAdd(editId){
 function openNetViewer(id){
   const arr=S.get('network',[]);
   const n=arr.find(x=>x.id===id);if(!n)return;
+  // 기존 metDate 있는데 meets 비어있으면 자동 마이그레이션
+  if(n.metDate){
+    const meets=S.get('net_meets_'+id,[]);
+    const hasFirst=meets.some(m=>m.first);
+    if(!hasFirst){
+      meets.push({date:n.metDate,memo:n.metHow||'첫 만남',first:true,id:n.id+'_first'});
+      S.set('net_meets_'+id,meets);
+    }
+  }
   const moim=n.moim||n.rel||'';
   document.getElementById('nv-name').textContent=n.name+(moim?' · '+moim:'');
   const personLines=[
