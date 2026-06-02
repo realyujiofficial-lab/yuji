@@ -174,10 +174,25 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 textarea.finp{min-height:120px;resize:vertical}
 
 /* ── 개인 항목 ── */
-.acc-item{padding:18px 20px;border-bottom:1px solid var(--border)}
+.acc-item{padding:14px 20px;border-bottom:1px solid var(--border)}
 .acc-item:last-child{border-bottom:none}
-.acc-top{font-size:16px;font-weight:700}
-.acc-info{font-size:13px;color:var(--sub);margin-top:4px}
+.acc-top{font-size:15px;font-weight:700;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.acc-info{font-size:12px;color:var(--sub);margin-top:3px}
+.acc-ins-tag{font-size:10px;background:#f5f5f5;color:var(--accent);padding:2px 6px;border-radius:4px;font-weight:700}
+.acc-limit-bar{background:#f0f0f0;border-radius:6px;height:7px;overflow:hidden;margin:6px 0}
+.acc-limit-fill{background:var(--accent);height:100%;border-radius:6px;transition:width .4s}
+.doc-item{display:flex;align-items:center;gap:12px;padding:13px 20px;border-bottom:1px solid var(--border)}
+.doc-item:last-child{border-bottom:none}
+.doc-chk{width:18px;height:18px;accent-color:#1a1a1a;flex-shrink:0;cursor:pointer}
+.doc-lbl{font-size:13px;flex:1}
+.sym-item{padding:13px 20px;border-bottom:1px solid var(--border)}
+.sym-item:last-child{border-bottom:none}
+.sym-top{font-size:13px;font-weight:700}
+.sym-info{font-size:12px;color:var(--sub);margin-top:3px}
+.acc-overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px}
+.acc-ov-item{display:flex;flex-direction:column;gap:3px}
+.acc-ov-label{font-size:11px;color:var(--sub)}
+.acc-ov-val{font-weight:700}
 .net-item{padding:18px 20px;border-bottom:1px solid var(--border)}
 .net-item:last-child{border-bottom:none}
 .net-top{display:flex;align-items:center;justify-content:space-between}
@@ -556,10 +571,10 @@ textarea.finp{min-height:120px;resize:vertical}
     <div class="hdr-date">교통사고 · 인맥 · FNB마케터</div>
   </div>
 
-  <div class="sec" style="margin-top:8px"><div class="sec-lbl">교통사고</div></div>
+  <div class="sec" style="margin-top:8px"><div class="sec-lbl">교통사고 <span style="font-size:10px;font-weight:400;color:var(--sub)">2025.09.25 · DB손해보험</span></div></div>
   <div class="card" style="margin:0 20px 14px">
     <div class="row" onclick="goSub('acc')">
-      <div class="row-body"><div class="row-title">기록 목록</div><div class="row-sub" id="acc-sub">기록 없음</div></div>
+      <div class="row-body"><div class="row-title">치료 기록</div><div class="row-sub" id="acc-sub">기록 없음</div></div>
       <div class="row-arr">›</div>
     </div>
   </div>
@@ -878,7 +893,20 @@ function renderSub(id){
 }
 
 function afterSub(id){
-  if(id==='acc'){document.getElementById('acc-save')?.addEventListener('click',()=>{const h=v('a-hosp');if(!h)return;const arr=S.get('accidents',[]);arr.unshift({hospital:h,pain:v('a-pain'),purpose:v('a-purpose'),date:v('a-date'),amount:v('a-amount'),memo:v('a-memo'),id:Date.now()});S.set('accidents',arr);updateAccSub();showToast('저장됐어요!');renderSub('acc');});}
+  if(id==='acc'){
+    document.getElementById('acc-save')?.addEventListener('click',()=>{
+      const h=v('a-hosp');if(!h)return;
+      const arr=S.get('accidents',[]);
+      arr.unshift({hospital:h,dept:v('a-dept'),treatment:v('a-treatment'),pain:v('a-pain'),date:v('a-date'),amount:v('a-amount'),ins:v('a-ins'),memo:v('a-memo'),id:Date.now()});
+      S.set('accidents',arr);updateAccSub();showToast('저장됐어요!');renderSub('acc');
+    });
+    document.getElementById('sym-save')?.addEventListener('click',()=>{
+      const date=v('s-date');if(!date)return;
+      const arr=S.get('symptoms',[]);
+      arr.unshift({date,level:v('s-level')||'5',parts:v('s-parts'),mood:v('s-mood'),memo:v('s-memo'),id:Date.now()});
+      S.set('symptoms',arr);showToast('증상 저장됐어요!');renderSub('acc');
+    });
+  }
   if(id==='network'){renderNetList();document.getElementById('net-search')?.addEventListener('input',renderNetList);document.getElementById('net-save')?.addEventListener('click',()=>{const n=v('n-name');if(!n)return;const arr=S.get('network',[]);arr.unshift({name:n,rel:v('n-rel'),org:v('n-org'),contact:v('n-contact'),memo:v('n-memo'),id:Date.now()});S.set('network',arr);['n-name','n-rel','n-org','n-contact','n-memo'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});updateNetSub();renderNetList();});}
   if(id==='resume'){const ta=document.getElementById('ta-resume');if(ta){ta.value=localStorage.getItem('resume')||'';ta.addEventListener('input',e=>localStorage.setItem('resume',e.target.value));}}
   if(id==='cover'){const ta=document.getElementById('ta-cover');if(ta){ta.value=localStorage.getItem('cover')||'';ta.addEventListener('input',e=>localStorage.setItem('cover',e.target.value));}}
@@ -1055,12 +1083,146 @@ function subGovt(){
   `;
 }
 
+const ACC_SUPA_URL='https://yseynfdirbnlygwpygvp.supabase.co';
+const ACC_SUPA_KEY='SUPABASE_KEY_REDACTED';
+
+async function syncAccToSupabase(){
+  const data={accidents:S.get('accidents',[]),symptoms:S.get('symptoms',[]),acc_docs:S.get('acc_docs',[]),updated:new Date().toISOString()};
+  try{
+    await fetch(ACC_SUPA_URL+'/storage/v1/object/okaband-data/accident-data.json',{method:'POST',headers:{'Authorization':'Bearer '+ACC_SUPA_KEY,'Content-Type':'application/json','x-upsert':'true'},body:JSON.stringify(data)});
+    showToast('백업 완료!');
+  }catch(e){showToast('백업 실패 — 로컬 저장됨');}
+}
+
+async function loadAccFromSupabase(){
+  try{
+    const r=await fetch(ACC_SUPA_URL+'/storage/v1/object/okaband-data/accident-data.json?t='+Date.now(),{cache:'no-store',headers:{'Authorization':'Bearer '+ACC_SUPA_KEY}});
+    const d=await r.json();
+    if(d.accidents)S.set('accidents',d.accidents);
+    if(d.symptoms)S.set('symptoms',d.symptoms);
+    if(d.acc_docs)S.set('acc_docs',d.acc_docs);
+    showToast('데이터 불러왔어요!');renderSub('acc');updateAccSub();
+  }catch(e){showToast('불러오기 실패');}
+}
+
 function subAcc(){
-  const arr=S.get('accidents',[]);
+  const arr=S.get('accidents',[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const total=arr.reduce((s,a)=>s+(Number(a.amount)||0),0);
-  const stats=arr.length?`<div style="display:flex;gap:8px;padding:0 20px 12px"><div class="stat" style="flex:1"><div class="stat-n">${arr.length}</div><div class="stat-l">총 방문</div></div><div class="stat" style="flex:2"><div class="stat-n" style="font-size:15px">${total.toLocaleString()}원</div><div class="stat-l">총 진료비</div></div></div>`:'';
-  const list=arr.map(a=>`<div class="acc-item"><div class="acc-top">${a.hospital} <span style="font-size:11px;color:var(--sub);font-weight:400">${a.date||''}</span></div><div class="acc-info">${[a.pain,a.purpose,a.amount?Number(a.amount).toLocaleString()+'원':''].filter(Boolean).join(' · ')}</div>${a.memo?`<div class="acc-info">${a.memo}</div>`:''}<button onclick="delAcc(${a.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:4px">삭제</button></div>`).join('');
-  return `${stats}<div class="card" style="margin:0 20px 14px">${list||'<div class="empty">기록 없음</div>'}</div><div class="form-wrap"><div class="sec-lbl" style="margin-bottom:10px">기록 추가</div><div class="finp-grid"><input id="a-hosp" class="finp" style="margin:0" placeholder="병원명"><input id="a-pain" class="finp" style="margin:0" placeholder="아픈 곳"></div><div class="finp-grid"><input id="a-purpose" class="finp" style="margin:0" placeholder="목적"><input id="a-date" type="date" class="finp" style="margin:0"></div><div class="finp-grid"><input id="a-amount" type="number" class="finp" style="margin:0" placeholder="금액 (원)"><input id="a-memo" class="finp" style="margin:0" placeholder="메모"></div><button id="acc-save" class="submit-btn">저장</button></div>`;
+  const ownCost=arr.filter(a=>a.ins==='본인치료비').reduce((s,a)=>s+(Number(a.amount)||0),0);
+  const LIMIT=5000000;
+  const limitPct=Math.min(100,Math.round(ownCost/LIMIT*100));
+
+  const DEFAULT_DOCS=[
+    {id:1,name:'진단서',done:false},{id:2,name:'MRI/CT 판독결과지',done:false},
+    {id:3,name:'입퇴원확인서',done:false},{id:4,name:'진료비 영수증',done:false},
+    {id:5,name:'교통사고 사실확인원',done:false},{id:6,name:'근무확인서',done:false},
+    {id:7,name:'향후치료비 추정서',done:false},{id:8,name:'통증일지',done:false},
+  ];
+  const docs=S.get('acc_docs',DEFAULT_DOCS);
+  const docsDone=docs.filter(d=>d.done).length;
+  const syms=S.get('symptoms',[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+
+  const visitList=arr.map(a=>`
+    <div class="acc-item">
+      <div class="acc-top">${a.hospital}${a.ins?`<span class="acc-ins-tag">${a.ins}</span>`:''}
+        <span style="font-size:11px;color:var(--sub);font-weight:400;margin-left:auto">${a.date||''}</span>
+      </div>
+      <div class="acc-info">${[a.dept,a.treatment,a.pain].filter(Boolean).join(' · ')}${a.amount?' · '+Number(a.amount).toLocaleString()+'원':''}</div>
+      ${a.memo?`<div class="acc-info">${a.memo}</div>`:''}
+      <button onclick="delAcc(${a.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:2px">삭제</button>
+    </div>`).join('');
+
+  const symList=syms.map(s=>`
+    <div class="sym-item">
+      <div class="sym-top">${s.date} · 통증 ${s.level||'-'}/10${s.mood?` · ${s.mood}`:''}</div>
+      <div class="sym-info">${[s.parts,s.memo].filter(Boolean).join(' — ')}</div>
+      <button onclick="delSym(${s.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:2px">삭제</button>
+    </div>`).join('');
+
+  const docList=docs.map(d=>`
+    <div class="doc-item">
+      <input type="checkbox" class="doc-chk" ${d.done?'checked':''} onchange="toggleDoc(${d.id})">
+      <span class="doc-lbl" style="${d.done?'text-decoration:line-through;color:var(--sub)':''}">${d.name}</span>
+    </div>`).join('');
+
+  return `
+    <div style="display:flex;gap:8px;padding:8px 20px 12px">
+      <button onclick="loadAccFromSupabase()" style="flex:1;padding:10px;background:#f5f5f5;border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700">불러오기</button>
+      <button onclick="syncAccToSupabase()" style="flex:1;padding:10px;background:#1a1a1a;color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700">백업 저장</button>
+    </div>
+
+    <div class="sec-lbl" style="padding:0 20px 8px">사고 개요</div>
+    <div class="card" style="margin:0 20px 14px"><div class="p">
+      <div class="acc-overview-grid">
+        <div class="acc-ov-item"><span class="acc-ov-label">사고일</span><span class="acc-ov-val">2025.09.25</span></div>
+        <div class="acc-ov-item"><span class="acc-ov-label">사고유형</span><span class="acc-ov-val">카카오 T 바이크</span></div>
+        <div class="acc-ov-item"><span class="acc-ov-label">보험사</span><span class="acc-ov-val">DB손해보험/SIMG</span></div>
+        <div class="acc-ov-item"><span class="acc-ov-label">총 진료비</span><span class="acc-ov-val">${total.toLocaleString()}원</span></div>
+      </div>
+    </div></div>
+
+    <div class="sec-lbl" style="padding:0 20px 8px">보험 한도 현황</div>
+    <div class="card" style="margin:0 20px 14px"><div class="p">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+        <span style="font-weight:700">본인치료비</span>
+        <span style="color:var(--sub)">${ownCost.toLocaleString()} / 500만원</span>
+      </div>
+      <div class="acc-limit-bar"><div class="acc-limit-fill" style="width:${limitPct}%"></div></div>
+      <div style="font-size:11px;color:var(--sub);margin-top:4px">${limitPct}% 사용 · 잔여 ${Math.max(0,LIMIT-ownCost).toLocaleString()}원</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px">
+        ${[['대인배상','1억'],['대물배상','1천만'],['방문횟수',arr.length+'건']].map(([l,v])=>`<div style="background:#f5f5f5;border-radius:8px;padding:8px;text-align:center"><div style="font-weight:700;font-size:13px">${v}</div><div style="font-size:10px;color:var(--sub);margin-top:2px">${l}</div></div>`).join('')}
+      </div>
+    </div></div>
+
+    <div class="sec-lbl" style="padding:0 20px 8px">서류 체크리스트 <span style="font-size:11px;font-weight:400;color:var(--sub)">${docsDone}/${docs.length}</span></div>
+    <div class="card" style="margin:0 20px 14px">${docList}</div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px 8px">
+      <div class="sec-lbl" style="padding:0">방문 일지 <span style="font-size:11px;font-weight:400;color:var(--sub)">${arr.length}건</span></div>
+      <button onclick="document.getElementById('csv-wrap').style.display=document.getElementById('csv-wrap').style.display==='none'?'block':'none'" style="font-size:11px;background:#f5f5f5;border:none;padding:5px 10px;border-radius:8px;cursor:pointer;font-weight:700">CSV 업로드</button>
+    </div>
+    <div id="csv-wrap" style="display:none;margin:0 20px 12px">
+      <div style="font-size:12px;color:var(--sub);margin-bottom:6px;line-height:1.5">형식: 날짜,병원명,진료과,치료내용,비용,증상,보험,메모</div>
+      <div style="font-size:11px;background:#f5f5f5;padding:8px 12px;border-radius:8px;margin-bottom:8px;font-family:monospace;color:var(--dim)">2025-09-25,강철병원,정형외과,엑스레이,0,팔꿈치통증,자보,입원</div>
+      <textarea id="csv-input" style="width:100%;height:100px;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;resize:none;font-family:inherit" placeholder="CSV 내용 붙여넣기..."></textarea>
+      <button onclick="importCsvData()" class="submit-btn" style="margin-top:8px">업로드</button>
+    </div>
+    <div class="card" style="margin:0 20px 14px">${visitList||'<div class="empty">기록 없음</div>'}</div>
+    <div class="form-wrap">
+      <div class="sec-lbl" style="margin-bottom:10px">방문 추가</div>
+      <div class="finp-grid">
+        <input id="a-hosp" class="finp" style="margin:0" placeholder="병원명">
+        <input id="a-date" type="date" class="finp" style="margin:0">
+      </div>
+      <div class="finp-grid">
+        <input id="a-dept" class="finp" style="margin:0" placeholder="진료과">
+        <input id="a-treatment" class="finp" style="margin:0" placeholder="치료내용">
+      </div>
+      <div class="finp-grid">
+        <input id="a-pain" class="finp" style="margin:0" placeholder="증상/아픈 곳">
+        <input id="a-amount" type="number" class="finp" style="margin:0" placeholder="비용(원)">
+      </div>
+      <div class="finp-grid">
+        <select id="a-ins" class="fsel" style="margin:0"><option value="">보험구분</option><option value="자보">자동차보험</option><option value="실비">실비</option><option value="본인치료비">본인치료비</option><option value="본인부담">본인부담</option></select>
+        <input id="a-memo" class="finp" style="margin:0" placeholder="메모">
+      </div>
+      <button id="acc-save" class="submit-btn">저장</button>
+    </div>
+
+    <div class="sec-lbl" style="padding:0 20px 8px">증상 일지 <span style="font-size:11px;font-weight:400;color:var(--sub)">위자료 근거</span></div>
+    <div class="card" style="margin:0 20px 14px">${symList||'<div class="empty">기록 없음</div>'}</div>
+    <div class="form-wrap">
+      <div class="sec-lbl" style="margin-bottom:10px">증상 추가</div>
+      <div class="finp-grid">
+        <input id="s-date" type="date" class="finp" style="margin:0">
+        <select id="s-level" class="fsel" style="margin:0">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}">통증 ${n}/10</option>`).join('')}</select>
+      </div>
+      <input id="s-parts" class="finp" placeholder="아픈 부위 (예: 팔꿈치·허리·턱)">
+      <select id="s-mood" class="fsel"><option value="">기분/상태</option><option value="불안">불안</option><option value="우울">우울</option><option value="보통">보통</option><option value="회복중">회복중</option><option value="많이나아짐">많이 나아짐</option></select>
+      <input id="s-memo" class="finp" placeholder="메모">
+      <button id="sym-save" class="submit-btn">증상 저장</button>
+    </div>
+  `;
 }
 function subNetwork(){return `<div class="form-wrap" style="margin-top:4px"><input id="net-search" class="finp" placeholder="검색..."></div><div class="card" style="margin:0 20px 12px"><div id="net-list"></div></div><div class="form-wrap"><div class="sec-lbl" style="margin-bottom:10px">인맥 추가</div><div class="finp-grid"><input id="n-name" class="finp" style="margin:0" placeholder="이름"><input id="n-rel" class="finp" style="margin:0" placeholder="관계"></div><div class="finp-grid"><input id="n-org" class="finp" style="margin:0" placeholder="소속/회사"><input id="n-contact" class="finp" style="margin:0" placeholder="연락처"></div><input id="n-memo" class="finp" placeholder="메모"><button id="net-save" class="submit-btn">추가</button></div>`;}
 
@@ -1140,7 +1302,15 @@ function updateStats(){
   const todos=S.get('main-todo-list',[]),done=todos.filter(t=>t.done).length,remain=todos.filter(t=>!t.done).length,issues=S.get('issues',[]).length,sch=S.get('schedules',[]).filter(s=>s.date>=new Date().toISOString().slice(0,10)).length;
   document.getElementById('main-stats').innerHTML=`<div class="stat"><div class="stat-n">${remain}</div><div class="stat-l">할일</div></div><div class="stat"><div class="stat-n">${done}</div><div class="stat-l">완료</div></div><div class="stat"><div class="stat-n">${issues}</div><div class="stat-l">이슈</div></div><div class="stat"><div class="stat-n">${sch}</div><div class="stat-l">일정</div></div>`;
 }
-function updateAccSub(){const arr=S.get('accidents',[]);const el=document.getElementById('acc-sub');if(el)el.textContent=arr.length?`${arr.length}건 · ${arr.reduce((s,a)=>s+(Number(a.amount)||0),0).toLocaleString()}원`:'기록 없음';}
+function updateAccSub(){
+  const arr=S.get('accidents',[]);
+  const el=document.getElementById('acc-sub');
+  if(!el)return;
+  if(!arr.length){el.textContent='기록 없음';return;}
+  const total=arr.reduce((s,a)=>s+(Number(a.amount)||0),0);
+  const latest=arr.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+  el.textContent=`${arr.length}건 · ${latest?.hospital||''} · ${total.toLocaleString()}원`;
+}
 function updateNetSub(){const arr=S.get('network',[]);const el=document.getElementById('net-sub');if(el)el.textContent=arr.length?`${arr.length}명`:'기록 없음';}
 
 function addSimple(listId,inputId){
@@ -1156,6 +1326,33 @@ function renderSimple(listId){
 function delWriting(id){S.set('writings',S.get('writings',[]).filter(w=>w.id!==id));renderSub('writing');}
 function addDoc(){const inp=document.getElementById('doc-inp'),name=inp?.value.trim();if(!name)return;const arr=S.get('docs-extra',[]);arr.push({name,date:new Date().toISOString().slice(0,10),id:Date.now()});S.set('docs-extra',arr);inp.value='';renderSub('tt-docs');}
 function delAcc(id){S.set('accidents',S.get('accidents',[]).filter(a=>a.id!==id));updateAccSub();renderSub('acc');}
+function delSym(id){S.set('symptoms',S.get('symptoms',[]).filter(s=>s.id!==id));renderSub('acc');}
+function toggleDoc(id){
+  const DEFAULT_DOCS=[
+    {id:1,name:'진단서',done:false},{id:2,name:'MRI/CT 판독결과지',done:false},
+    {id:3,name:'입퇴원확인서',done:false},{id:4,name:'진료비 영수증',done:false},
+    {id:5,name:'교통사고 사실확인원',done:false},{id:6,name:'근무확인서',done:false},
+    {id:7,name:'향후치료비 추정서',done:false},{id:8,name:'통증일지',done:false},
+  ];
+  const docs=S.get('acc_docs',DEFAULT_DOCS);
+  const i=docs.findIndex(d=>d.id===id);
+  if(i>=0){docs[i].done=!docs[i].done;S.set('acc_docs',docs);}
+  renderSub('acc');
+}
+function importCsvData(){
+  const raw=document.getElementById('csv-input')?.value.trim();if(!raw)return;
+  const lines=raw.split('\n').filter(l=>l.trim());
+  const arr=S.get('accidents',[]);let count=0;
+  lines.forEach((line,idx)=>{
+    const cols=line.split(',').map(c=>c.trim());
+    if(cols.length<2)return;
+    const [date,hospital,dept,treatment,amount,pain,ins,memo]=cols;
+    if(!hospital)return;
+    arr.unshift({date:date||'',hospital,dept:dept||'',treatment:treatment||'',amount:Number(amount)||0,pain:pain||'',ins:ins||'',memo:memo||'',id:Date.now()+idx});
+    count++;
+  });
+  S.set('accidents',arr);updateAccSub();showToast(`${count}건 업로드됐어요!`);renderSub('acc');
+}
 function delNet(id){S.set('network',S.get('network',[]).filter(n=>n.id!==id));updateNetSub();renderNetList();}
 function delGovt(id){S.set('govt',S.get('govt',[]).filter(g=>g.id!==id));renderGovtList();}
 
