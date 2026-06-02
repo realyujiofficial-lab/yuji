@@ -1646,34 +1646,39 @@ function renderDayStats(){
   const day=daily[dt]||{};
   const users=day.user_list||[];
   const msgs=day.msgs||0;
+  const counts=day.user_msg_counts||{};
 
-  // 참여자
+  // 참여자 (수 포함)
   const duEl=document.getElementById('day-users');
-  if(duEl) duEl.innerHTML=users.length
-    ?users.map(u=>`<span style="background:#f5f5f5;border-radius:8px;padding:3px 10px;font-size:12px;margin:2px 4px 2px 0;display:inline-block">${u.split('/').pop().trim()}</span>`).join('')
-    :'<span style="color:#bbb;font-size:13px">없음</span>';
+  if(duEl){
+    const header=`<div style="font-size:13px;font-weight:800;margin-bottom:6px">${users.length}명 참여 · 총 ${msgs}건</div>`;
+    const chips=users.map(u=>`<span style="background:#f5f5f5;border-radius:8px;padding:3px 10px;font-size:12px;margin:2px 4px 2px 0;display:inline-block">${u.split('/').pop().trim()}</span>`).join('');
+    duEl.innerHTML=users.length?header+chips:'<span style="color:#bbb;font-size:13px">없음</span>';
+  }
 
-  // 기여도 바
+  // 기여도 (정확한 건수/%)
   const dcEl=document.getElementById('day-contrib');
   if(!dcEl) return;
   if(!users.length){dcEl.innerHTML='<span style="color:#bbb;font-size:13px">없음</span>';return;}
-  // 날짜별 유저 메시지 수는 user_list에만 있어서 균등 표시 (sample 기반)
-  const samples=day.sample_texts||[];
-  const userMsgMap={};
-  // sample에서 닉 카운트 (근사치)
-  samples.forEach(s=>{const nick=s.split(':')[0];if(nick)userMsgMap[nick]=(userMsgMap[nick]||0)+1;});
-  // user_list 균등 배분
-  const perUser=msgs>0?Math.round(msgs/users.length):0;
-  dcEl.innerHTML=users.map(u=>{
-    const nick=u.split('/').pop().trim();
-    return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-      <span style="font-size:12px;font-weight:600;min-width:60px;flex-shrink:0">${nick}</span>
-      <div style="flex:1;background:#f5f5f5;border-radius:4px;height:6px">
-        <div style="background:var(--accent);height:100%;width:${Math.round(100/users.length)}%;border-radius:4px"></div>
+
+  const sorted=Object.entries(counts).length
+    ?Object.entries(counts).sort((a,b)=>b[1].msgs-a[1].msgs)
+    :users.map(u=>([u,{msgs:Math.round(msgs/users.length),pct:Math.round(100/users.length)}]));
+
+  const maxM=sorted[0]?sorted[0][1].msgs:1;
+  dcEl.innerHTML=sorted.map(([user,info])=>{
+    const nick=user.split('/').pop().trim();
+    const barW=Math.round(info.msgs/maxM*100);
+    return`<div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+        <span style="font-weight:600">${nick}</span>
+        <span style="color:var(--sub)">${info.msgs}건 · ${info.pct}%</span>
       </div>
-      <span style="font-size:11px;color:var(--sub);min-width:30px;text-align:right">~${perUser}건</span>
+      <div style="background:#f5f5f5;border-radius:4px;height:6px;overflow:hidden">
+        <div style="background:var(--accent);height:100%;width:${barW}%;border-radius:4px"></div>
+      </div>
     </div>`;
-  }).join('')+`<div style="font-size:11px;color:#bbb;margin-top:4px">※ 일별 기여도는 추정치 (정확한 값은 전체 기여도 탭 참고)</div>`;
+  }).join('');
 }
 loadDash();
 
