@@ -4892,69 +4892,9 @@
     }
   },
   "at_risk": {
-    "얼룩기타": {
-      "msgs": 43,
-      "days_silent": 1095
-    },
-    "✨이 현지✨": {
-      "msgs": 500,
-      "days_silent": 1093
-    },
-    "지우": {
-      "msgs": 59,
-      "days_silent": 1092
-    },
     "🔥핫두기👍/경북/40": {
       "msgs": 82,
       "days_silent": 1065
-    },
-    "트레블": {
-      "msgs": 46,
-      "days_silent": 1051
-    },
-    "나야나": {
-      "msgs": 60,
-      "days_silent": 963
-    },
-    "쩝쩝": {
-      "msgs": 120,
-      "days_silent": 962
-    },
-    "량요": {
-      "msgs": 62,
-      "days_silent": 855
-    },
-    "알로에": {
-      "msgs": 91,
-      "days_silent": 846
-    },
-    "춘천 먹보": {
-      "msgs": 93,
-      "days_silent": 841
-    },
-    "치맥하는 제이지": {
-      "msgs": 43,
-      "days_silent": 837
-    },
-    "ㅋㅋㅋㅋ": {
-      "msgs": 110,
-      "days_silent": 793
-    },
-    "류즈": {
-      "msgs": 71,
-      "days_silent": 793
-    },
-    "즐거운 네오": {
-      "msgs": 70,
-      "days_silent": 785
-    },
-    "마이크를 든 라이언": {
-      "msgs": 53,
-      "days_silent": 780
-    },
-    "Relax": {
-      "msgs": 82,
-      "days_silent": 767
     },
     "서울시/미식가": {
       "msgs": 127,
@@ -4980,14 +4920,6 @@
       "msgs": 166,
       "days_silent": 665
     },
-    "기뻐하는 라이언": {
-      "msgs": 54,
-      "days_silent": 638
-    },
-    "화난 라이언": {
-      "msgs": 73,
-      "days_silent": 612
-    },
     "서울시/라이언언": {
       "msgs": 102,
       "days_silent": 597
@@ -5003,10 +4935,6 @@
     "경기 / 청소하는튜브": {
       "msgs": 308,
       "days_silent": 545
-    },
-    "포콜": {
-      "msgs": 50,
-      "days_silent": 531
     },
     "서울/엘리샤": {
       "msgs": 1136,
