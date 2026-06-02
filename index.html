@@ -615,6 +615,14 @@ textarea.finp{min-height:120px;resize:vertical}
     </div>
   </div>
 
+  <div class="sec"><div class="sec-lbl">유지</div></div>
+  <div class="card" style="margin:0 20px 14px">
+    <div class="row" onclick="goSub('yuji-me')">
+      <div class="row-body"><div class="row-title">유지 한일</div><div class="row-sub">커리어 · 프로젝트 · 핵심역량</div></div>
+      <div class="row-arr">›</div>
+    </div>
+  </div>
+
   <div class="sec"><div class="sec-lbl">FNB마케터</div></div>
   <div class="card" style="margin:0 20px 16px">
     <div class="btn-grid-3">
@@ -904,7 +912,7 @@ function switchTab(group,tab,el){
   setAppScroll(group,tab);
 }
 
-const SUB_TITLES={writing:'작성법','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기',network:'인맥',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
+const SUB_TITLES={writing:'작성법','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기',network:'인맥','yuji-me':'유지 한일',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
 function renderSub(id){
   document.getElementById('sub-title').textContent=SUB_TITLES[id]||'';
   const fn={
@@ -916,6 +924,7 @@ function renderSub(id){
     acc:subAcc,
     diary:subDiary,
     network:subNetwork,
+    'yuji-me':subYujiMe,
     resume:()=>`<div class="ta-page"><textarea id="ta-resume" placeholder="이력서 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-resume').value).then(()=>showToast('복사됐어요!'))">복사</button></div>`,
     cover:()=>`<div class="ta-page"><textarea id="ta-cover" placeholder="자소서 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-cover').value).then(()=>showToast('복사됐어요!'))">복사</button></div>`,
     'sns-fl':()=>`<div class="form-wrap" style="margin-top:8px"><div style="display:flex;gap:8px"><input id="sns-fl-inp" class="finp" style="margin:0;flex:1" placeholder="SNS 운영 메모..."><button id="sns-fl-add" class="add-btn">+</button></div></div><div class="card" style="margin:10px 20px"><div id="sns-fl-list"></div></div>`,
@@ -1369,6 +1378,130 @@ function subAcc(){
     </div>
   `;
 }
+const YUJI_HANIL=`## 3️⃣ 서비스 기획 커리어 (2018 ~ 현재)
+
+## 더맘마 (2018.11 ~ 2019.08 / 팀장)
+- 맘마먹자 플랫폼 개선 (100%)
+- UI/UX 기획
+- B2B 제안 (L마트)
+- 마케팅 기획 및 실행
+- 온라인 신문사 SBIZ 뉴스 운영
+
+## 아레나캐스트 (2019.10 ~ 2020.12)
+- 스포츠 토토 앱 기획
+- 랭킹볼 / 아레나캐스트 운영
+- 게임 UX 개선 및 플로우 단축
+
+## 원글로벌 (2020.12 ~ 2021.09)
+- 숙박 플랫폼 원픽 UX 개선
+- 지도 기능 고도화
+- UX 리서치 및 기능 정의
+
+## 아토스터디 (2021.11 ~ 2022.12)
+- 독서실 앱 "밀리언즈" 기획 (100%)
+  - 공부시간 기반 보상 시스템
+- 메가스터디X그린램프 "스터디캠프" 구축
+- 핵심 기능: SNS 로그인, 시간 측정, 예약, 데이터 시각화
+
+## 트래블멤버스 (2023.12 ~ 2024.04)
+- 스테이앤모어 UIUX 개선
+- 모바일/웹 통합 기획
+- 예약/이벤트 구조 개선
+
+## 에스티로직 ( ~ 2026.01 )
+- 공간빅데이터 플랫폼 운영
+- 국토교통부 협업
+- 데이터 기반 서비스 운영 경험
+
+## 🚀 프로젝트 & 개인 활동
+
+- 여행 오픈카톡방 운영 (2022~현재): 최대 1,300명 → 현재 200명 정예 · 리뷰 데이터 약 22,000건 · DB 정리 약 14,000건
+- 군산 여행 실증 프로젝트 (2025.07): 현지인 데이터 기반 코스 검증 · 유저 참여형 테스트
+- 대양회관 브랜딩 (2025.09~): 오프라인 매장 수제맥주 전략 · 매출 약 88% 상승
+- 송파구 여성리더십 5기 총무 (2025.09)
+- TasteTrip 여행 플랫폼 (2026.01~): 현지인 기반 여행 추천 서비스 기획/개발 중 · AI 맞춤 추천
+
+## 🧠 핵심 역량
+
+- 플랫폼 기획 6년: 예약·결제·숙박·독서실·배달·스포츠·공간빅데이터·여행 정보 플랫폼
+- 마케팅 3년: 100만뷰 이상 콘텐츠 다수, 로컬 매장 브랜딩으로 매출 약 88% 상승
+- 데이터 & 커뮤니티: 누적 데이터 약 22,000건, 정리 DB 약 14,000건, 최대 1,300명 운영
+- 창업 실행력: 기획 → 데이터 확보 → 유저 모집 → 현장 검증 → 협업 → 운영 전과정 직접 실행
+
+## 📚 교육 / 수상
+
+- 2020 Adobe XD / 2020 피그마 디자인
+- 2021 AI 서비스기획 (KAIST & 서울ICT이노베이션스퀘어)
+- 2021 서비스기획 60일 완주반 (제로베이스)
+- 2022 UXUI 디자인 (패스트캠퍼스 · Figma/Zeplin)
+- 2023 데이터드리븐 서비스기획 (서울경제진흥원 · 페르소나/UT/GA/SQL)
+- 2023 창업 실전교육 (경기도경제과학진흥원)
+- 2023.12 대전세종 관광 공모전 최우수상
+- 2024 마계대학 협업 스쿨 / 로컬 비즈니스 실무
+- 2025.04 한국MICE협회 인센티브 관광 전문가 과정 1기`;
+
+const YUJI_APPEAL=`내가 어필하고 싶은 부분은
+나 유지,
+초등학생때 동생을 기르며, 육아 관련 책을 쓰고 싶었다.
+엄마가 동생의 마음과 생각을 이해해, 동생을 쉽게 보았으면 했다.
+
+2013년 삼성모바일 알바를 하며, 블로그 관리를 했었다.
+방문자 300명 찍고 재밌어서 계속 했다.
+
+블로그 협찬이 들어오자 흥미가 사라졌다.
+광고판이 싫었기 때문이다.
+난 내가 진심으로 좋아하는걸 찾고, 상대방도 진심으로 좋아하는 걸 찾길 바랬다.
+
+2025년, 로컬에 꽂혔다.
+인간다움, 문화재, 로컬.
+
+3N세 유지
+이제 생각에서 그치는게 아니라 실제 구체화를 해 수익을 만들어나갈꺼다.`;
+
+function yujiCopy(key){
+  const el=document.getElementById('yuji-ta-'+key);
+  if(!el)return;
+  navigator.clipboard.writeText(el.value).then(()=>showToast('복사됐어요!'));
+}
+
+function subYujiMe(){
+  const tabs=[
+    {key:'hanil',label:'유지 한일',init:YUJI_HANIL},
+    {key:'appeal',label:'어필',init:YUJI_APPEAL},
+    {key:'marketer',label:'마케터/FNB'},
+    {key:'planner',label:'기획자'},
+    {key:'biz',label:'사업기획'},
+  ];
+  const activeKey=window._yujiTab||'hanil';
+  return `
+    <div style="display:flex;gap:6px;padding:8px 20px 12px;overflow-x:auto;flex-wrap:nowrap">
+      ${tabs.map(t=>`<button onclick="switchYujiTab('${t.key}')" id="yt-${t.key}" class="nf-btn${activeKey===t.key?' active':''}" style="flex-shrink:0">${t.label}</button>`).join('')}
+    </div>
+    ${tabs.map(t=>{
+      const saved=localStorage.getItem('yuji_ta_'+t.key)||t.init||'';
+      return `<div id="yuji-pane-${t.key}" style="display:${activeKey===t.key?'block':'none'}">
+        <div style="display:flex;justify-content:flex-end;padding:0 20px 8px;gap:8px">
+          <button onclick="localStorage.setItem('yuji_ta_${t.key}',document.getElementById('yuji-ta-${t.key}').value);showToast('저장됐어요!')" style="font-size:12px;background:#f5f5f5;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700">저장</button>
+          <button onclick="yujiCopy('${t.key}')" style="font-size:12px;background:#1a1a1a;color:#fff;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700">전체 복사</button>
+        </div>
+        <div style="padding:0 20px 40px">
+          <textarea id="yuji-ta-${t.key}" style="width:100%;min-height:400px;border:1px solid var(--border);border-radius:12px;padding:14px;font-size:13px;line-height:1.8;resize:vertical;font-family:inherit;color:var(--text)" placeholder="${t.label} 내용을 입력하거나 붙여넣기 하세요...">${saved}</textarea>
+        </div>
+      </div>`;
+    }).join('')}
+  `;
+}
+
+function switchYujiTab(key){
+  window._yujiTab=key;
+  document.querySelectorAll('[id^="yuji-pane-"]').forEach(el=>el.style.display='none');
+  document.querySelectorAll('[id^="yt-"]').forEach(el=>el.classList.remove('active'));
+  const pane=document.getElementById('yuji-pane-'+key);
+  const btn=document.getElementById('yt-'+key);
+  if(pane)pane.style.display='block';
+  if(btn)btn.classList.add('active');
+}
+
 function subNetwork(){
   const arr=S.get('network',[]);
   const moims=[...new Set(arr.map(n=>n.moim||n.rel).filter(Boolean))];
