@@ -365,25 +365,24 @@ textarea.finp{min-height:120px;resize:vertical}
   <div class="sec" style="margin-top:8px"><div class="sec-lbl">놀생</div></div>
   <div class="card" style="margin:0 20px 14px">
     <div class="btn-grid-2">
-      <a class="gbtn" href="https://litt.ly/nol_life.official" target="_blank"><span class="gtxt">리틀리</span>
-      </a>
-      <button class="gbtn" onclick="goSub('writing')"><span class="gtxt">작성법</span>
-      </button>
+      <a class="gbtn" href="https://litt.ly/nol_life.official" target="_blank"><span class="gtxt">리틀리</span></a>
+      <button class="gbtn" onclick="goSub('stibee')"><span class="gtxt">스티비</span></button>
     </div>
   </div>
 
   <div class="sec"><div class="sec-lbl">테이스트트립</div></div>
   <div class="card" style="margin:0 20px 4px">
     <div class="btn-grid-3">
-      <a class="gbtn" href="https://litt.ly/spotontaste_tastetrip.official" target="_blank"><span class="gtxt">리틀리</span>
-      </a>
-      <a class="gbtn" href="https://sot-tastetrip.vercel.app/#/places" target="_blank"><span class="gtxt">라이브</span>
-      </a>
-      <a class="gbtn" href="https://dev-sot-tastetrip.vercel.app/#/places" target="_blank"><span class="gtxt">데브</span>
-      </a>
+      <a class="gbtn" href="https://litt.ly/spotontaste_tastetrip.official" target="_blank"><span class="gtxt">리틀리</span></a>
+      <a class="gbtn" href="https://sot-tastetrip.vercel.app/#/places" target="_blank"><span class="gtxt">라이브</span></a>
+      <a class="gbtn" href="https://dev-sot-tastetrip.vercel.app/#/places" target="_blank"><span class="gtxt">데브</span></a>
     </div>
   </div>
   <div class="card" style="margin:0 20px 16px">
+    <div class="row" onclick="goSub('tt-biz-plan')">
+      <div class="row-body"><div class="row-title">사업계획서</div><div class="row-sub">복붙용 · 범용</div></div>
+      <div class="row-arr">›</div>
+    </div>
     <div class="row" onclick="goSub('tt-docs')">
       <div class="row-body"><div class="row-title">개발 문서</div></div>
       <div class="row-arr">›</div>
@@ -940,11 +939,13 @@ function switchTab(group,tab,el){
   setAppScroll(group,tab);
 }
 
-const SUB_TITLES={writing:'작성법','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
+const SUB_TITLES={writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
 function renderSub(id){
   document.getElementById('sub-title').textContent=SUB_TITLES[id]||'';
   const fn={
     writing:subWriting,
+    'tt-biz-plan':subTTBizPlan,
+    stibee:subStibee,
     'tt-docs':subDocs,
     'tt-sns':subSns,
     'tt-govt':subGovt,
@@ -1030,6 +1031,7 @@ function afterSub(id){
       S.set('acc_diaries',arr);updateDiarySub();showToast('저장됐어요!');renderSub('diary');
     });
   }
+  if(id==='stibee'){const ta=document.getElementById('ta-stibee');if(ta){ta.value=localStorage.getItem('stibee_content')||'';ta.addEventListener('input',e=>localStorage.setItem('stibee_content',e.target.value));}}
   if(id==='resume'){const ta=document.getElementById('ta-resume');if(ta){ta.value=localStorage.getItem('resume')||'';ta.addEventListener('input',e=>localStorage.setItem('resume',e.target.value));}}
   if(id==='cover'){const ta=document.getElementById('ta-cover');if(ta){ta.value=localStorage.getItem('cover')||'';ta.addEventListener('input',e=>localStorage.setItem('cover',e.target.value));}}
   if(id==='sns-fl'){renderListInEl('sns-fl-list','sns-fl-items');document.getElementById('sns-fl-add')?.addEventListener('click',()=>{const inp=document.getElementById('sns-fl-inp'),t=inp.value.trim();if(!t)return;const arr=S.get('sns-fl-items',[]);arr.unshift({text:t,id:Date.now()});S.set('sns-fl-items',arr);inp.value='';renderListInEl('sns-fl-list','sns-fl-items');});}
@@ -1039,6 +1041,191 @@ function afterSub(id){
   if(id==='tt-docs'){renderDocsList();}
 }
 function v(id){return document.getElementById(id)?.value||'';}
+
+// ── 서브페이지: 스티비 ──
+function subStibee(){
+  return `<div class="ta-page">
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px">
+      <button onclick="localStorage.setItem('stibee_content',document.getElementById('ta-stibee').value);showToast('저장됐어요!')" style="font-size:12px;background:#f5f5f5;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700">저장</button>
+      <button onclick="navigator.clipboard.writeText(document.getElementById('ta-stibee').value).then(()=>showToast('복사됐어요!'))" style="font-size:12px;background:#1a1a1a;color:#fff;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700">전체 복사</button>
+    </div>
+    <textarea id="ta-stibee" style="width:100%;min-height:500px;border:1px solid var(--border);border-radius:12px;padding:14px;font-size:13px;line-height:1.8;resize:vertical;font-family:inherit" placeholder="스티비 히스토리, 레퍼런스, 운영 메모..."></textarea>
+  </div>`;
+}
+
+// ── 서브페이지: 테이스트트립 사업계획서 ──
+const TT_BIZ_PLAN = `# TasteTrip (테이스트립) 사업계획서
+
+## 1. 사업 개요
+
+| 항목 | 내용 |
+|------|------|
+| 서비스명 | TasteTrip (테이스트립) |
+| 한줄 정의 | 현지인 기반 여행·맛집 리뷰 플랫폼 |
+| 운영 형태 | 모바일 웹앱 (PWA, 초대코드 기반 클로즈드 베타) |
+| 대표 | 유지현 (PM/마케터, 서비스기획 7년) |
+| 연락처 | sot.tastetrip@gmail.com |
+| 현황 | MVP 운영 중 (https://sot-tastetrip.vercel.app) |
+
+---
+
+## 2. 문제 정의
+
+### ① 광고·체험단이 뒤덮은 리뷰 시장
+- 정보는 넘치는데 믿을 수 있는 정보가 없다
+- 체험단·유료광고 글이 진짜 후기를 밀어내는 구조
+- 소비자는 정보 과부하 속에서 '선택 피로'를 경험
+
+### ② 지역 정체성 소멸
+- 어디나 같은 트렌드, 어디가나 비슷한 매장
+- 그 지역만의 특색 있는 음식·문화·공간이 사라지는 중
+- 여행자는 로컬 특색을 원하지만 찾기 어렵다
+
+### ③ 사장님이 자기 고객을 모른다
+- '단골이 많다' → 실제론 신규가 더 많음
+- '광고 보고 온다' → 실제론 맛·가성비·지인 추천이 주요 유입
+- 감이 아닌 데이터 기반 마케팅이 필요하지만 도구가 없다
+
+---
+
+## 3. 솔루션
+
+**TasteTrip = 현지인·실방문자의 진짜 리뷰만 남기는 여행 정보 플랫폼**
+
+- 초대코드 기반 신뢰 네트워크 (아무나 못 들어온다)
+- 현지인 인증 시스템 (리뷰 기반 → GPS+리뷰 조합으로 고도화 예정)
+- 리뷰 진위 판별 엔진 개발 중 (체험단·광고글 자동 감지)
+- 지역 정체성 기반 콘텐츠 (트렌드 아닌 현지 특색)
+
+---
+
+## 4. 핵심 차별화
+
+| 구분 | 기존 플랫폼 | TasteTrip |
+|------|------------|-----------|
+| 리뷰 신뢰도 | 체험단·광고 혼재 | 현지인 인증 + 진위 판별 |
+| 콘텐츠 방향 | 트렌드 중심 | 지역 정체성 기반 |
+| 접근 방식 | 누구나 가입 | 초대코드·실방문자 한정 |
+| 데이터 활용 | 소비자 중심 | B2C + B2B (사장님 데이터) |
+| 여행 단계 | 탐색 중심 | 전/중/후 전주기 커버 |
+
+---
+
+## 5. 서비스 구조
+
+### 핵심 기능 (MVP 현재)
+- 장소 탐색 (지도+목록 토글, 현지인 인증 뱃지)
+- 리뷰 작성 (취향도·태그·동행자 태그·팁)
+- 장소 저장 (북마크, 컬렉션)
+- 현지인 인증 (지역 기반 리뷰 → 관리자 승인)
+- 알림 (동행자 태그 요청, 리뷰 좋아요)
+- 관리자 센터 (회원 승인, 통계)
+
+### 기술 스택
+- Frontend: React + TypeScript + Vite + Tailwind CSS
+- Backend: Supabase (PostgreSQL)
+- 지도: react-leaflet (OpenStreetMap)
+- 배포: Vercel
+
+---
+
+## 6. 타겟
+
+### 주 타겟 (B2C)
+- 20~40대 여행·맛집 관심 유저
+- '체험단 아닌 진짜 정보'를 원하는 소비자
+- 현지인 추천을 받고 싶은 여행자
+
+### 보조 타겟 (B2B)
+- FNB(식음료) 매장 사장님
+- 로컬 여행 콘텐츠 크리에이터
+
+---
+
+## 7. 수익 모델 (BM)
+
+| 구분 | 무료 | 유료 |
+|------|------|------|
+| 일반 유저 | 탐색·리뷰·저장·마이피드 | 고급 추천·프리미엄 위저드 |
+| 사장님 B2B | 기본 매장 등록 | 광고 노출·이벤트·데이터분석·체험단 연계 |
+| 크리에이터 | 크로스 SNS 업로드 기본 | 자동 스케줄링·분석 리포트 |
+
+**핵심 수익화 타이밍:** B2B 사장님 대시보드 오픈 시점 (5단계)
+
+---
+
+## 8. 시장 규모
+
+- 국내 여행 시장: 약 30조 원 (2024 기준)
+- 국내 음식점 수: 약 70만 개 (잠재 B2B 고객)
+- 리뷰 플랫폼 시장 성장률: 연 15%+
+- 오카방 데이터: 누적 리뷰 약 22,000건, 정리 DB 약 14,000건
+
+---
+
+## 9. 단계별 로드맵
+
+| 단계 | 내용 | 상태 |
+|------|------|------|
+| 1단계 | MVP 오픈 (초대코드 기반, 오카방 멤버) | ✅ 진행중 |
+| 2단계 | 리뷰 진위 판별 엔진 개발 | 준비중 |
+| 3단계 | SNS 로그인 + 일반 유저 오픈 | 예정 |
+| 4단계 | 크로스 SNS 업로드 (인스타/틱톡/블로그) | 예정 |
+| 5단계 | 사장님 B2B 대시보드 (수익화 핵심) | 예정 |
+| 6단계 | POS/키오스크 연동 | 예정 |
+| 7단계 | 전주기 플랫폼 완성 + 오프라인 연계 | 예정 |
+
+---
+
+## 10. 팀
+
+| 이름 | 역할 | 배경 |
+|------|------|------|
+| 유지현 | CEO / PM / 마케터 | 서비스기획 7년, 플랫폼 기획 다수, 여행 오카방 4년 운영, 커뮤니티 데이터 22,000건 |
+
+**핵심 자산:**
+- 오카방(현지인 여행 오픈채팅방) 4년 운영 경험
+- 리뷰 데이터 22,000건, 정리 DB 14,000건
+- 최대 멤버 1,300명 커뮤니티 운영
+- 로컬 브랜딩 실전 경험 (대양회관 매출 88% 상승)
+
+---
+
+## 11. 현황 및 성과
+
+- MVP 앱 라이브 운영 중 (React+Supabase)
+- 초대코드 기반 클로즈드 베타 운영
+- 오카방 멤버 200명 정예 운영
+- 매장 협업 1기 모집 진행 중 (당근·Threads·X 배포)
+- 사장님 협업: 대양회관 브랜딩 (매출 88% 상승 실적)
+
+---
+
+## 12. 지원 요청 / 협력 제안
+
+- 개발 인력 또는 AI 개발 지원
+- 리뷰 진위 판별 엔진 R&D 파트너
+- FNB/여행 분야 B2B 파트너십
+- 초기 투자 (Seed)
+
+---
+
+> 문의: sot.tastetrip@gmail.com
+> 앱: https://sot-tastetrip.vercel.app
+> 오픈채팅: https://open.kakao.com/o/sAaH8z9d`;
+
+function subTTBizPlan(){
+  const saved=localStorage.getItem('tt_biz_plan');
+  const val=saved!==null?saved:TT_BIZ_PLAN;
+  return `
+    <div style="display:flex;justify-content:flex-end;padding:8px 20px 8px;gap:8px">
+      <button onclick="localStorage.setItem('tt_biz_plan',document.getElementById('ta-tt-biz').value);showToast('저장됐어요!')" style="font-size:12px;background:#f5f5f5;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700">저장</button>
+      <button onclick="navigator.clipboard.writeText(document.getElementById('ta-tt-biz').value).then(()=>showToast('복사됐어요!'))" style="font-size:12px;background:#1a1a1a;color:#fff;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700">전체 복사</button>
+    </div>
+    <div style="padding:0 20px 60px">
+      <textarea id="ta-tt-biz" style="width:100%;min-height:600px;border:1px solid var(--border);border-radius:12px;padding:14px;font-size:13px;line-height:1.8;resize:vertical;font-family:inherit;color:var(--text)">${val.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea>
+    </div>`;
+}
 
 // ── 서브페이지: 작성법 ──
 const YECHANG_PROMPTS=[
