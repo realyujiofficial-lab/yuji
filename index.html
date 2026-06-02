@@ -1131,7 +1131,7 @@ function subDiary(){
       <div class="acc-top">${d.date}${d.mood?` ${d.mood}`:''}
         <span style="font-size:12px;color:#ddd;margin-left:auto">›</span>
       </div>
-      <div style="font-size:13px;font-weight:600;color:var(--text);margin-top:3px">${shortTitle||'(제목 없음)'}</div>
+      ${shortTitle?`<div style="font-size:13px;font-weight:600;color:var(--text);margin-top:3px">${shortTitle}</div>`:''}
       ${shortPreview?`<div class="acc-info" style="margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${shortPreview}</div>`:''}
     </div>`;
   }).join('');
@@ -1158,12 +1158,7 @@ function subDiary(){
     </div>`;
 }
 
-function diaryTitle(d){
-  if(d.title) return d.title;
-  // fallback: first non-empty, non-markdown line of content
-  const lines=(d.content||'').split('\n').map(l=>l.replace(/^[#*\->\s]+/,'').trim()).filter(Boolean);
-  return lines[0]||'';
-}
+function diaryTitle(d){return d.title||'';}
 
 function openDiary(id){
   const arr=S.get('acc_diaries',[]);
