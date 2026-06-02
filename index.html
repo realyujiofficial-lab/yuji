@@ -453,6 +453,9 @@ textarea.finp{min-height:120px;resize:vertical}
       <div style="font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.06em;margin-bottom:6px">참여자</div>
       <div id="day-users" style="margin-bottom:12px"></div>
       <div style="font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.06em;margin-bottom:8px">메시지 기여도</div>
+      <div style="position:relative;width:200px;height:200px;margin:0 auto 8px">
+        <canvas id="contrib-chart"></canvas>
+      </div>
       <div id="day-contrib"></div>
     </div>
     <div class="dblock">
@@ -1665,20 +1668,38 @@ function renderDayStats(){
     ?Object.entries(counts).sort((a,b)=>b[1].msgs-a[1].msgs)
     :users.map(u=>([u,{msgs:Math.round(msgs/users.length),pct:Math.round(100/users.length)}]));
 
-  const maxM=sorted[0]?sorted[0][1].msgs:1;
-  dcEl.innerHTML=sorted.map(([user,info])=>{
-    const nick=user.split('/').pop().trim();
-    const barW=Math.round(info.msgs/maxM*100);
-    return`<div style="margin-bottom:8px">
-      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
-        <span style="font-weight:600">${nick}</span>
-        <span style="color:var(--sub)">${info.msgs}건 · ${info.pct}%</span>
+  const COLORS=['#FF6B35','#3B82F6','#10B981','#F59E0B','#8B5CF6','#EC4899','#06B6D4','#84CC16','#F97316','#6366F1'];
+
+  // 도넛 차트
+  const chartEl=document.getElementById('contrib-chart');
+  if(chartEl){
+    if(window._contribChart) window._contribChart.destroy();
+    window._contribChart=new Chart(chartEl,{
+      type:'doughnut',
+      data:{
+        labels:sorted.map(([u])=>u.split('/').pop().trim()),
+        datasets:[{data:sorted.map(([,i])=>i.msgs),backgroundColor:COLORS.slice(0,sorted.length),borderWidth:0,hoverOffset:6}]
+      },
+      options:{
+        cutout:'62%',
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw}건 (${sorted[ctx.dataIndex][1].pct}%)`}}
+        },
+        responsive:true,maintainAspectRatio:true
+      }
+    });
+  }
+
+  // 범례
+  dcEl.innerHTML=sorted.map(([user,info],i)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f5f5f5">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:10px;height:10px;border-radius:50%;background:${COLORS[i%COLORS.length]};flex-shrink:0;display:inline-block"></span>
+        <span style="font-size:13px;font-weight:600">${user.split('/').pop().trim()}</span>
       </div>
-      <div style="background:#f5f5f5;border-radius:4px;height:6px;overflow:hidden">
-        <div style="background:var(--accent);height:100%;width:${barW}%;border-radius:4px"></div>
-      </div>
-    </div>`;
-  }).join('');
+      <span style="font-size:12px;color:var(--sub)">${info.msgs}건 · ${info.pct}%</span>
+    </div>`).join('');
 }
 loadDash();
 
