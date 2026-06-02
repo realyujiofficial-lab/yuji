@@ -574,7 +574,12 @@ textarea.finp{min-height:120px;resize:vertical}
   <div class="sec" style="margin-top:8px"><div class="sec-lbl">교통사고 <span style="font-size:10px;font-weight:400;color:var(--sub)">2025.09.25 · DB손해보험</span></div></div>
   <div class="card" style="margin:0 20px 14px">
     <div class="row" onclick="goSub('acc')">
-      <div class="row-body"><div class="row-title">치료 기록</div><div class="row-sub" id="acc-sub">기록 없음</div></div>
+      <div class="row-body"><div class="row-title">치료기록</div><div class="row-sub" id="acc-sub">기록 없음</div></div>
+      <div class="row-arr">›</div>
+    </div>
+    <div style="height:1px;background:var(--border);margin:0 20px"></div>
+    <div class="row" onclick="goSub('diary')">
+      <div class="row-body"><div class="row-title">일기</div><div class="row-sub" id="diary-sub">기록 없음</div></div>
       <div class="row-arr">›</div>
     </div>
   </div>
@@ -876,7 +881,7 @@ function switchTab(group,tab,el){
   setAppScroll(group,tab);
 }
 
-const SUB_TITLES={writing:'작성법','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'교통사고',network:'인맥',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
+const SUB_TITLES={writing:'작성법','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기',network:'인맥',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
 function renderSub(id){
   document.getElementById('sub-title').textContent=SUB_TITLES[id]||'';
   const fn={
@@ -886,6 +891,7 @@ function renderSub(id){
     'tt-govt':subGovt,
     'tt-mine':()=>`<div class="form-wrap" style="margin-top:16px;display:flex;flex-direction:column;gap:10px"><button class="submit-btn" onclick="alert('터미널: bash run_all_files.sh')">파이프라인 실행</button><button class="submit-btn" style="background:#f5f5f5;color:#333" onclick="window.open('okaband.html','_blank')">대시보드 열기</button><button class="submit-btn" style="background:#f5f5f5;color:#333">랜딩페이지</button></div>`,
     acc:subAcc,
+    diary:subDiary,
     network:subNetwork,
     resume:()=>`<div class="ta-page"><textarea id="ta-resume" placeholder="이력서 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-resume').value).then(()=>showToast('복사됐어요!'))">복사</button></div>`,
     cover:()=>`<div class="ta-page"><textarea id="ta-cover" placeholder="자소서 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-cover').value).then(()=>showToast('복사됐어요!'))">복사</button></div>`,
@@ -918,6 +924,14 @@ function afterSub(id){
     });
   }
   if(id==='network'){renderNetList();document.getElementById('net-search')?.addEventListener('input',renderNetList);document.getElementById('net-save')?.addEventListener('click',()=>{const n=v('n-name');if(!n)return;const arr=S.get('network',[]);arr.unshift({name:n,rel:v('n-rel'),org:v('n-org'),contact:v('n-contact'),memo:v('n-memo'),id:Date.now()});S.set('network',arr);['n-name','n-rel','n-org','n-contact','n-memo'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});updateNetSub();renderNetList();});}
+  if(id==='diary'){
+    document.getElementById('dj-save')?.addEventListener('click',()=>{
+      const date=v('dj-date');if(!date)return;
+      const arr=S.get('acc_diaries',[]);
+      arr.unshift({id:Date.now(),date,mood:v('dj-mood'),title:v('dj-title'),content:v('dj-content')});
+      S.set('acc_diaries',arr);updateDiarySub();showToast('일기 저장됐어요!');renderSub('diary');
+    });
+  }
   if(id==='resume'){const ta=document.getElementById('ta-resume');if(ta){ta.value=localStorage.getItem('resume')||'';ta.addEventListener('input',e=>localStorage.setItem('resume',e.target.value));}}
   if(id==='cover'){const ta=document.getElementById('ta-cover');if(ta){ta.value=localStorage.getItem('cover')||'';ta.addEventListener('input',e=>localStorage.setItem('cover',e.target.value));}}
   if(id==='sns-fl'){renderListInEl('sns-fl-list','sns-fl-items');document.getElementById('sns-fl-add')?.addEventListener('click',()=>{const inp=document.getElementById('sns-fl-inp'),t=inp.value.trim();if(!t)return;const arr=S.get('sns-fl-items',[]);arr.unshift({text:t,id:Date.now()});S.set('sns-fl-items',arr);inp.value='';renderListInEl('sns-fl-list','sns-fl-items');});}
@@ -1091,6 +1105,54 @@ function subGovt(){
     <div class="form-wrap"><input id="g-name" class="finp" placeholder="지원사업명"><div style="display:flex;gap:8px;margin-bottom:10px"><input id="g-dl" type="date" class="finp" style="margin:0;flex:1"><select id="g-status" class="fsel" style="margin:0;flex:0 0 90px"><option>관심</option><option>준비중</option><option>제출</option><option>완료</option></select></div><button id="govt-save" class="submit-btn">추가</button></div>
     <div class="card" style="margin:12px 20px 20px"><div id="govt-list"></div></div>
   `;
+}
+
+// ── 교통사고 초기 데이터 (노션 CSV 파싱) ──
+const ACC_INIT_RECORDS=[{"id":5,"date":"2025-09-25","dateEnd":"","hospital":"강철병원 — 검사/병명확진","types":"검사, 병명확진"},{"id":27,"date":"2025-09-25","dateEnd":"2025-10-10","hospital":"강철병원 입원","types":"입원"},{"id":31,"date":"2025-09-29","dateEnd":"","hospital":"연세우리집치과 (신경치료)","types":"외래진료"},{"id":32,"date":"2025-09-29","dateEnd":"","hospital":"경찰서","types":"경찰관련"},{"id":8,"date":"2025-09-30","dateEnd":"","hospital":"서울성모 치과(구강악,치아보존)","types":"검사, 외래진료"},{"id":9,"date":"2025-10-01","dateEnd":"","hospital":"여의도성모 정형외과(팔), 안과","types":"검사, 외래진료, 진단서"},{"id":30,"date":"2025-10-10","dateEnd":"","hospital":"서울성모 구강악","types":"검사, 병명확진, 외래진료, 진단서"},{"id":4,"date":"2025-10-10","dateEnd":"2025-10-29","hospital":"잠실자생한방병원 입원","types":"입원"},{"id":33,"date":"2025-10-10","dateEnd":"","hospital":"연세우리집치과","types":"외래진료"},{"id":34,"date":"2025-10-14","dateEnd":"","hospital":"연세우리집치과 (임플란트)","types":"외래진료"},{"id":35,"date":"2025-10-14","dateEnd":"2025-10-16","hospital":"임플란트 수술","types":"수술"},{"id":38,"date":"2025-10-15","dateEnd":"","hospital":"서울성모 이비인후과&성형외과","types":"외래진료, 진단서"},{"id":40,"date":"2025-10-17","dateEnd":"","hospital":"서울성모 치과(구강악&치아)","types":"검사, 외래진료"},{"id":37,"date":"2025-10-20","dateEnd":"","hospital":"연세우리집치과 (실밥)","types":"외래진료"},{"id":43,"date":"2025-10-20","dateEnd":"","hospital":"성모 안과","types":"검사, 외래진료, 진단서"},{"id":39,"date":"2025-10-21","dateEnd":"","hospital":"여의도성모 이비인후과","types":"외래진료, 진단서"},{"id":47,"date":"2025-10-28","dateEnd":"","hospital":"서울성모 치과 진단서 발급","types":"외래진료, 진단서"},{"id":48,"date":"2025-10-28","dateEnd":"","hospital":"여의도성모 정형외과(팔), 이비인후과","types":"외래진료"},{"id":6,"date":"2025-10-29","dateEnd":"2025-12-13","hospital":"대전대서울한방병원 입원","types":"입원"},{"id":49,"date":"2025-10-31","dateEnd":"","hospital":"여의도성모 재활의학과, 정신건강, 정형외과(손목CT)","types":"검사, 외래진료"},{"id":51,"date":"2025-11-04","dateEnd":"","hospital":"여의도성모 재활의학과, 정형외과, 정신건강","types":"병명확진, 외래진료, 진단서"},{"id":55,"date":"2025-11-04","dateEnd":"","hospital":"대물 — 노트북","types":"대물"},{"id":52,"date":"2025-11-09","dateEnd":"","hospital":"경찰서","types":"경찰관련"},{"id":54,"date":"2025-11-11","dateEnd":"","hospital":"여의도성모 이비인후과, 정신건강, 정형외과(고관절)","types":"검사, 외래진료"},{"id":59,"date":"2025-11-17","dateEnd":"","hospital":"여의도성모 정형외과(어깨,고관절&무릎), 이비인후과(코CT)","types":"검사, 외래진료"},{"id":62,"date":"2025-11-21","dateEnd":"","hospital":"서울성모 정형외과(허리,목), 치과, 재활의학과","types":"검사, 병명확진, 외래진료, 진단서"},{"id":67,"date":"2025-12-02","dateEnd":"","hospital":"여의도성모 정신건강(인지검사)","types":"검사, 외래진료"},{"id":68,"date":"2025-12-03","dateEnd":"","hospital":"여의도성모 치과(뇌MRI), 이비인후과, 정신건강의학과","types":"외래진료"}];
+
+const ACC_INIT_DIARIES=[{"id":115,"date":"2025-09-28","title":"창문침대로 병실 이동!"},{"id":116,"date":"2025-09-30","title":"수술이답이냐고ㅡㅡ"},{"id":120,"date":"2025-10-01","title":"사람을 더 아프게하고 힘들게하는 강철병원"},{"id":118,"date":"2025-10-09","title":"ㅂ2다 이놈들아"},{"id":125,"date":"2025-10-11","title":""},{"id":140,"date":"2025-10-18","title":"그냥.. 잘 모르겠다"},{"id":141,"date":"2025-10-19","title":""},{"id":135,"date":"2025-10-21","title":"갑자기 걸음이 걸어지지 않음. 진짜 환자라고 생각이 듬.. 받아들여짐"},{"id":145,"date":"2025-10-27","title":""},{"id":110,"date":"2025-11-03","title":"머냐.. 팔꿈치, 손목 개아픔"},{"id":112,"date":"2025-11-04","title":"외래진료 full, 긴장, 걱정.. 정신건강진료를 보고 내가 마음이, 정신이 아프다는걸 알았다.."},{"id":111,"date":"2025-11-05","title":""},{"id":152,"date":"2025-11-06","title":"오락가락 싱숭생숭"},{"id":109,"date":"2025-11-07","title":"일어나자마자 다른데 아픔?"},{"id":155,"date":"2025-11-08","title":""},{"id":123,"date":"2025-11-09","title":""},{"id":157,"date":"2025-11-10","title":""},{"id":119,"date":"2025-11-13","title":"헐…아파 추가증상"},{"id":122,"date":"2025-11-14","title":""},{"id":156,"date":"2025-11-15","title":""},{"id":128,"date":"2025-11-16","title":""},{"id":127,"date":"2025-11-17","title":""},{"id":144,"date":"2025-11-18","title":""},{"id":159,"date":"2025-11-19","title":""},{"id":160,"date":"2025-11-20","title":""},{"id":163,"date":"2025-11-23","title":""},{"id":164,"date":"2025-11-24","title":""},{"id":165,"date":"2025-11-28","title":""},{"id":168,"date":"2025-12-04","title":""},{"id":169,"date":"2025-12-06","title":""},{"id":170,"date":"2025-12-09","title":""}];
+
+function initAccData(){
+  if(!S.get('acc_init_done',false)){
+    if(!S.get('accidents',[]).length) S.set('accidents', ACC_INIT_RECORDS.map(r=>({...r,amount:0,ins:'자보',pain:'',dept:'',memo:''})));
+    if(!S.get('acc_diaries',[]).length) S.set('acc_diaries', ACC_INIT_DIARIES.map(d=>({...d,content:'',mood:''})));
+    S.set('acc_init_done',true);
+  }
+}
+
+function subDiary(){
+  const arr=S.get('acc_diaries',[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const list=arr.map(d=>`
+    <div class="acc-item" onclick="openDiary(${d.id})" style="cursor:pointer">
+      <div class="acc-top">${d.date} <span style="font-size:11px;color:var(--sub);font-weight:400;margin-left:4px">${d.mood||''}</span></div>
+      <div class="acc-info" style="margin-top:4px">${d.title||'(제목 없음)'}</div>
+      ${d.content?`<div class="acc-info" style="margin-top:2px;color:#bbb;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${d.content.slice(0,40)}…</div>`:''}
+    </div>`).join('');
+  return `
+    <div class="card" style="margin:8px 20px 14px">${list||'<div class="empty">일기 없음</div>'}</div>
+    <div class="form-wrap">
+      <div class="finp-grid">
+        <input id="dj-date" type="date" class="finp" style="margin:0">
+        <select id="dj-mood" class="fsel" style="margin:0"><option value="">기분</option><option value="😢">😢 힘들어</option><option value="😰">😰 불안</option><option value="😐">😐 보통</option><option value="🙂">🙂 괜찮아</option><option value="😊">😊 좋아</option></select>
+      </div>
+      <input id="dj-title" class="finp" placeholder="제목">
+      <textarea id="dj-content" class="finp" style="height:80px;resize:none" placeholder="내용 (선택)"></textarea>
+      <button id="dj-save" class="submit-btn">저장</button>
+    </div>`;
+}
+
+function openDiary(id){
+  const arr=S.get('acc_diaries',[]);
+  const d=arr.find(x=>x.id===id);if(!d)return;
+  const title=d.date+(d.mood?' '+d.mood:'')+(d.title?' — '+d.title:'');
+  alert(title+'\n\n'+(d.content||'(내용 없음)'));
+}
+
+function updateDiarySub(){
+  const arr=S.get('acc_diaries',[]);
+  const el=document.getElementById('diary-sub');
+  if(!el)return;
+  el.textContent=arr.length?`${arr.length}건`:'기록 없음';
 }
 
 const ACC_SUPA_URL='https://yseynfdirbnlygwpygvp.supabase.co';
@@ -1408,12 +1470,14 @@ async function loadDash(){
 loadDash();
 
 // ── 초기화 ──
+initAccData();
 renderTodos();
 renderIssues();
 renderCal();
 updateStats();
 updateAccSub();
 updateNetSub();
+updateDiarySub();
 ['notice-list','ops-list','ev-list','new-iss-list'].forEach(renderSimple);
 renderNoticeHist();
 renderIssueHist();
