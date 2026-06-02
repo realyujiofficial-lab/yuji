@@ -193,6 +193,8 @@ textarea.finp{min-height:120px;resize:vertical}
 .acc-ov-item{display:flex;flex-direction:column;gap:3px}
 .acc-ov-label{font-size:11px;color:var(--sub)}
 .acc-ov-val{font-weight:700}
+.nf-btn{background:#f5f5f5;border:none;border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;color:#666;font-family:inherit}
+.nf-btn.active{background:#1a1a1a;color:#fff}
 .net-item{padding:18px 20px;border-bottom:1px solid var(--border)}
 .net-item:last-child{border-bottom:none}
 .net-top{display:flex;align-items:center;justify-content:space-between}
@@ -925,10 +927,9 @@ function renderSub(id){
 function afterSub(id){
   const hdrActions=document.getElementById('sub-hdr-actions');
   if(hdrActions){
-    hdrActions.innerHTML=id==='acc'
-      ?`<button onclick="loadAccFromSupabase()" style="font-size:11px;background:#f5f5f5;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:700">↻</button>
-         <button onclick="syncAccToSupabase()" style="font-size:11px;background:#1a1a1a;color:#fff;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:700">저장</button>`
-      :'';
+    if(id==='acc') hdrActions.innerHTML=`<button onclick="loadAccFromSupabase()" style="font-size:11px;background:#f5f5f5;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:700">↻</button><button onclick="syncAccToSupabase()" style="font-size:11px;background:#1a1a1a;color:#fff;border:none;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:700">저장</button>`;
+    else if(id==='network') hdrActions.innerHTML=`<button onclick="openNetAdd(null)" style="font-size:18px;background:none;border:none;cursor:pointer;color:var(--text);font-weight:700;padding:0 4px">+</button>`;
+    else hdrActions.innerHTML='';
   }
   if(id==='acc'){
     document.getElementById('acc-save')?.addEventListener('click',()=>{
@@ -944,7 +945,32 @@ function afterSub(id){
       S.set('symptoms',arr);showToast('증상 저장됐어요!');renderSub('acc');
     });
   }
-  if(id==='network'){renderNetList();document.getElementById('net-search')?.addEventListener('input',renderNetList);document.getElementById('net-save')?.addEventListener('click',()=>{const n=v('n-name');if(!n)return;const arr=S.get('network',[]);arr.unshift({name:n,rel:v('n-rel'),org:v('n-org'),contact:v('n-contact'),metDate:v('n-met-date'),metHow:v('n-met-how'),memo:v('n-memo'),id:Date.now()});S.set('network',arr);['n-name','n-rel','n-org','n-contact','n-met-date','n-met-how','n-memo'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});updateNetSub();renderNetList();});}
+  if(id==='network'){
+    renderNetList();
+    document.getElementById('net-search')?.addEventListener('input',renderNetList);
+    document.getElementById('net-save')?.addEventListener('click',()=>{
+      const name=v('n-name');if(!name)return;
+      const editId=document.getElementById('n-edit-id')?.value;
+      const arr=S.get('network',[]);
+      const metDate=v('n-met-date'), metHow=v('n-met-how');
+      if(editId){
+        const i=arr.findIndex(x=>String(x.id)===editId);
+        if(i>=0) arr[i]={...arr[i],name,moim:v('n-moim'),org:v('n-org'),contact:v('n-contact'),metDate,metHow,memo:v('n-memo')};
+      } else {
+        const newId=Date.now();
+        arr.unshift({name,moim:v('n-moim'),org:v('n-org'),contact:v('n-contact'),metDate,metHow,memo:v('n-memo'),id:newId});
+        // 첫만남 자동으로 meets에 추가
+        if(metDate){
+          const meets=S.get('net_meets_'+newId,[]);
+          meets.unshift({date:metDate,memo:metHow||'첫 만남',first:true,id:Date.now()});
+          S.set('net_meets_'+newId,meets);
+        }
+      }
+      S.set('network',arr);
+      document.getElementById('net-add-overlay').style.display='none';
+      updateNetSub();renderNetList();showToast(editId?'수정됐어요!':'추가됐어요!');
+    });
+  }
   if(id==='diary'){
     document.getElementById('dj-save')?.addEventListener('click',()=>{
       const date=v('dj-date');const content=v('dj-content');if(!date||!content)return;
@@ -1344,54 +1370,117 @@ function subAcc(){
   `;
 }
 function subNetwork(){
+  const arr=S.get('network',[]);
+  const moims=[...new Set(arr.map(n=>n.moim||n.rel).filter(Boolean))];
   return `
-    <div class="form-wrap" style="margin-top:4px"><input id="net-search" class="finp" placeholder="검색..."></div>
-    <div class="card" style="margin:0 20px 12px"><div id="net-list"></div></div>
-    <!-- 만남 기록 뷰어 -->
-    <div id="net-viewer" style="display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:100%;background:#fff;z-index:200;overflow-y:auto">
-      <div style="position:sticky;top:0;background:#fff;padding:20px 20px 12px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:10px">
-        <button onclick="document.getElementById('net-viewer').style.display='none'" style="font-size:22px;background:none;border:none;cursor:pointer">←</button>
-        <div id="nv-name" style="font-size:17px;font-weight:800"></div>
-      </div>
-      <div style="padding:16px 20px 8px">
-        <div id="nv-meta" style="font-size:12px;color:var(--sub);margin-bottom:12px"></div>
-        <div id="nv-meet-list" style="margin-bottom:16px"></div>
-        <div class="sec-lbl" style="margin-bottom:8px">만남 추가</div>
-        <div class="finp-grid">
-          <input id="nm-date" type="date" class="finp" style="margin:0">
-          <input id="nm-memo" class="finp" style="margin:0" placeholder="내용">
+    <!-- 추가 오버레이 -->
+    <div id="net-add-overlay" style="display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:100%;background:#fff;z-index:300;overflow-y:auto">
+      <div style="position:sticky;top:0;background:#fff;padding:20px 20px 12px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <button onclick="document.getElementById('net-add-overlay').style.display='none'" style="font-size:22px;background:none;border:none;cursor:pointer">←</button>
+          <span id="net-add-title" style="font-size:17px;font-weight:800">인맥 추가</span>
         </div>
-        <button id="nm-save" class="submit-btn">기록</button>
+      </div>
+      <div style="padding:16px 20px 60px">
+        <input type="hidden" id="n-edit-id">
+        <div class="sec-lbl" style="margin-bottom:8px">이 사람</div>
+        <div class="finp-grid">
+          <input id="n-name" class="finp" style="margin:0" placeholder="이름 *">
+          <input id="n-moim" class="finp" style="margin:0" placeholder="모임">
+        </div>
+        <div class="finp-grid">
+          <input id="n-org" class="finp" style="margin:0" placeholder="소속/회사">
+          <input id="n-contact" class="finp" style="margin:0" placeholder="연락처">
+        </div>
+        <textarea id="n-memo" class="finp" style="height:70px;resize:none" placeholder="이 사람에 대한 메모"></textarea>
+        <div class="sec-lbl" style="margin:4px 0 8px">첫 만남 (만남 기록에 자동 추가)</div>
+        <div class="finp-grid">
+          <input id="n-met-date" type="date" class="finp" style="margin:0">
+          <input id="n-met-how" class="finp" style="margin:0" placeholder="알게된 상황">
+        </div>
+        <button id="net-save" class="submit-btn" style="margin-top:8px">저장</button>
       </div>
     </div>
-    <div class="form-wrap">
-      <div class="sec-lbl" style="margin-bottom:10px">인맥 추가</div>
-      <div class="finp-grid">
-        <input id="n-name" class="finp" style="margin:0" placeholder="이름">
-        <input id="n-rel" class="finp" style="margin:0" placeholder="관계">
+    <!-- 상세 뷰어 -->
+    <div id="net-viewer" style="display:none;position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:100%;background:#fff;z-index:200;overflow-y:auto">
+      <div style="position:sticky;top:0;background:#fff;padding:20px 20px 12px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <button onclick="document.getElementById('net-viewer').style.display='none'" style="font-size:22px;background:none;border:none;cursor:pointer">←</button>
+          <div id="nv-name" style="font-size:17px;font-weight:800"></div>
+        </div>
+        <button id="nv-edit-btn" style="font-size:13px;color:var(--accent);background:none;border:none;cursor:pointer;font-weight:700">수정</button>
       </div>
-      <div class="finp-grid">
-        <input id="n-org" class="finp" style="margin:0" placeholder="소속/회사">
-        <input id="n-contact" class="finp" style="margin:0" placeholder="연락처">
+      <div style="padding:16px 20px 60px">
+        <div class="sec-lbl" style="margin-bottom:8px">이 사람</div>
+        <div id="nv-person" style="background:#f9f9f9;border-radius:12px;padding:14px;font-size:13px;line-height:1.8;margin-bottom:16px;color:#333"></div>
+        <div class="sec-lbl" style="margin-bottom:8px">만남 기록 <span id="nv-meet-count" style="font-size:11px;font-weight:400;color:var(--sub)"></span></div>
+        <div id="nv-meet-list" style="margin-bottom:14px"></div>
+        <div class="finp-grid">
+          <input id="nm-date" type="date" class="finp" style="margin:0">
+          <input id="nm-memo" class="finp" style="margin:0" placeholder="만남 내용">
+        </div>
+        <button id="nm-save" class="submit-btn">만남 추가</button>
       </div>
-      <div class="finp-grid">
-        <input id="n-met-date" type="date" class="finp" style="margin:0">
-        <input id="n-met-how" class="finp" style="margin:0" placeholder="알게된 상황">
-      </div>
-      <input id="n-memo" class="finp" placeholder="메모">
-      <button id="net-save" class="submit-btn">추가</button>
-    </div>`;
+    </div>
+    <!-- 목록 -->
+    <div style="padding:8px 20px 6px;display:flex;gap:8px;align-items:center">
+      <input id="net-search" class="finp" style="margin:0;flex:1" placeholder="검색...">
+    </div>
+    <div id="net-filter-row" style="padding:0 20px 8px;display:flex;gap:6px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch">
+      <button onclick="filterNet('')" id="nf-all" class="nf-btn active" style="flex-shrink:0">전체</button>
+      ${moims.map(m=>`<button onclick="filterNet('${m}')" class="nf-btn" style="flex-shrink:0">${m}</button>`).join('')}
+    </div>
+    <div class="card" style="margin:0 20px 14px"><div id="net-list"></div></div>`;
+}
+
+let _netFilter='';
+function filterNet(moim){
+  _netFilter=moim;
+  document.querySelectorAll('.nf-btn').forEach(b=>{
+    b.classList.toggle('active', b.textContent===(moim||'전체'));
+  });
+  renderNetList();
+}
+
+function openNetAdd(editId){
+  const overlay=document.getElementById('net-add-overlay');
+  const title=document.getElementById('net-add-title');
+  if(editId){
+    const n=S.get('network',[]).find(x=>x.id===editId);if(!n)return;
+    document.getElementById('n-edit-id').value=editId;
+    document.getElementById('n-name').value=n.name||'';
+    document.getElementById('n-moim').value=n.moim||n.rel||'';
+    document.getElementById('n-org').value=n.org||'';
+    document.getElementById('n-contact').value=n.contact||'';
+    document.getElementById('n-memo').value=n.memo||'';
+    document.getElementById('n-met-date').value=n.metDate||'';
+    document.getElementById('n-met-how').value=n.metHow||'';
+    if(title) title.textContent='인맥 수정';
+  } else {
+    ['n-edit-id','n-name','n-moim','n-org','n-contact','n-memo','n-met-date','n-met-how'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    if(title) title.textContent='인맥 추가';
+  }
+  overlay.style.display='block';overlay.scrollTop=0;
 }
 
 function openNetViewer(id){
   const arr=S.get('network',[]);
   const n=arr.find(x=>x.id===id);if(!n)return;
-  document.getElementById('nv-name').textContent=n.name+(n.rel?' · '+n.rel:'');
-  const meta=[n.org,n.contact,n.metDate?'첫만남 '+n.metDate:'',n.metHow].filter(Boolean).join(' · ');
-  document.getElementById('nv-meta').textContent=meta;
+  const moim=n.moim||n.rel||'';
+  document.getElementById('nv-name').textContent=n.name+(moim?' · '+moim:'');
+  const personLines=[
+    n.org&&`<div><span style="color:var(--sub)">소속</span> ${n.org}</div>`,
+    n.contact&&`<div><span style="color:var(--sub)">연락처</span> ${n.contact}</div>`,
+    n.memo&&`<div style="margin-top:6px;padding-top:6px;border-top:1px solid #eee">${n.memo}</div>`
+  ].filter(Boolean).join('');
+  document.getElementById('nv-person').innerHTML=personLines||'<span style="color:#bbb">기록 없음</span>';
+  document.getElementById('nv-edit-btn').onclick=()=>{document.getElementById('net-viewer').style.display='none';openNetAdd(id);};
   renderMeetList(id);
   const v=document.getElementById('net-viewer');v.style.display='block';v.scrollTop=0;
-  document.getElementById('nm-save')?.addEventListener('click',function h(){
+  const nmSave=document.getElementById('nm-save');
+  const newBtn=nmSave.cloneNode(true);
+  nmSave.parentNode.replaceChild(newBtn,nmSave);
+  newBtn.addEventListener('click',()=>{
     const date=document.getElementById('nm-date')?.value;
     const memo=document.getElementById('nm-memo')?.value.trim();
     if(!date)return;
@@ -1401,17 +1490,18 @@ function openNetViewer(id){
     renderMeetList(id);
     document.getElementById('nm-date').value='';
     document.getElementById('nm-memo').value='';
-    this.removeEventListener('click',h);
-    document.getElementById('nm-save')?.addEventListener('click',h);
   });
 }
 
 function renderMeetList(nid){
   const meets=S.get('net_meets_'+nid,[]).slice().sort((a,b)=>b.date.localeCompare(a.date));
   const el=document.getElementById('nv-meet-list');if(!el)return;
+  const cnt=document.getElementById('nv-meet-count');
+  if(cnt) cnt.textContent=meets.length?`총 ${meets.length}회`:'';
   el.innerHTML=meets.length
     ?meets.map(m=>`<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start">
-        <div><div style="font-size:13px;font-weight:700">${m.date}</div>${m.memo?`<div style="font-size:12px;color:var(--sub);margin-top:2px">${m.memo}</div>`:''}</div>
+        <div><div style="font-size:13px;font-weight:700">${m.date}${m.first?' <span style="font-size:10px;color:var(--accent);font-weight:700">첫만남</span>':''}</div>
+        ${m.memo?`<div style="font-size:12px;color:var(--sub);margin-top:2px">${m.memo}</div>`:''}</div>
         <button onclick="delMeet(${nid},${m.id})" style="font-size:11px;color:#ccc;background:none;border:none;cursor:pointer">삭제</button>
       </div>`).join('')
     :'<div style="font-size:13px;color:var(--sub);padding:8px 0">만남 기록 없음</div>';
@@ -1424,19 +1514,24 @@ function delMeet(nid,mid){
 
 function renderNetList(){
   const q=(document.getElementById('net-search')?.value||'').toLowerCase();
-  const arr=S.get('network',[]).filter(n=>!q||n.name.includes(q)||n.rel?.includes(q)||n.org?.includes(q));
+  const arr=S.get('network',[]).filter(n=>{
+    const moim=n.moim||n.rel||'';
+    const matchQ=!q||n.name.includes(q)||moim.includes(q)||n.org?.includes(q);
+    const matchF=!_netFilter||moim===_netFilter;
+    return matchQ&&matchF;
+  });
   const el=document.getElementById('net-list');if(!el)return;
   el.innerHTML=arr.map(n=>{
+    const moim=n.moim||n.rel||'';
     const meets=S.get('net_meets_'+n.id,[]);
-    const lastMeet=meets.sort((a,b)=>b.date.localeCompare(a.date))[0];
+    const lastMeet=meets.slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
     return `<div class="net-item" onclick="openNetViewer(${n.id})" style="cursor:pointer">
       <div class="net-top">
         <span class="net-name">${n.name}</span>
-        ${n.rel?`<span class="net-rel">${n.rel}</span>`:''}
+        ${moim?`<span class="net-rel">${moim}</span>`:''}
       </div>
       <div class="net-info">${[n.org,n.contact].filter(Boolean).join(' · ')}</div>
-      ${n.metDate?`<div class="net-info">첫만남 ${n.metDate}${n.metHow?' — '+n.metHow:''}</div>`:''}
-      ${lastMeet?`<div class="net-info" style="color:var(--accent)">최근 만남 ${lastMeet.date} · 총 ${meets.length}회</div>`:''}
+      ${lastMeet?`<div class="net-info" style="color:var(--accent)">최근 ${lastMeet.date} · ${meets.length}회</div>`:''}
     </div>`;
   }).join('')||'<div class="empty">기록 없음</div>';
 }
