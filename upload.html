@@ -3,128 +3,200 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>오카방 로그 업로드</title>
+<title>제보하기</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;background:#f2f2ef;min-height:100vh;padding:20px 16px;color:#1a1a1a}
-h1{font-size:18px;font-weight:700;margin-bottom:4px;cursor:pointer;user-select:none}
-.sub{font-size:13px;color:#888;margin-bottom:24px}
-.card{background:#fff;border-radius:16px;padding:20px;margin-bottom:12px}
-.card-title{font-size:11px;color:#bbb;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
-.upload-area{border:2px dashed #ddd;border-radius:12px;padding:32px 16px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;position:relative}
-.upload-area:active,.upload-area.drag{border-color:#FF6B35;background:#fff8f5}
-.upload-icon{font-size:40px;margin-bottom:8px}
-.upload-text{font-size:15px;font-weight:600;color:#333;margin-bottom:4px}
-.upload-hint{font-size:12px;color:#aaa}
-input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.preview-wrap{margin-top:12px;display:none}
-.preview-wrap.show{display:block}
-.preview-img{width:100%;border-radius:8px;max-height:300px;object-fit:contain;background:#f5f5f5}
-.preview-name{font-size:12px;color:#888;margin-top:6px;text-align:center}
-.btn{width:100%;padding:16px;border-radius:12px;border:none;font-size:16px;font-weight:700;cursor:pointer;transition:opacity .15s}
-.btn-upload{background:#FF6B35;color:#fff}
-.btn-upload:disabled{background:#ddd;color:#aaa;cursor:not-allowed}
-.btn-upload:active:not(:disabled){opacity:.8}
-.status{padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;display:none;margin-top:8px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;background:#f2f2ef;min-height:100vh;color:#1a1a1a}
+.page-hdr{padding:20px 20px 0;display:flex;align-items:center;gap:10px}
+.page-hdr h1{font-size:18px;font-weight:800;flex:1;cursor:pointer;user-select:none}
+.page-hdr .admin-toggle{font-size:12px;color:#aaa;border:none;background:none;padding:4px 8px}
+.card{background:#fff;border-radius:16px;padding:20px;margin:12px 16px 0}
+.sec-lbl{font-size:11px;font-weight:700;color:#bbb;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+
+/* 타입 선택 */
+.type-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px}
+.type-btn{border:1.5px solid #eee;border-radius:12px;padding:10px 4px;font-size:11px;font-weight:600;color:#888;background:#fafafa;cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.type-btn .ico{font-size:20px}
+.type-btn.active{border-color:#0047AB;color:#0047AB;background:#f0f4ff}
+
+/* 폼 */
+.finp{width:100%;border:1.5px solid #eee;border-radius:12px;padding:12px 14px;font-size:14px;font-family:inherit;outline:none;background:#fafafa;transition:border-color .15s}
+.finp:focus{border-color:#0047AB;background:#fff}
+.frow{margin-bottom:10px}
+.frow label{display:block;font-size:11px;font-weight:700;color:#aaa;margin-bottom:5px;letter-spacing:.05em}
+select.finp{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23aaa'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:32px}
+.frow-half{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+textarea.finp{resize:none;min-height:90px;line-height:1.6}
+.submit-btn{width:100%;padding:15px;border-radius:14px;border:none;background:#FF6B35;color:#fff;font-size:16px;font-weight:800;cursor:pointer;transition:opacity .15s;margin-top:4px}
+.submit-btn:disabled{background:#ddd;color:#aaa;cursor:not-allowed}
+.submit-btn:active:not(:disabled){opacity:.8}
+.status{padding:12px 16px;border-radius:10px;font-size:13px;font-weight:600;display:none;margin-top:8px}
 .status.show{display:block}
-.status.loading{background:#fff8e1;color:#b07000}
-.status.success{background:#e8f5e9;color:#2e7d32}
-.status.error{background:#ffebee;color:#c62828}
-.history{margin-top:4px}
-.history-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
-.history-item:last-child{border:none}
-.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dot.done{background:#4caf50}
-.dot.pending{background:#FF6B35}
-.dot.error{background:#ef5350}
-.history-name{flex:1;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.history-time{font-size:11px;color:#aaa;flex-shrink:0}
-.empty{color:#bbb;font-size:13px;text-align:center;padding:16px 0}
+.status.ok{background:#e8f5e9;color:#2e7d32}
+.status.err{background:#ffebee;color:#c62828}
+.status.wait{background:#fff8e1;color:#b07000}
+
+/* 내 제보 내역 */
+.my-item{padding:10px 0;border-bottom:1px solid #f0f0f0;display:flex;align-items:flex-start;gap:10px}
+.my-item:last-child{border:none}
+.my-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.my-dot.pending{background:#FF6B35}
+.my-dot.approved{background:#4caf50}
+.my-dot.rejected{background:#ef5350}
+.my-body{flex:1}
+.my-type{font-size:10px;font-weight:700;color:#aaa;margin-bottom:2px}
+.my-content{font-size:13px;color:#333;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.my-time{font-size:11px;color:#bbb;flex-shrink:0;margin-top:3px}
 
 /* 관리자 패널 */
-#admin-panel{display:none;margin-top:16px}
+#admin-panel{display:none;padding:0 0 40px}
 #admin-panel.show{display:block}
-.admin-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.admin-hdr-title{font-size:16px;font-weight:800}
-.admin-refresh{font-size:12px;color:#FF6B35;border:none;background:none;cursor:pointer;padding:4px 8px}
-.pending-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.pending-item{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.pending-thumb{width:100%;aspect-ratio:9/16;object-fit:cover;background:#f0f0f0;display:block}
-.pending-thumb.loading{background:#f0f0f0}
-.pending-meta{padding:8px 10px 4px;font-size:11px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pending-actions{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #f0f0f0;margin-top:4px}
-.pa-btn{padding:10px 0;font-size:18px;border:none;background:none;cursor:pointer;transition:background .15s}
-.pa-btn.approve{border-right:1px solid #f0f0f0}
-.pa-btn.approve:active{background:#e8f5e9}
-.pa-btn.reject:active{background:#ffebee}
-.pending-empty{text-align:center;padding:32px;color:#bbb;font-size:14px;grid-column:1/-1}
-.admin-badge{display:inline-block;background:#0047AB;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px;vertical-align:middle}
-.pin-wrap{padding:20px;text-align:center}
-.pin-inp{width:100%;padding:14px;border-radius:12px;border:1.5px solid #eee;font-size:18px;text-align:center;letter-spacing:.3em;font-weight:700;outline:none;margin-bottom:10px}
+.admin-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px}
+.admin-title{font-size:16px;font-weight:800}
+.admin-badge{background:#0047AB;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px}
+.refresh-btn{font-size:12px;color:#FF6B35;border:none;background:none;cursor:pointer}
+
+.report-card{background:#fff;border-radius:16px;margin:0 16px 10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.rc-meta{padding:12px 14px 8px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #f5f5f5}
+.rc-nick{font-size:13px;font-weight:700}
+.rc-type{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:#f0f4ff;color:#0047AB}
+.rc-region{font-size:11px;color:#aaa}
+.rc-dt{font-size:11px;color:#aaa;margin-left:auto}
+.rc-body{padding:10px 14px;font-size:13px;line-height:1.6;color:#333}
+.rc-source{font-size:11px;color:#0047AB;padding:0 14px 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rc-actions{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #f0f0f0}
+.rc-btn{padding:12px;border:none;background:none;font-size:15px;cursor:pointer;font-weight:700;transition:background .15s}
+.rc-btn.ok{border-right:1px solid #f0f0f0;color:#2e7d32}
+.rc-btn.ok:active{background:#e8f5e9}
+.rc-btn.no{color:#c62828}
+.rc-btn.no:active{background:#ffebee}
+
+/* 승인 모달 */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:flex-end}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;padding:20px 20px 36px;animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-size:16px;font-weight:800;margin-bottom:16px}
+.cat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.cat-btn{border:1.5px solid #eee;border-radius:12px;padding:12px 6px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;color:#888;background:#fafafa;transition:all .15s}
+.cat-btn.active{border-color:#0047AB;color:#0047AB;background:#f0f4ff}
+.modal-sub{font-size:11px;font-weight:700;color:#aaa;margin-bottom:6px}
+.modal-confirm{width:100%;padding:14px;border-radius:12px;border:none;background:#0047AB;color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:12px}
+.modal-confirm:disabled{background:#ddd;color:#aaa}
+.modal-cancel{width:100%;padding:10px;border-radius:12px;border:none;background:none;color:#aaa;font-size:14px;cursor:pointer;margin-top:6px}
+
+/* PIN */
+.pin-card{background:#fff;border-radius:16px;margin:12px 16px 0;padding:20px}
+.pin-inp{width:100%;padding:14px;border-radius:12px;border:1.5px solid #eee;font-size:20px;text-align:center;letter-spacing:.4em;font-weight:700;outline:none;margin-bottom:10px;font-family:inherit}
 .pin-inp:focus{border-color:#0047AB}
 .pin-btn{width:100%;padding:13px;border-radius:12px;border:none;background:#0047AB;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.empty{text-align:center;padding:24px;color:#bbb;font-size:13px}
 </style>
 </head>
 <body>
 
-<h1 id="title-tap">오카방 로그 업로드</h1>
-<p class="sub">카톡 캡쳐 업로드 → 관리자 승인 후 처리</p>
-
-<div class="card">
-  <div class="card-title">캡쳐 선택</div>
-  <div class="upload-area" id="dropZone">
-    <input type="file" id="fileInput" accept="image/*" multiple>
-    <div class="upload-icon">📸</div>
-    <div class="upload-text">캡쳐 사진 선택</div>
-    <div class="upload-hint">갤러리에서 선택하거나 드래그</div>
-  </div>
-  <div class="preview-wrap" id="previewWrap">
-    <img class="preview-img" id="previewImg" alt="">
-    <div class="preview-name" id="previewName"></div>
-  </div>
+<div class="page-hdr">
+  <h1 id="title-tap">📣 제보하기</h1>
 </div>
 
-<button class="btn btn-upload" id="uploadBtn" disabled>업로드</button>
-<div class="status" id="status"></div>
-
-<div class="card" style="margin-top:12px">
-  <div class="card-title">최근 업로드</div>
-  <div class="history" id="history">
-    <div class="empty">업로드 내역이 없습니다</div>
+<!-- 제보 폼 -->
+<div class="card" id="form-card">
+  <div class="sec-lbl">타입 선택</div>
+  <div class="type-row">
+    <button class="type-btn" data-type="상황" onclick="selectType(this)"><span class="ico">📝</span>상황</button>
+    <button class="type-btn" data-type="라이브" onclick="selectType(this)"><span class="ico">📺</span>라이브</button>
+    <button class="type-btn" data-type="SNS" onclick="selectType(this)"><span class="ico">📲</span>SNS</button>
+    <button class="type-btn" data-type="지역추가" onclick="selectType(this)"><span class="ico">📍</span>지역추가</button>
   </div>
+
+  <div class="frow">
+    <label>닉네임</label>
+    <input id="f-nick" class="finp" placeholder="닉네임" maxlength="20">
+  </div>
+  <div class="frow-half">
+    <div>
+      <label>지역</label>
+      <select id="f-region" class="finp">
+        <option value="">지역 선택</option>
+        <option>서울</option><option>경기</option><option>인천</option>
+        <option>강원</option><option>충북</option><option>충남</option>
+        <option>대전</option><option>세종</option><option>전북</option>
+        <option>전남</option><option>광주</option><option>경북</option>
+        <option>경남</option><option>대구</option><option>울산</option>
+        <option>부산</option><option>제주</option>
+      </select>
+    </div>
+    <div>
+      <label>날짜 · 시간</label>
+      <input id="f-dt" class="finp" type="datetime-local">
+    </div>
+  </div>
+  <div class="frow">
+    <label>상황 내용</label>
+    <textarea id="f-content" class="finp" placeholder="상황 내용..."></textarea>
+  </div>
+  <div class="frow">
+    <label>출처 링크 (선택)</label>
+    <input id="f-source" class="finp" type="url" placeholder="https://">
+  </div>
+
+  <button class="submit-btn" id="submit-btn" onclick="submitReport()">📤 올리기</button>
+  <div class="status" id="form-status"></div>
+</div>
+
+<!-- 내 제보 내역 -->
+<div class="card" style="margin-bottom:24px">
+  <div class="sec-lbl">내 제보 내역</div>
+  <div id="my-history"><div class="empty">제보 내역이 없습니다</div></div>
 </div>
 
 <!-- 관리자 패널 -->
 <div id="admin-panel">
-  <div id="pin-section" class="card">
-    <div class="card-title">관리자 확인</div>
-    <div class="pin-wrap">
-      <input type="password" id="pin-inp" class="pin-inp" placeholder="PIN" maxlength="6" inputmode="numeric">
+  <div id="pin-section">
+    <div class="pin-card">
+      <div class="sec-lbl">관리자 확인</div>
+      <input type="password" id="pin-inp" class="pin-inp" placeholder="•••" maxlength="6" inputmode="numeric">
       <button class="pin-btn" onclick="checkPin()">확인</button>
     </div>
   </div>
   <div id="admin-section" style="display:none">
     <div class="admin-hdr">
-      <div class="admin-hdr-title">대기 중 <span class="admin-badge" id="pending-count">0</span></div>
-      <button class="admin-refresh" onclick="loadPending()">새로고침</button>
+      <div class="admin-title">대기 제보 <span class="admin-badge" id="pending-count">0</span></div>
+      <button class="refresh-btn" onclick="loadPending()">새로고침</button>
     </div>
-    <div class="pending-grid" id="pending-grid">
-      <div class="pending-empty">로딩 중...</div>
+    <div id="pending-list"></div>
+  </div>
+</div>
+
+<!-- 승인 모달 -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-title">어느 섹션에 올릴까요?</div>
+    <div class="cat-row">
+      <button class="cat-btn" onclick="selectCat(this,'뉴스')">📰 뉴스</button>
+      <button class="cat-btn" onclick="selectCat(this,'SNS')">📲 SNS</button>
+      <button class="cat-btn" onclick="selectCat(this,'지역')">📍 지역</button>
     </div>
+    <div id="modal-detail"></div>
+    <button class="modal-confirm" id="modal-confirm" disabled onclick="confirmApprove()">게시</button>
+    <button class="modal-cancel" onclick="document.getElementById('modal-bg').classList.remove('show')">취소</button>
   </div>
 </div>
 
 <script>
-const SUPABASE_URL = 'https://yseynfdirbnlygwpygvp.supabase.co';
-const SUPABASE_KEY = 'SUPABASE_KEY_REDACTED';
+const SB_URL = 'https://yseynfdirbnlygwpygvp.supabase.co';
+const SB_KEY = 'SUPABASE_KEY_REDACTED';
 const BUCKET = 'okaband-screenshots';
-const HISTORY_KEY = 'okaband_upload_history';
-const ADMIN_PIN = '1234'; // 원하는 PIN으로 변경
+const MY_KEY = 'jebo_history';
+const ADMIN_PIN = '1234';
 
-let selectedFiles = [];
+let selectedType = '';
+let approvingId = null;
+let approvingData = null;
+let selectedCat = '';
 let tapCount = 0, tapTimer;
 
-// 제목 5번 탭 → 관리자 패널 열기
+// 제목 5번 탭 → 관리자
 document.getElementById('title-tap').addEventListener('click', () => {
   tapCount++;
   clearTimeout(tapTimer);
@@ -136,232 +208,278 @@ document.getElementById('title-tap').addEventListener('click', () => {
   }
 });
 
-const fileInput = document.getElementById('fileInput');
-const previewWrap = document.getElementById('previewWrap');
-const previewImg = document.getElementById('previewImg');
-const previewName = document.getElementById('previewName');
-const uploadBtn = document.getElementById('uploadBtn');
-const statusEl = document.getElementById('status');
-const historyEl = document.getElementById('history');
-
-fileInput.addEventListener('change', e => {
-  selectedFiles = Array.from(e.target.files);
-  if (!selectedFiles.length) return;
-  previewWrap.classList.add('show');
-  previewImg.src = URL.createObjectURL(selectedFiles[0]);
-  previewName.textContent = selectedFiles.length > 1
-    ? `${selectedFiles[0].name} 외 ${selectedFiles.length - 1}장`
-    : selectedFiles[0].name;
-  uploadBtn.disabled = false;
-});
-
-uploadBtn.addEventListener('click', async () => {
-  if (!selectedFiles.length) return;
-  showStatus('loading', `업로드 중... (0/${selectedFiles.length})`);
-  uploadBtn.disabled = true;
-
-  const results = [];
-  for (let i = 0; i < selectedFiles.length; i++) {
-    const file = selectedFiles[i];
-    showStatus('loading', `업로드 중... (${i+1}/${selectedFiles.length})`);
-    try {
-      const ts = Date.now();
-      const ext = file.name.split('.').pop() || 'jpg';
-      const path = `pending/${ts}_${i}.${ext}`;
-      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': file.type || 'image/jpeg',
-        },
-        body: file
-      });
-      if (res.ok) {
-        results.push({path, name: file.name, status: 'pending', time: new Date().toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'})});
-        saveHistory(results[results.length - 1]);
-      } else {
-        results.push({name: file.name, status: 'error', time: new Date().toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'})});
-      }
-    } catch(e) {
-      results.push({name: file.name, status: 'error', time: new Date().toLocaleTimeString('ko-KR')});
-    }
-  }
-
-  const ok = results.filter(r => r.status === 'pending').length;
-  const fail = results.filter(r => r.status === 'error').length;
-  if (fail === 0) {
-    showStatus('success', `${ok}장 업로드 완료 — 관리자 승인 후 처리됩니다`);
-  } else {
-    showStatus('error', `${ok}장 성공 / ${fail}장 실패`);
-  }
-
-  selectedFiles = [];
-  fileInput.value = '';
-  previewWrap.classList.remove('show');
-  uploadBtn.disabled = true;
-  renderHistory();
-});
-
-function showStatus(type, msg) {
-  statusEl.className = `status show ${type}`;
-  const icons = {loading: '⏳', success: '✅', error: '❌'};
-  statusEl.textContent = `${icons[type]} ${msg}`;
+function selectType(el) {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  selectedType = el.dataset.type;
 }
 
-function saveHistory(item) {
-  const h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+// 현재 시간 기본값
+const now = new Date();
+now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+document.getElementById('f-dt').value = now.toISOString().slice(0,16);
+
+async function submitReport() {
+  const nick = document.getElementById('f-nick').value.trim();
+  const content = document.getElementById('f-content').value.trim();
+  if (!nick) return showFormStatus('err','닉네임을 입력해주세요');
+  if (!selectedType) return showFormStatus('err','타입을 선택해주세요');
+  if (!content) return showFormStatus('err','내용을 입력해주세요');
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  showFormStatus('wait','올리는 중...');
+
+  const id = Date.now();
+  const data = {
+    id, nick,
+    type: selectedType,
+    region: document.getElementById('f-region').value,
+    datetime: document.getElementById('f-dt').value,
+    content,
+    source: document.getElementById('f-source').value.trim(),
+    submittedAt: new Date().toISOString(),
+    status: 'pending'
+  };
+
+  try {
+    const res = await sbPut(`reports/pending/${id}.json`, JSON.stringify(data), 'application/json');
+    if (!res.ok) throw new Error();
+    saveMyHistory(data);
+    showFormStatus('ok','제보 완료! 관리자 승인 후 게시됩니다 ✅');
+    document.getElementById('f-nick').value = '';
+    document.getElementById('f-content').value = '';
+    document.getElementById('f-source').value = '';
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+    selectedType = '';
+    renderMyHistory();
+  } catch {
+    showFormStatus('err','올리기 실패. 다시 시도해주세요');
+  }
+  btn.disabled = false;
+}
+
+function showFormStatus(type, msg) {
+  const el = document.getElementById('form-status');
+  el.className = `status show ${type}`;
+  el.textContent = msg;
+  if (type !== 'wait') setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+function saveMyHistory(item) {
+  const h = JSON.parse(localStorage.getItem(MY_KEY) || '[]');
   h.unshift(item);
-  if (h.length > 20) h.pop();
-  localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+  if (h.length > 30) h.pop();
+  localStorage.setItem(MY_KEY, JSON.stringify(h));
 }
 
-function renderHistory() {
-  const h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-  if (!h.length) {
-    historyEl.innerHTML = '<div class="empty">업로드 내역이 없습니다</div>';
-    return;
-  }
-  historyEl.innerHTML = h.slice(0, 10).map(item => `
-    <div class="history-item">
-      <span class="dot ${item.status}"></span>
-      <span class="history-name">${item.name || item.path}</span>
-      <span class="history-time">${item.time}</span>
-    </div>
-  `).join('');
+function renderMyHistory() {
+  const h = JSON.parse(localStorage.getItem(MY_KEY) || '[]');
+  const el = document.getElementById('my-history');
+  if (!h.length) { el.innerHTML = '<div class="empty">제보 내역이 없습니다</div>'; return; }
+  el.innerHTML = h.slice(0,10).map(it => `
+    <div class="my-item">
+      <span class="my-dot ${it.status}"></span>
+      <div class="my-body">
+        <div class="my-type">${it.type} ${it.region ? '· '+it.region : ''}</div>
+        <div class="my-content">${it.content}</div>
+      </div>
+      <div class="my-time">${it.datetime ? it.datetime.slice(5,16).replace('T',' ') : ''}</div>
+    </div>`).join('');
 }
 
 // ── 관리자 ──
 
 function checkPin() {
-  const val = document.getElementById('pin-inp').value;
-  if (val === ADMIN_PIN) {
+  if (document.getElementById('pin-inp').value === ADMIN_PIN) {
     document.getElementById('pin-section').style.display = 'none';
     document.getElementById('admin-section').style.display = 'block';
     loadPending();
   } else {
     document.getElementById('pin-inp').value = '';
-    document.getElementById('pin-inp').placeholder = '틀렸어요';
-    setTimeout(() => document.getElementById('pin-inp').placeholder = 'PIN', 1500);
+    document.getElementById('pin-inp').style.borderColor = '#ef5350';
+    setTimeout(() => document.getElementById('pin-inp').style.borderColor = '#eee', 1000);
   }
 }
-
-document.getElementById('pin-inp').addEventListener('keydown', e => {
-  if (e.key === 'Enter') checkPin();
-});
-
-async function listPending() {
-  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/list/${BUCKET}`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({prefix: 'pending/', limit: 100, offset: 0, sortBy: {column: 'created_at', order: 'asc'}})
-  });
-  const data = await res.json();
-  return Array.isArray(data) ? data.filter(f => f.name && f.name !== '.emptyFolderPlaceholder') : [];
-}
-
-async function getSignedUrl(path) {
-  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/sign/${BUCKET}/${path}`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({expiresIn: 3600})
-  });
-  const data = await res.json();
-  return data.signedURL ? `${SUPABASE_URL}/storage/v1${data.signedURL}` : '';
-}
+document.getElementById('pin-inp').addEventListener('keydown', e => { if(e.key==='Enter') checkPin(); });
 
 async function loadPending() {
-  const grid = document.getElementById('pending-grid');
-  grid.innerHTML = '<div class="pending-empty">불러오는 중...</div>';
+  document.getElementById('pending-list').innerHTML = '<div class="empty">불러오는 중...</div>';
   try {
-    const files = await listPending();
+    const files = await sbList('reports/pending/');
     document.getElementById('pending-count').textContent = files.length;
     if (!files.length) {
-      grid.innerHTML = '<div class="pending-empty">대기 중인 파일 없음</div>';
+      document.getElementById('pending-list').innerHTML = '<div class="empty">대기 중인 제보 없음</div>';
       return;
     }
-    grid.innerHTML = files.map((f, i) => `
-      <div class="pending-item" id="pi-${i}">
-        <img class="pending-thumb loading" id="thumb-${i}" alt="">
-        <div class="pending-meta">${f.name}</div>
-        <div class="pending-actions">
-          <button class="pa-btn approve" onclick="approveFile('${f.name}', ${i})">⭕</button>
-          <button class="pa-btn reject" onclick="rejectFile('${f.name}', ${i})">❌</button>
-        </div>
-      </div>
-    `).join('');
-    // 썸네일 로드
-    files.forEach(async (f, i) => {
-      const url = await getSignedUrl(`pending/${f.name}`);
-      const img = document.getElementById(`thumb-${i}`);
-      if (img && url) { img.src = url; img.classList.remove('loading'); }
-    });
+    const reports = await Promise.all(files.map(f => sbGet(`reports/pending/${f.name}`)));
+    document.getElementById('pending-list').innerHTML = reports
+      .filter(Boolean)
+      .sort((a,b) => a.submittedAt > b.submittedAt ? 1 : -1)
+      .map(r => `
+        <div class="report-card" id="rc-${r.id}">
+          <div class="rc-meta">
+            <span class="rc-nick">${r.nick}</span>
+            <span class="rc-type">${r.type}</span>
+            ${r.region ? `<span class="rc-region">${r.region}</span>` : ''}
+            <span class="rc-dt">${r.datetime ? r.datetime.slice(5,16).replace('T',' ') : ''}</span>
+          </div>
+          <div class="rc-body">${r.content}</div>
+          ${r.source ? `<div class="rc-source">${r.source}</div>` : ''}
+          <div class="rc-actions">
+            <button class="rc-btn ok" onclick="openApproveModal(${r.id})">⭕ 승인</button>
+            <button class="rc-btn no" onclick="rejectReport(${r.id})">❌ 거절</button>
+          </div>
+        </div>`).join('');
   } catch(e) {
-    grid.innerHTML = '<div class="pending-empty">불러오기 실패</div>';
+    document.getElementById('pending-list').innerHTML = '<div class="empty">불러오기 실패</div>';
   }
 }
 
-async function approveFile(name, idx) {
-  const item = document.getElementById(`pi-${idx}`);
-  if (item) item.style.opacity = '0.4';
+function openApproveModal(id) {
+  approvingId = id;
+  const card = document.getElementById(`rc-${id}`);
+  approvingData = null;
+  // pending 데이터 찾기 (DOM에서 읽기)
+  sbGet(`reports/pending/${id}.json`).then(d => { approvingData = d; });
+  selectedCat = '';
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('modal-detail').innerHTML = '';
+  document.getElementById('modal-confirm').disabled = true;
+  document.getElementById('modal-bg').classList.add('show');
+}
+
+function selectCat(el, cat) {
+  selectedCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderModalDetail(cat);
+  document.getElementById('modal-confirm').disabled = false;
+}
+
+function renderModalDetail(cat) {
+  const d = document.getElementById('modal-detail');
+  if (cat === '뉴스') {
+    d.innerHTML = `
+      <div class="modal-sub">출처 매체명</div>
+      <input id="md-outlet" class="finp" placeholder="예: 동아일보" style="margin-bottom:8px">
+      <div class="modal-sub">날짜</div>
+      <input id="md-date" class="finp" type="date">`;
+  } else if (cat === 'SNS') {
+    d.innerHTML = `
+      <div class="modal-sub">플랫폼</div>
+      <select id="md-platform" class="finp" style="margin-bottom:8px">
+        <option>X (트위터)</option><option>인스타그램</option><option>유튜브</option><option>스레드</option><option>기타</option>
+      </select>
+      <div class="modal-sub">계정명</div>
+      <input id="md-account" class="finp" placeholder="@계정명">`;
+  } else if (cat === '지역') {
+    d.innerHTML = `
+      <div class="modal-sub">카테고리</div>
+      <select id="md-loc-cat" class="finp" style="margin-bottom:8px">
+        <option>식당</option><option>카페</option><option>관광지</option><option>숙소</option><option>행사</option><option>기타</option>
+      </select>
+      <div class="modal-sub">장소명</div>
+      <input id="md-loc-name" class="finp" placeholder="장소명">`;
+  }
+}
+
+async function confirmApprove() {
+  if (!approvingId || !selectedCat) return;
+  document.getElementById('modal-confirm').disabled = true;
+
+  let extra = {};
+  if (selectedCat === '뉴스') {
+    extra = { outlet: document.getElementById('md-outlet')?.value || '', date: document.getElementById('md-date')?.value || '' };
+  } else if (selectedCat === 'SNS') {
+    extra = { platform: document.getElementById('md-platform')?.value || '', account: document.getElementById('md-account')?.value || '' };
+  } else if (selectedCat === '지역') {
+    extra = { locCat: document.getElementById('md-loc-cat')?.value || '', locName: document.getElementById('md-loc-name')?.value || '' };
+  }
+
   try {
-    // pending/ → 루트로 이동 (copy + delete)
-    const copyRes = await fetch(`${SUPABASE_URL}/storage/v1/object/copy`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        bucketId: BUCKET,
-        sourceKey: `pending/${name}`,
-        destinationBucket: BUCKET,
-        destinationKey: name
-      })
-    });
-    if (!copyRes.ok) throw new Error('copy failed');
-    await deleteFile(`pending/${name}`);
-    if (item) item.remove();
-    const count = document.getElementById('pending-count');
-    count.textContent = Math.max(0, parseInt(count.textContent) - 1);
-  } catch(e) {
-    if (item) item.style.opacity = '1';
-    alert('승인 실패');
+    const data = approvingData || {};
+    const approved = { ...data, status: 'approved', category: selectedCat, ...extra, approvedAt: new Date().toISOString() };
+    // approved 폴더에 저장
+    await sbPut(`reports/approved/${selectedCat}/${approvingId}.json`, JSON.stringify(approved), 'application/json');
+    // pending 삭제
+    await sbDelete(`reports/pending/${approvingId}.json`);
+    document.getElementById(`rc-${approvingId}`)?.remove();
+    const cnt = document.getElementById('pending-count');
+    cnt.textContent = Math.max(0, parseInt(cnt.textContent) - 1);
+    closeModal();
+  } catch {
+    alert('승인 처리 실패');
+    document.getElementById('modal-confirm').disabled = false;
   }
 }
 
-async function rejectFile(name, idx) {
-  const item = document.getElementById(`pi-${idx}`);
-  if (item) item.style.opacity = '0.4';
+async function rejectReport(id) {
   try {
-    await deleteFile(`pending/${name}`);
-    if (item) item.remove();
-    const count = document.getElementById('pending-count');
-    count.textContent = Math.max(0, parseInt(count.textContent) - 1);
-  } catch(e) {
-    if (item) item.style.opacity = '1';
-    alert('삭제 실패');
+    await sbDelete(`reports/pending/${id}.json`);
+    document.getElementById(`rc-${id}`)?.remove();
+    const cnt = document.getElementById('pending-count');
+    cnt.textContent = Math.max(0, parseInt(cnt.textContent) - 1);
+  } catch { alert('삭제 실패'); }
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-bg')) {
+    document.getElementById('modal-bg').classList.remove('show');
   }
 }
 
-async function deleteFile(path) {
-  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}`, {
+// ── Supabase helpers ──
+
+async function sbPut(path, body, contentType) {
+  // 먼저 POST 시도, 이미 있으면 PUT
+  let res = await fetch(`${SB_URL}/storage/v1/object/${BUCKET}/${path}`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': contentType },
+    body
+  });
+  if (res.status === 409) {
+    res = await fetch(`${SB_URL}/storage/v1/object/${BUCKET}/${path}`, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': contentType },
+      body
+    });
+  }
+  return res;
+}
+
+async function sbList(prefix) {
+  const res = await fetch(`${SB_URL}/storage/v1/object/list/${BUCKET}`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prefix, limit: 100, offset: 0, sortBy: { column: 'created_at', order: 'asc' } })
+  });
+  const data = await res.json();
+  return Array.isArray(data) ? data.filter(f => f.name && !f.name.endsWith('/') && f.name !== '.emptyFolderPlaceholder') : [];
+}
+
+async function sbGet(path) {
+  const signRes = await fetch(`${SB_URL}/storage/v1/object/sign/${BUCKET}/${path}`, {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ expiresIn: 3600 })
+  });
+  const { signedURL } = await signRes.json();
+  if (!signedURL) return null;
+  const res = await fetch(`${SB_URL}/storage/v1${signedURL}`);
+  return res.ok ? res.json() : null;
+}
+
+async function sbDelete(path) {
+  const res = await fetch(`${SB_URL}/storage/v1/object/${BUCKET}`, {
     method: 'DELETE',
-    headers: {
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({prefixes: [path]})
+    headers: { 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prefixes: [path] })
   });
   if (!res.ok) throw new Error('delete failed');
 }
 
-renderHistory();
+renderMyHistory();
 </script>
 </body>
 </html>
