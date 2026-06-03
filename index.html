@@ -335,6 +335,14 @@ textarea.finp{min-height:120px;resize:vertical}
     <div id="issue-list"></div>
   </div>
 
+  <div class="sec"><div class="sec-lbl">뉴스</div></div>
+  <div class="card" style="margin:0 20px 14px">
+    <div class="row" onclick="goSub('news')">
+      <div class="row-body"><div class="row-title">정치 뉴스</div><div class="row-sub">6/3~4 · 10건</div></div>
+      <div class="row-arr">›</div>
+    </div>
+  </div>
+
   <div class="sec"><div class="sec-lbl">캘린더</div></div>
   <div class="card" style="margin:0 20px 16px">
     <div class="cal-nav">
@@ -939,7 +947,7 @@ function switchTab(group,tab,el){
   setAppScroll(group,tab);
 }
 
-const SUB_TITLES={writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
+const SUB_TITLES={writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모',news:'정치 뉴스'};
 function renderSub(id){
   document.getElementById('sub-title').textContent=SUB_TITLES[id]||'';
   const fn={
@@ -968,6 +976,7 @@ function renderSub(id){
     resume:()=>`<div class="ta-page"><textarea id="ta-resume" placeholder="이력서 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-resume').value).then(()=>showToast('복사됐어요!'))">복사</button></div>`,
     cover:()=>`<div class="ta-page"><textarea id="ta-cover" placeholder="자소서 내용..."></textarea><button class="cpy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ta-cover').value).then(()=>showToast('복사됐어요!'))">복사</button></div>`,
     'sns-fl':()=>`<div class="form-wrap" style="margin-top:8px"><div style="display:flex;gap:8px"><input id="sns-fl-inp" class="finp" style="margin:0;flex:1" placeholder="SNS 운영 메모..."><button id="sns-fl-add" class="add-btn">+</button></div></div><div class="card" style="margin:10px 20px"><div id="sns-fl-list"></div></div>`,
+    news:subNews,
   };
   document.getElementById('sub-body').innerHTML=fn[id]?fn[id]():'<div class="empty">준비중</div>';
   afterSub(id);
@@ -1141,6 +1150,28 @@ const SNS_CONTENTS=[
   '오카방 3년 운영 후기 — 커뮤니티와 신뢰',
   '창업 일지 — 데이터 기반 큐레이션의 시작',
 ];
+function subNews(){
+  const items=[
+    {date:'6/3',outlet:'동아일보',url:'https://www.donga.com/news/Politics/article/all/20260603/134045297/2'},
+    {date:'6/3',outlet:'파이낸셜뉴스',url:'https://www.fnnews.com/news/202606032316236603'},
+    {date:'6/3',outlet:'조선비즈',url:'https://biz.chosun.com/policy/politics/president_office/2026/06/03/FXIJF6WDBJE4PGG2HQASP4D6QM/'},
+    {date:'6/4',outlet:'매일경제',url:'https://www.mk.co.kr/news/politics/12064984'},
+    {date:'6/4',outlet:'중앙뉴스',url:'https://www.joongangenews.com/news/articleView.html?idxno=523480'},
+    {date:'6/4',outlet:'인사이트',url:'https://www.insight.co.kr/news/556881'},
+    {date:'6/4',outlet:'위키트리',url:'https://www.wikitree.co.kr/articles/1139610'},
+    {date:'6/4',outlet:'뉴스천지',url:'https://www.newscj.com/news/articleView.html?idxno=3406427'},
+    {date:'6/4',outlet:'뉴데일리',url:'https://www.newdaily.co.kr/site/data/html/2026/06/04/2026060400025.html'},
+    {date:'6/4',outlet:'한국경제',url:'https://magazine.hankyung.com/business/article/202606045680b'},
+    {date:'6/4',outlet:'매일경제 (2)',url:'https://www.mk.co.kr/news/politics/12065258'},
+  ];
+  const rows=items.map(it=>`
+    <a href="${it.url}" target="_blank" style="display:flex;align-items:center;gap:10px;padding:11px 20px;border-bottom:1px solid var(--border);text-decoration:none;color:inherit">
+      <span style="font-size:11px;color:var(--sub);min-width:28px">${it.date}</span>
+      <span style="flex:1;font-size:14px;font-weight:600">${it.outlet}</span>
+      <span style="font-size:13px;color:var(--sub)">›</span>
+    </a>`).join('');
+  return `<div class="card" style="margin:10px 20px">${rows}</div>`;
+}
 function subSns(){
   const done=S.get('sns-content-done',[]);
   const contentList=SNS_CONTENTS.map((c,i)=>`
