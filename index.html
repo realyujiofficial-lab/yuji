@@ -1045,7 +1045,7 @@ function afterSub(id){
   if(id==='cover'){const ta=document.getElementById('ta-cover');if(ta){ta.value=localStorage.getItem('cover')||'';ta.addEventListener('input',e=>localStorage.setItem('cover',e.target.value));}}
   if(id==='sns-fl'){renderListInEl('sns-fl-list','sns-fl-items');document.getElementById('sns-fl-add')?.addEventListener('click',()=>{const inp=document.getElementById('sns-fl-inp'),t=inp.value.trim();if(!t)return;const arr=S.get('sns-fl-items',[]);arr.unshift({text:t,id:Date.now()});S.set('sns-fl-items',arr);inp.value='';renderListInEl('sns-fl-list','sns-fl-items');});}
   if(id==='tt-sns'){renderSnsContent();document.getElementById('sns-tt-add')?.addEventListener('click',()=>{const inp=document.getElementById('sns-tt-inp'),t=inp.value.trim();if(!t)return;const arr=S.get('sns-tt-items',[]);arr.unshift({text:t,id:Date.now()});S.set('sns-tt-items',arr);inp.value='';renderListInEl('sns-tt-list','sns-tt-items');});}
-  if(id==='tt-govt'){renderGovtList();document.getElementById('govt-save')?.addEventListener('click',()=>{const n=v('g-name');if(!n)return;const arr=S.get('govt',[]);arr.unshift({name:n,deadline:v('g-dl'),status:document.getElementById('g-status')?.value||'관심',id:Date.now()});S.set('govt',arr);document.getElementById('g-name').value='';renderGovtList();});}
+  if(id==='tt-govt'){renderGovtList();document.getElementById('govt-save')?.addEventListener('click',()=>{const n=v('g-name');if(!n)return;const arr=S.get('govt',[]);arr.unshift({name:n,url:v('g-url'),deadline:v('g-dl'),status:document.getElementById('g-status')?.value||'관심',id:Date.now()});S.set('govt',arr);document.getElementById('g-name').value='';document.getElementById('g-url').value='';renderGovtList();});}
   if(id==='writing'){document.getElementById('wt-save')?.addEventListener('click',()=>{const tag=v('wt-tag'),content=v('wt-body');if(!content)return;const arr=S.get('writings',[]);arr.unshift({tag,content,id:Date.now(),date:new Date().toLocaleDateString('ko-KR')});S.set('writings',arr);renderSub('writing');});}
   if(id==='tt-docs'){renderDocsList();}
 }
@@ -1232,13 +1232,23 @@ function subGovt(){
       <div class="chip-row">${interestChips.map(c=>`<span class="chip">${c}</span>`).join('')}</div>
     </div>
     <div class="card" style="margin:0 20px 14px">
+      <a href="https://drive.google.com/drive/folders/1fMefnqAzBqvmNM8G310BsyzBqEN5OkyT" target="_blank" class="link-row">
+        <div><div style="font-size:13px;font-weight:700">📁 09_투자지원 폴더에서 자세히 보기</div><div class="link-url">마감일·D-day·적합도 정리된 통합 시트는 여기서 확인</div></div>
+      </a>
+    </div>
+    <div class="card" style="margin:0 20px 14px">
       <div class="p">
         <div style="font-size:13px;font-weight:800;margin-bottom:10px">정부지원 자동 탐색 — 주요 포털</div>
         ${portals.map(p=>`<a href="${p.url}" target="_blank" class="link-row"><div><div style="font-size:13px;font-weight:600">${p.name}</div><div class="link-url">${p.url}</div></div></a>`).join('')}
       </div>
     </div>
-    <div class="sec-lbl" style="padding:0 20px 8px">지원사업 추가</div>
-    <div class="form-wrap"><input id="g-name" class="finp" placeholder="지원사업명"><div style="display:flex;gap:8px;margin-bottom:10px"><input id="g-dl" type="date" class="finp" style="margin:0;flex:1"><select id="g-status" class="fsel" style="margin:0;flex:0 0 90px"><option>관심</option><option>준비중</option><option>제출</option><option>완료</option></select></div><button id="govt-save" class="submit-btn">추가</button></div>
+    <div class="sec-lbl" style="padding:0 20px 8px">지원사업 링크 추가 (임시 메모 — 나중에 통합 시트로 정리 요청)</div>
+    <div class="form-wrap">
+      <input id="g-name" class="finp" placeholder="지원사업명">
+      <input id="g-url" class="finp" type="url" placeholder="링크 (선택)" inputmode="url">
+      <div style="display:flex;gap:8px;margin-bottom:10px"><input id="g-dl" type="date" class="finp" style="margin:0;flex:1"><select id="g-status" class="fsel" style="margin:0;flex:0 0 90px"><option>관심</option><option>준비중</option><option>제출</option><option>완료</option></select></div>
+      <button id="govt-save" class="submit-btn">추가</button>
+    </div>
     <div class="card" style="margin:12px 20px 20px"><div id="govt-list"></div></div>
   `;
 }
@@ -1652,7 +1662,7 @@ function renderNetList(){
 }
 function renderGovtList(){
   const el=document.getElementById('govt-list');if(!el)return;
-  el.innerHTML=S.get('govt',[]).map(g=>`<div class="govt-item"><div class="govt-top"><span class="govt-name">${g.name}</span><span class="govt-st g${g.status}">${g.status}</span></div><div class="govt-dl">${g.deadline||'마감일 미정'}</div><button onclick="delGovt(${g.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:2px">삭제</button></div>`).join('')||'<div class="empty">없음</div>';
+  el.innerHTML=S.get('govt',[]).map(g=>`<div class="govt-item"><div class="govt-top"><span class="govt-name">${g.name}</span><span class="govt-st g${g.status}">${g.status}</span></div><div class="govt-dl">${g.deadline||'마감일 미정'}</div>${g.url?`<a href="${g.url}" target="_blank" style="font-size:11px;color:var(--royal-blue,#0047AB)">링크 열기</a>`:''}<button onclick="delGovt(${g.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:2px;margin-left:8px">삭제</button></div>`).join('')||'<div class="empty">없음</div>';
 }
 function renderListInEl(elId,stKey){
   const el=document.getElementById(elId);if(!el)return;
