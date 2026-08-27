@@ -66,9 +66,10 @@
 **스킬:** `skills/유지케어/SKILL.md`
 
 **컨텍스트:**
-- yuji OS: github.com/yuji-boop/yuji (Vercel 자동 배포)
+- yuji OS: github.com/yuji-boop/yuji (Vercel 자동 배포, 라이브 yuji-seven.vercel.app)
 - 오카방 대시보드: github.com/yuji-boop/yuji (`okaband-dashboard/`)
 - 테이스트트립 라이브: https://sot-tastetrip.vercel.app/#/places
+- 트로펫(TRF): github.com/yuji-boop/trf, 라이브 trf-xi.vercel.app — 로컬·여행 SNS 트렌드 수집 도구. "트로펫 업데이트/수집해줘" 요청 시 자동 루틴 없이 그 세션에서 직접 수집(계정 WebFetch + Supabase PUT). 정부지원 링크는 트로펫이 아니라 유지OS 사업탭에서 관리(2026-08-26 이관)
 - 오카방 관련은 오카방 오케스트레이터로 위임
 
 ---
@@ -93,3 +94,4 @@
 | 2026-05-17 | 초기 구성 | 전체 에이전트 팀 | 오카방 운영 자동화 하네스 구축 |
 | 2026-05-18 | 경로/작업스타일 추가, 대화분석 워크플로우 명문화 | CLAUDE.md | 실제 작업 패턴 반영 |
 | 2026-08-27 | "전반적 업무 스타일" 섹션 추가(자동화 지양, 안정적 링크 선호, 도구 한계 투명 공유, 개념 재정의 선호, 반복형 작업, 다단계 상태트래킹) | CLAUDE.md | 트로펫/자금조달 작업에서 반복 관찰된 패턴 정리 |
+| 2026-08-27 | 유지케어 컨텍스트에 트로펫 프로젝트 추가 | CLAUDE.md | 정부지원 이관(트로펫→유지OS) 이후 두 프로젝트 관계 명문화 |
