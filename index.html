@@ -613,6 +613,19 @@ textarea.finp{min-height:120px;resize:vertical}
       <div class="row-body"><div class="row-title">일기</div><div class="row-sub" id="diary-sub">기록 없음</div></div>
       <div class="row-arr">›</div>
     </div>
+    <div style="height:1px;background:var(--border);margin:0 20px"></div>
+    <div class="row" onclick="goSub('acc-exercise')">
+      <div class="row-body"><div class="row-title">운동법</div><div class="row-sub" id="acc-ex-sub">기록 없음</div></div>
+      <div class="row-arr">›</div>
+    </div>
+  </div>
+
+  <div class="sec"><div class="sec-lbl">개인 꿀팁</div></div>
+  <div class="card" style="margin:0 20px 14px">
+    <div class="row" onclick="goSub('personal-tips')">
+      <div class="row-body"><div class="row-title">모아둔 꿀팁</div><div class="row-sub" id="ptips-sub">기록 없음</div></div>
+      <div class="row-arr">›</div>
+    </div>
   </div>
 
   <div class="sec"><div class="sec-lbl">인맥</div></div>
@@ -948,7 +961,7 @@ function switchTab(group,tab,el){
   setAppScroll(group,tab);
 }
 
-const SUB_TITLES={writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
+const SUB_TITLES={writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기','acc-exercise':'운동법','personal-tips':'개인 꿀팁',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
 function renderSub(id){
   document.getElementById('sub-title').textContent=SUB_TITLES[id]||'';
   const fn={
@@ -961,6 +974,8 @@ function renderSub(id){
     'tt-mine':()=>`<div class="form-wrap" style="margin-top:16px;display:flex;flex-direction:column;gap:10px"><button class="submit-btn" onclick="alert('터미널: bash run_all_files.sh')">파이프라인 실행</button><button class="submit-btn" style="background:#f5f5f5;color:#333" onclick="window.open('okaband.html','_blank')">대시보드 열기</button><button class="submit-btn" style="background:#f5f5f5;color:#333">랜딩페이지</button></div>`,
     acc:subAcc,
     diary:subDiary,
+    'acc-exercise':subAccExercise,
+    'personal-tips':subPersonalTips,
     network:subNetwork,
     'yuji-resume':()=>subTextEditor('yuji-resume','이력서 (사람인)'),
     'yuji-career':()=>subTextEditor('yuji-career','커리어'),
@@ -1332,6 +1347,105 @@ function openDiary(id){
 function updateDiarySub(){
   const arr=S.get('acc_diaries',[]);
   const el=document.getElementById('diary-sub');
+  if(!el)return;
+  el.textContent=arr.length?`${arr.length}건`:'기록 없음';
+}
+
+// ── 서브페이지: 운동법 (트로펫/카톡 등에서 수집한 재활·스트레칭 팁 모음) ──
+const ACC_EXERCISE_INIT=[
+  {id:1,tag:'목·어깨',title:'승모근 빼는 법 (전거근 활성화)',summary:'재활·도수치료에서 알려주는 동작. 승모근이 뭉치는 원인인 전거근 비활성화를 먼저 해결해야 함 — 전거근은 어깨 안정화에도 중요.',source:'X @minto_000_'},
+  {id:2,tag:'목·어깨',title:'승모근 예쁘게 만드는 법 (목빗근 이완)',summary:'승모근은 문지른다고 안 없어짐. 목빗근을 풀어주는 게 핵심 — 자기 전에 풀어주면 수면에도 도움.',source:'X @minto_000_'},
+  {id:3,tag:'얼굴',title:'얼굴 비대칭 관리 운동',summary:'귓구멍 앞쪽 1cm 아래를 누르고 입 벌렸다 닫기 20회 등 STEP별 동작으로 얼굴 비대칭 완화.',source:'X @Captain_Dotori'},
+  {id:4,tag:'골반',title:'골반전방경사 스트레칭',summary:'골반전방경사가 심할 때 SNPE 방식 동작. 준비 스트레칭 없이 무작정 하면 허리 다칠 수 있어 순서대로 진행 필요.',source:'X @sonsudiggng'},
+  {id:5,tag:'등',title:'벽 하나로 굳은 등 풀어주는 법',summary:'벽을 이용해 굳은 등 근육을 이완하는 스트레칭 튜토리얼.',source:'YouTube Shorts'},
+];
+function subAccExercise(){
+  const arr=S.get('acc_exercises',ACC_EXERCISE_INIT);
+  const list=arr.map(e=>`
+    <div class="acc-item">
+      <div class="acc-top">${e.title}<span class="acc-ins-tag" style="margin-left:auto">${e.tag||''}</span></div>
+      <div class="acc-info" style="margin-top:4px;line-height:1.5">${e.summary||''}</div>
+      <div style="font-size:11px;color:var(--sub);margin-top:4px;display:flex;justify-content:space-between;align-items:center">
+        <span>출처: ${e.source||''}</span>
+        <span onclick="delExercise(${e.id})" style="cursor:pointer;color:#ccc">삭제</span>
+      </div>
+    </div>`).join('');
+  return `
+    <div class="card" style="margin:8px 20px 14px">${list||'<div class="empty">기록 없음</div>'}</div>
+    <div class="form-wrap" style="display:flex;flex-direction:column;gap:8px">
+      <input id="ex-tag" class="finp" style="margin:0" placeholder="부위(예: 목·어깨)">
+      <input id="ex-title" class="finp" style="margin:0" placeholder="제목">
+      <textarea id="ex-summary" class="finp" style="height:70px;resize:none" placeholder="내용 요약"></textarea>
+      <input id="ex-source" class="finp" style="margin:0" placeholder="출처(선택)">
+      <button id="ex-save" class="submit-btn" onclick="addExercise()">저장</button>
+    </div>`;
+}
+function addExercise(){
+  const title=v('ex-title');if(!title)return;
+  const arr=S.get('acc_exercises',ACC_EXERCISE_INIT).slice();
+  arr.unshift({id:Date.now(),tag:v('ex-tag'),title,summary:v('ex-summary'),source:v('ex-source')});
+  S.set('acc_exercises',arr);updateAccExSub();showToast('저장됐어요!');renderSub('acc-exercise');
+}
+function delExercise(id){
+  const arr=S.get('acc_exercises',ACC_EXERCISE_INIT).filter(e=>e.id!==id);
+  S.set('acc_exercises',arr);updateAccExSub();renderSub('acc-exercise');
+}
+function updateAccExSub(){
+  const arr=S.get('acc_exercises',ACC_EXERCISE_INIT);
+  const el=document.getElementById('acc-ex-sub');
+  if(!el)return;
+  el.textContent=arr.length?`${arr.length}건`:'기록 없음';
+}
+
+// ── 서브페이지: 개인 꿀팁 (트로펫 분류에 안 맞는 개인/생활 정보 모음) ──
+const PERSONAL_TIPS_INIT=[
+  {id:1,category:'집·주거',title:'SH 국민임대 입주자 모집',summary:'서울 무주택세대구성원 대상, 1,973세대 모집. 39㎡ 이하 평균 월 25만원(보증금 3,200만원). 서울 23개 지구·15개 단지, SH 인터넷청약시스템 접수.',source:'X / Instagram'},
+  {id:2,category:'금융',title:'삼성 새희망홀씨류 무담보·무보증 대출',summary:'Samsung Smile Finance Foundation 재원. 사업운영자금·창업자금·긴급생계자금 용도, 금리 연 2.0~4.5%, 한도 500만~3,000만원, 상환 5년 이내. 사업자 대출 필요할 때 참고.',source:'Instagram'},
+  {id:3,category:'건강·멘탈',title:'국민건강보험 본인부담상한제 환급',summary:'2025년 진료분 소득분위별 상한액(1분위 89만~10분위 826만) 초과분 전액 환급, 평균 136만원. The건강보험 앱/nhis.or.kr에서 신청해야 입금됨(자동 아님).',source:'X @grok'},
+  {id:4,category:'건강·멘탈',title:'방어기제 이해하고 명상으로 벗어나기',summary:'이유 모를 반복 행동(상처받기 전에 거리두기 등)은 방어기제 — 제거 대상이 아니라 자신을 이해하는 단서. 대한명상협회 콘텐츠.',source:'Instagram @meditationkorea'},
+  {id:5,category:'요리',title:'멸치칼국수를 봉골레맛으로',summary:'멸치칼국수를 봉골레 맛이 나게 만드는 레시피.',source:'X @minto_000_'},
+  {id:6,category:'요리',title:'라면에 계란 안 넣고 더 맛있게 먹는 법',summary:'계란을 그냥 넣지 않고 다르게 조리해서 먹는 라면 레시피.',source:'X @jey0316'},
+  {id:7,category:'요리',title:'치즈 네 장 넣은 너구리 레시피',summary:'치즈 네 장을 넣어 끓이는 너구리 라면 레시피, 반응 좋았던 조합.',source:'X @tlqkfttorrl0000'},
+  {id:8,category:'기술·앱',title:'컴퓨터 렉의 진짜 범인',summary:'PC 렉 걸리는 원인을 짚어주는 트러블슈팅 팁.',source:'X @golae540637'},
+  {id:9,category:'기술·앱',title:'삼성 직원도 모르는 갤럭시 숨은 기능',summary:'갤럭시 스마트폰의 잘 알려지지 않은 유용한 기능 모음.',source:'YouTube Shorts'},
+  {id:10,category:'기술·앱',title:'바이브휴먼 (토스 미니앱)',summary:'앱 설치 없이 토스에서 바로 쓸 수 있는 미니앱. 궁금해서 저장해둔 것.',source:'minion.toss.im'},
+  {id:11,category:'기술·앱',title:'키보드 타건감 테스트 앱',summary:'키보드 타건감을 느껴볼 수 있는 자판 테스트 앱.',source:'개인 메모'},
+  {id:12,category:'아이디어',title:'마트 장보기 태블릿 카트 기능',summary:'마트에서 카트에 태블릿 놓고 상품 검색 → 앱 장바구니에 담아두면 담당 직원이 해당 상품 가져다주는 장보기 기능 아이디어. TasteTrip/싱플리와 무관한 별도 아이디어라 메모만.',source:'개인 메모'},
+];
+function subPersonalTips(){
+  const arr=S.get('personal_tips',PERSONAL_TIPS_INIT);
+  const list=arr.map(t=>`
+    <div class="acc-item">
+      <div class="acc-top">${t.title}<span class="acc-ins-tag" style="margin-left:auto">${t.category||''}</span></div>
+      <div class="acc-info" style="margin-top:4px;line-height:1.5">${t.summary||''}</div>
+      <div style="font-size:11px;color:var(--sub);margin-top:4px;display:flex;justify-content:space-between;align-items:center">
+        <span>출처: ${t.source||''}</span>
+        <span onclick="delTip(${t.id})" style="cursor:pointer;color:#ccc">삭제</span>
+      </div>
+    </div>`).join('');
+  return `
+    <div class="card" style="margin:8px 20px 14px">${list||'<div class="empty">기록 없음</div>'}</div>
+    <div class="form-wrap" style="display:flex;flex-direction:column;gap:8px">
+      <input id="tip-category" class="finp" style="margin:0" placeholder="분류(예: 집·주거/금융/요리/기술·앱)">
+      <input id="tip-title" class="finp" style="margin:0" placeholder="제목">
+      <textarea id="tip-summary" class="finp" style="height:70px;resize:none" placeholder="내용 요약"></textarea>
+      <input id="tip-source" class="finp" style="margin:0" placeholder="출처(선택)">
+      <button id="tip-save" class="submit-btn" onclick="addTip()">저장</button>
+    </div>`;
+}
+function addTip(){
+  const title=v('tip-title');if(!title)return;
+  const arr=S.get('personal_tips',PERSONAL_TIPS_INIT).slice();
+  arr.unshift({id:Date.now(),category:v('tip-category'),title,summary:v('tip-summary'),source:v('tip-source')});
+  S.set('personal_tips',arr);updatePTipsSub();showToast('저장됐어요!');renderSub('personal-tips');
+}
+function delTip(id){
+  const arr=S.get('personal_tips',PERSONAL_TIPS_INIT).filter(t=>t.id!==id);
+  S.set('personal_tips',arr);updatePTipsSub();renderSub('personal-tips');
+}
+function updatePTipsSub(){
+  const arr=S.get('personal_tips',PERSONAL_TIPS_INIT);
+  const el=document.getElementById('ptips-sub');
   if(!el)return;
   el.textContent=arr.length?`${arr.length}건`:'기록 없음';
 }
@@ -1979,6 +2093,8 @@ updateStats();
 updateAccSub();
 updateNetSub();
 updateDiarySub();
+updateAccExSub();
+updatePTipsSub();
 ['notice-list','ops-list','ev-list','new-iss-list'].forEach(renderSimple);
 renderNoticeHist();
 renderIssueHist();
