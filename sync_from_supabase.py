@@ -17,8 +17,8 @@ from pathlib import Path
 
 # ── 설정 ────────────────────────────────────────────────────────────
 SUPABASE_URL = "https://yseynfdirbnlygwpygvp.supabase.co"
-SUPABASE_KEY = "SUPABASE_KEY_REDACTED"
-ANTHROPIC_KEY = "ANTHROPIC_KEY_REDACTED"
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
+ANTHROPIC_KEY = os.environ.get("ANTHROPIC_KEY", "")
 BUCKET = "okaband-screenshots"
 
 BASE_DIR = Path("/mnt/c/Users/ryu53/Downloads/yuji os/깃허브/harness-main")
