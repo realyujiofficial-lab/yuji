@@ -1926,9 +1926,7 @@ function delGovt(id){S.set('govt',S.get('govt',[]).filter(g=>g.id!==id));renderG
 // ── 카톡방 대시보드 데이터 로드 ──
 async function loadDash(){
   let d;
-  const SUPA_URL='https://yseynfdirbnlygwpygvp.supabase.co';
-  const SUPA_KEY='SUPABASE_KEY_REDACTED';
-  try{const r=await fetch(SUPA_URL+'/storage/v1/object/okaband-data/data.json?t='+Date.now(),{cache:'no-store',headers:{'Authorization':'Bearer '+SUPA_KEY}});d=await r.json();}
+  try{const r=await fetch('/data.json?t='+Date.now(),{cache:'no-store'});d=await r.json();}
   catch(e){
     document.getElementById('status-text').textContent='data.json 없음';
     document.getElementById('t-active').innerHTML='<tr><td colspan="4" style="color:#bbb;font-size:12px">데이터 없음</td></tr>';
