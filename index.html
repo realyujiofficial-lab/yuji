@@ -1475,20 +1475,37 @@ function updatePTipsSub(){
   el.textContent=arr.length?`${arr.length}건`:'기록 없음';
 }
 
-const ACC_SUPA_URL='https://yseynfdirbnlygwpygvp.supabase.co';
-const ACC_SUPA_KEY='SUPABASE_KEY_REDACTED';
+// 백업은 유지OS 자체 저장소(/api/acc, Vercel Blob 비공개). 비밀번호는 처음 한 번만 묻고 이 브라우저에 기억
+function accPin(reset){
+  if(reset)localStorage.removeItem('acc_pin');
+  let p=localStorage.getItem('acc_pin');
+  if(!p){p=(prompt('백업 비밀번호를 입력해 주세요')||'').trim();if(p)localStorage.setItem('acc_pin',p);}
+  return p;
+}
+async function accFetch(opt={}){
+  for(let i=0;i<2;i++){
+    const pin=accPin(i>0);if(!pin)return null;
+    const r=await fetch('/api/acc',{...opt,cache:'no-store',headers:{...(opt.headers||{}),'x-pin':pin}});
+    if(r.status!==401)return r;
+  }
+  showToast('비밀번호가 달라요');return null;
+}
 
 async function syncAccToSupabase(){
   const data={accidents:S.get('accidents',[]),symptoms:S.get('symptoms',[]),acc_docs:S.get('acc_docs',[]),updated:new Date().toISOString()};
   try{
-    await fetch(ACC_SUPA_URL+'/storage/v1/object/okaband-data/accident-data.json',{method:'POST',headers:{'Authorization':'Bearer '+ACC_SUPA_KEY,'Content-Type':'application/json','x-upsert':'true'},body:JSON.stringify(data)});
+    const r=await accFetch({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    if(!r)return;
+    if(!r.ok)throw 0;
     showToast('백업 완료!');
   }catch(e){showToast('백업 실패 — 로컬 저장됨');}
 }
 
 async function loadAccFromSupabase(){
   try{
-    const r=await fetch(ACC_SUPA_URL+'/storage/v1/object/okaband-data/accident-data.json?t='+Date.now(),{cache:'no-store',headers:{'Authorization':'Bearer '+ACC_SUPA_KEY}});
+    const r=await accFetch();
+    if(!r)return;
+    if(r.status===404){showToast('아직 백업한 데이터가 없어요');return;}
     const d=await r.json();
     if(d.accidents)S.set('accidents',d.accidents);
     if(d.symptoms)S.set('symptoms',d.symptoms);
