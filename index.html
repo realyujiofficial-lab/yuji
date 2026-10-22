@@ -66,10 +66,13 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .row-arr{color:#aaa;display:flex;align-items:center;flex-shrink:0}
 
 /* ── 할일 ── */
-.todo-inp-row{display:flex;gap:8px;padding:14px 20px 10px}
-.todo-inp-row input{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:13px 14px;font-size:15px;outline:none;font-family:inherit;background:var(--card)}
+.todo-inp-row{display:flex;flex-wrap:wrap;gap:8px;padding:14px 20px 10px}
+.todo-inp-row input{flex:1 0 calc(100% - 70px);min-width:0}
+.todo-inp-row .add-btn{order:1}
+.todo-inp-row select{order:2;flex:1 1 35%;min-width:0;padding:11px 8px}
+.todo-inp-row input{border:1.5px solid var(--border);border-radius:10px;padding:13px 14px;font-size:15px;outline:none;font-family:inherit;background:var(--card)}
 .todo-inp-row input:focus{border-color:#1a1a1a}
-.todo-inp-row select{border:1.5px solid var(--border);border-radius:10px;padding:10px 8px;font-size:12px;background:var(--card);outline:none;color:var(--dim)}
+.todo-inp-row select{border:1.5px solid var(--border);border-radius:10px;font-size:12px;background:var(--card);outline:none;color:var(--dim)}
 .add-btn{border:none;border-radius:10px;padding:11px 18px;background:#1a1a1a;color:#fff;font-size:18px;font-weight:400;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .todo-item{display:flex;align-items:center;gap:12px;padding:15px 20px;border-bottom:1px solid var(--border);font-size:15px}
 .todo-item:last-child{border-bottom:none}
@@ -87,6 +90,23 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .tsub input[type=checkbox]{width:16px;height:16px;accent-color:#1a1a1a;flex-shrink:0;cursor:pointer}
 .tsub.done span{text-decoration:line-through;color:#ccc}
 .tcnt{font-size:12px;color:var(--dim);flex-shrink:0}
+.todo-item .tt,.tsub span{flex:1;min-width:0;cursor:pointer;overflow-wrap:anywhere}
+.thas{display:inline-block;margin-left:6px;font-size:11px;color:var(--dim);font-weight:600}
+.td-wrap{padding:16px 20px 40px;display:flex;flex-direction:column;gap:16px}
+.td-l{font-size:12px;font-weight:700;color:var(--dim);margin-bottom:6px}
+.td-in{width:100%;min-width:0;border:1.5px solid var(--border);border-radius:10px;padding:11px 12px;font-size:15px;background:var(--card);outline:none;font-family:inherit;box-sizing:border-box}
+textarea.td-in{resize:vertical;line-height:1.6}
+.td-row{display:flex;gap:8px;align-items:center}
+.td-btn{flex-shrink:0;border:none;border-radius:10px;padding:11px 14px;background:#1a1a1a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.td-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.td-ph{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:#f0f0f0}
+.td-ph img{width:100%;height:100%;object-fit:cover;cursor:pointer}
+.td-ph button{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:none;background:rgba(0,0,0,.55);color:#fff;cursor:pointer}
+.td-add{aspect-ratio:1;border:1.5px dashed var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--dim);cursor:pointer}
+.td-sub{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:14px}
+.td-sub span{flex:1;min-width:0;cursor:pointer}
+.td-sub.done span{text-decoration:line-through;color:#ccc}
+.td-sub+.td-row{margin-top:8px}
 .tlink{font-size:11px;font-weight:700;background:#f0f0f0;border:none;border-radius:8px;padding:4px 8px;cursor:pointer;flex-shrink:0;font-family:inherit}
 
 /* ── 이슈 ── */
@@ -97,10 +117,13 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .issue-item.low{border-left-color:#e8e8e8}
 .issue-txt{font-size:15px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;font-weight:600}
 .issue-meta{font-size:12px;color:var(--sub);margin-top:4px}
-.inp-row{display:flex;gap:8px;padding:12px 20px;flex-wrap:nowrap;align-items:center}
+.inp-row{display:flex;gap:8px;padding:12px 20px;flex-wrap:wrap;align-items:center}
+.inp-row .add-btn{order:1}
+.inp-row select{order:2;flex:1 1 35%;min-width:0}
+.inp-row input{flex:1 0 calc(100% - 70px)}
 .inp-row input,.inp-row select{border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13px;background:var(--card);outline:none;font-family:inherit}
 .inp-row input{flex:1;min-width:0}
-.inp-row select{flex-shrink:0;max-width:80px}
+.inp-row select{max-width:none}
 
 /* ── 캘린더 ── */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 8px}
@@ -113,7 +136,7 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .cal-day.other{color:#ccc}
 .cal-dot{width:4px;height:4px;background:var(--accent);border-radius:50%;position:absolute;bottom:1px;left:50%;transform:translateX(-50%)}
 .sch-add{display:flex;gap:8px;padding:10px 20px;border-top:1px solid var(--border)}
-.sch-add input{border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-size:12px;background:var(--card);outline:none;font-family:inherit}
+.sch-add input{border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font-size:12px;background:var(--card);outline:none;font-family:inherit;min-width:0;flex:1 1 0}
 .sch-item{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--border);font-size:14px}
 .sch-item:last-child{border-bottom:none}
 .sch-date{color:#1a1a1a;font-weight:700;flex-shrink:0;margin-left:8px}
@@ -327,6 +350,7 @@ textarea.finp{min-height:120px;resize:vertical}
         <optgroup label="개인"><option value="집">집</option><option value="교통사고">교통사고</option><option value="기타">기타</option></optgroup>
         <optgroup label="사업"><option value="정부지원">정부지원</option><option value="강의">강의</option><option value="개발">개발</option><option value="SNS마케팅">SNS마케팅</option></optgroup>
       </select>
+      <select id="main-todo-parent"><option value="">새 할일로</option></select>
       <button class="add-btn" onclick="addTodo()">+</button>
     </div>
     <div id="main-todo-list"></div>
@@ -1018,6 +1042,7 @@ function renderSub(id){
     writing:subWriting,
     'tt-biz-plan':subTTBizPlan,
     stibee:subStibee,
+    todo:subTodo,
     'dododok-mail':subDododokMail,
     'tt-docs':subDocs,
     'tt-sns':subSns,
@@ -1942,7 +1967,11 @@ function delListItem(stKey,elId,id){S.set(stKey,S.get(stKey,[]).filter(t=>t.id!=
 function addTodo(){
   const inp=document.getElementById('main-todo-inp'),text=inp.value.trim();if(!text)return;
   const tag=document.getElementById('main-todo-tag').value;
-  const arr=S.get('main-todo-list',[]);arr.unshift({text,tag,done:false,id:Date.now()});S.set('main-todo-list',arr);
+  const pid=Number(document.getElementById('main-todo-parent').value);
+  const arr=S.get('main-todo-list',[]),par=pid&&arr.find(t=>t.id===pid);
+  if(par){(par.subs=par.subs||[]).push({text,done:false});par.done=false;}
+  else arr.unshift({text,tag,done:false,id:Date.now()});
+  S.set('main-todo-list',arr);
   inp.value='';renderTodos();updateStats();
 }
 function toggleTodo(id){const arr=S.get('main-todo-list',[]),i=arr.findIndex(t=>t.id===id);if(i>=0){arr[i].done=!arr[i].done;S.set('main-todo-list',arr);}renderTodos();updateStats();}
@@ -2005,19 +2034,66 @@ const TODO_SEED_1022=[
   if(t){t.text=seed[1];t.link=seed[3];t.subs=seed[2].map(x=>({text:x,done:false}));S.set('main-todo-list',arr);}
   S.set('todo_dododok_mail_1022',true);
 })();
+// ── 할일 상세: 메모·장소·전화번호·사진. k가 있으면 세부 단계 하나 ──
+let CUR_TODO=null;
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const todoHas=o=>{const h=[o.memo&&'메모',o.place&&'장소',o.phone&&'전화',o.photos?.length&&'사진'].filter(Boolean);return h.length?`<span class="thas">${h.join('·')}</span>`:'';};
+function openTodo(id,k=null){CUR_TODO={id,k};goSub('todo');}
+function todoObj(arr){const t=arr.find(t=>t.id===CUR_TODO?.id);if(!t)return null;return CUR_TODO.k==null?t:(t.subs||[])[CUR_TODO.k];}
+function saveTodoField(f,v){const arr=S.get('main-todo-list',[]),o=todoObj(arr);if(!o)return;o[f]=v;try{S.set('main-todo-list',arr);}catch(e){showToast('저장 공간이 부족해요');}}
+function subTodo(){
+  const arr=S.get('main-todo-list',[]),t=arr.find(t=>t.id===CUR_TODO?.id),o=todoObj(arr);
+  if(!o)return '<div class="empty">할일을 찾을 수 없어요</div>';
+  const isSub=CUR_TODO.k!=null;
+  document.getElementById('sub-title').textContent=isSub?t.text:'할일';
+  const fld=(lbl,html)=>`<div class="td-f"><div class="td-l">${lbl}</div>${html}</div>`;
+  const others=arr.filter(x=>!x.done&&x.id!==t.id);
+  return `<div class="td-wrap">
+    ${fld('할일',`<input class="td-in" value="${esc(o.text)}" oninput="saveTodoField('text',this.value)">`)}
+    ${isSub?'':fld('분류',`<select class="td-in" onchange="saveTodoField('tag',this.value)">${TODO_SECTIONS.flatMap(x=>x[1]).map(g=>`<option${(o.tag||'기타')===g?' selected':''}>${g}</option>`).join('')}</select>`)}
+    ${fld('메모',`<textarea class="td-in" rows="4" placeholder="자세한 내용" oninput="saveTodoField('memo',this.value)">${esc(o.memo)}</textarea>`)}
+    ${fld('장소',`<div class="td-row"><input class="td-in" placeholder="주소나 장소 이름" value="${esc(o.place)}" oninput="saveTodoField('place',this.value)"><button class="td-btn" onclick="const v=this.previousElementSibling.value.trim();if(v)window.open('https://map.naver.com/p/search/'+encodeURIComponent(v))">지도</button></div>`)}
+    ${fld('전화번호',`<div class="td-row"><input class="td-in" type="tel" placeholder="010-0000-0000" value="${esc(o.phone)}" oninput="saveTodoField('phone',this.value)"><button class="td-btn" onclick="const v=this.previousElementSibling.value.replace(/[^0-9+]/g,'');if(v)location.href='tel:'+v">전화</button></div>`)}
+    ${fld('사진',`<div class="td-photos">${(o.photos||[]).map((src,i)=>`<div class="td-ph"><img src="${src}" onclick="viewPhoto(this.src)"><button onclick="delTodoPhoto(${i})">×</button></div>`).join('')}<label class="td-add">+<input type="file" accept="image/*" multiple hidden onchange="addTodoPhotos(this.files)"></label></div>`)}
+    ${isSub?'':fld('세부 단계',`${(o.subs||[]).map((x,k)=>`<div class="td-sub${x.done?' done':''}"><input type="checkbox"${x.done?' checked':''} onchange="toggleSub(${t.id},${k});renderSub('todo')"><span onclick="openTodo(${t.id},${k})">${esc(x.text)}${todoHas(x)}</span><button class="xbtn" onclick="delTodoSub(${k})">×</button></div>`).join('')}<div class="td-row"><input class="td-in" id="td-newsub" placeholder="세부 단계 추가" onkeydown="if(event.key==='Enter')addTodoSub()"><button class="td-btn" onclick="addTodoSub()">추가</button></div>`)}
+    ${isSub||!others.length?'':fld('다른 할일 아래로 옮기기',`<select class="td-in" onchange="if(this.value)moveTodoUnder(Number(this.value))"><option value="">고르기</option>${others.map(x=>`<option value="${x.id}">${esc(x.text)}</option>`).join('')}</select>`)}
+  </div>`;
+}
+function addTodoSub(){const el=document.getElementById('td-newsub'),v=el.value.trim();if(!v)return;const arr=S.get('main-todo-list',[]),o=todoObj(arr);(o.subs=o.subs||[]).push({text:v,done:false});o.done=false;S.set('main-todo-list',arr);renderSub('todo');}
+function delTodoSub(k){const arr=S.get('main-todo-list',[]),o=todoObj(arr);o.subs.splice(k,1);S.set('main-todo-list',arr);renderSub('todo');}
+function moveTodoUnder(pid){
+  const arr=S.get('main-todo-list',[]),i=arr.findIndex(t=>t.id===CUR_TODO.id),par=arr.find(t=>t.id===pid);if(i<0||!par)return;
+  const [t]=arr.splice(i,1),{id,tag,subs,...rest}=t;
+  (par.subs=par.subs||[]).push(rest,...(subs||[]));par.done=false;
+  S.set('main-todo-list',arr);showToast('옮겼어요');CUR_TODO={id:pid,k:null};renderSub('todo');
+}
+function viewPhoto(src){const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center';d.innerHTML=`<img src="${src}" style="max-width:100%;max-height:100%">`;d.onclick=()=>d.remove();document.body.appendChild(d);}
+function delTodoPhoto(i){const arr=S.get('main-todo-list',[]),o=todoObj(arr);o.photos.splice(i,1);S.set('main-todo-list',arr);renderSub('todo');}
+// 사진은 긴 쪽 1000px JPEG로 줄여서 이 브라우저에 저장 (전체 백업에도 같이 들어감)
+async function addTodoPhotos(files){
+  const shrink=f=>new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1000/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.72));};im.onerror=()=>res(null);im.src=r.result;};r.readAsDataURL(f);});
+  const add=(await Promise.all([...files].map(shrink))).filter(Boolean);
+  const arr=S.get('main-todo-list',[]),o=todoObj(arr);o.photos=[...(o.photos||[]),...add];
+  try{S.set('main-todo-list',arr);}catch(e){showToast('저장 공간이 부족해요');return;}
+  renderSub('todo');
+}
 function renderTodos(){
   const arr=S.get('main-todo-list',[]);
   const el=document.getElementById('main-todo-list');if(!el)return;
   const fold=S.get('todo_fold',{}),sections=TODO_SECTIONS.map(([s,gs])=>[s,[...gs]]),known=sections.flatMap(x=>x[1]);
   arr.forEach(t=>{const g=t.tag||'기타';if(!known.includes(g)){known.push(g);sections[1][1].push(g);}});
   const item=t=>{const subs=t.subs||[],dn=subs.filter(s=>s.done).length;
-    return `<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt">${t.text}</span>${t.link?`<button class="tlink" onclick="goSub('${t.link}')">양식</button>`:''}${subs.length?`<span class="tcnt">${dn}/${subs.length}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`
-      +(t.done?'':subs.map((s,k)=>`<div class="tsub${s.done?' done':''}"><input type="checkbox"${s.done?' checked':''} onchange="toggleSub(${t.id},${k})"><span>${s.text}</span></div>`).join(''));};
+    return `<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt" onclick="openTodo(${t.id})">${t.text}${todoHas(t)}</span>${t.link?`<button class="tlink" onclick="goSub('${t.link}')">양식</button>`:''}${subs.length?`<span class="tcnt">${dn}/${subs.length}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`
+      +(t.done?'':subs.map((s,k)=>`<div class="tsub${s.done?' done':''}"><input type="checkbox"${s.done?' checked':''} onchange="toggleSub(${t.id},${k})"><span onclick="openTodo(${t.id},${k})">${s.text}${todoHas(s)}</span></div>`).join(''));};
   const grp=g=>{const list=arr.filter(t=>(t.tag||'기타')===g);if(!list.length)return '';
     const dn=list.filter(t=>t.done).length;
     return `<div class="tgrp-hd" onclick="foldTodoGrp('${g}')">${g} <span class="n">${dn}/${list.length}</span><span class="fold">${fold[g]?'펼치기':'접기'}</span></div>`
       +(fold[g]?'':list.slice().sort((a,b)=>a.done-b.done).map(item).join(''));};
   el.innerHTML=sections.map(([s,gs])=>{const body=gs.map(grp).join('');return body?`<div class="tsec-hd">${s}</div>`+body:'';}).join('')||'<div class="empty">할일 없음</div>';
+  const ps=document.getElementById('main-todo-parent');
+  if(ps){const cur=ps.value;const open=arr.filter(t=>!t.done);
+    ps.innerHTML='<option value="">새 할일로</option>'+[...new Set(open.map(t=>t.tag||'기타'))].map(g=>`<optgroup label="${g} 아래로">${open.filter(t=>(t.tag||'기타')===g).map(t=>`<option value="${t.id}">${esc(t.text)}</option>`).join('')}</optgroup>`).join('');
+    ps.value=open.some(t=>String(t.id)===cur)?cur:'';}
   const remain=arr.filter(t=>!t.done);
   const pv=document.getElementById('todo-preview');
   if(pv)pv.textContent=remain.length?`남은 할일 ${remain.length}개 — ${remain.slice(0,2).map(t=>t.text).join(', ')}${remain.length>2?' …':''}`:'모든 할일 완료';
