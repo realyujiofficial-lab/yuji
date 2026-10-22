@@ -715,6 +715,40 @@ textarea.finp{min-height:120px;resize:vertical}
 </nav>
 
 <script>
+// 주소 이전(yuji-seven → yujios): 옛 주소를 열면 이 브라우저 기록을 전체 백업하고 새 주소로 보냄 → 새 주소가 받아서 불러옴
+(async()=>{
+  const NEW='yujios.vercel.app';
+  const note=t=>{let d=document.getElementById('mig-note');if(!d){d=document.createElement('div');d.id='mig-note';d.style.cssText='position:fixed;inset:0;z-index:9999;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font:600 16px/1.6 Pretendard,sans-serif;white-space:pre-line;padding:24px';document.body.appendChild(d);}d.textContent=t;};
+  if(location.host==='yuji-seven.vercel.app'){
+    if(localStorage.getItem('mig_done')){location.replace('https://'+NEW+'/');return;}
+    await new Promise(r=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',r):r());
+    note('새 주소로 기록을 옮기는 중이에요.');
+    const data={};
+    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k!=='acc_pin')data[k]=localStorage.getItem(k);}
+    for(let i=0;i<3;i++){
+      let pin=localStorage.getItem('acc_pin');
+      if(!pin||i>0){pin=(prompt('백업 비밀번호를 입력해 주세요')||'').trim();if(!pin){note('비밀번호가 없어서 멈췄어요.\n새로고침하면 다시 시작해요.');return;}localStorage.setItem('acc_pin',pin);}
+      const r=await fetch('/api/acc?f=all',{method:'POST',cache:'no-store',headers:{'Content-Type':'application/json','x-pin':pin},body:JSON.stringify({updated:new Date().toISOString(),data})});
+      if(r.ok){localStorage.setItem('mig_done','1');location.replace('https://'+NEW+'/?restore=1#'+encodeURIComponent(pin));return;}
+      if(r.status!==401){note('백업에 실패했어요.\n새로고침하면 다시 시도해요.');return;}
+    }
+    note('비밀번호가 달라요.\n새로고침하면 다시 시도해요.');
+  }else if(new URLSearchParams(location.search).get('restore')==='1'){
+    const pin=decodeURIComponent(location.hash.slice(1))||localStorage.getItem('acc_pin');
+    history.replaceState(null,'',location.pathname);
+    if(!pin)return;
+    localStorage.setItem('acc_pin',pin);
+    await new Promise(r=>document.readyState==='loading'?document.addEventListener('DOMContentLoaded',r):r());
+    note('기록을 불러오는 중이에요.');
+    const r=await fetch('/api/acc?f=all',{cache:'no-store',headers:{'x-pin':pin}});
+    if(!r.ok){note('불러오기에 실패했어요.\n개인 탭 맨 아래 "전체 불러오기"를 눌러주세요.');return;}
+    const d=await r.json();
+    Object.entries(d.data||{}).forEach(([k,v])=>localStorage.setItem(k,v));
+    location.replace('/');
+  }
+})();
+</script>
+<script>
 const S={get:(k,d=[])=>{try{return JSON.parse(localStorage.getItem(k))||d}catch{return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
 
 // ── 이슈 데이터 ──
