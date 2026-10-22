@@ -680,6 +680,14 @@ textarea.finp{min-height:120px;resize:vertical}
       <button class="gbtn" onclick="goSub('biz-portfolio')"><span class="gtxt">포트폴리오</span></button>
     </div>
   </div>
+
+  <div class="sec"><div class="sec-lbl">전체 기록</div></div>
+  <div class="card" style="margin:0 20px 14px">
+    <div class="btn-grid-3" style="grid-template-columns:1fr 1fr">
+      <button class="gbtn" onclick="backupAll()"><span class="gtxt">전체 백업</span></button>
+      <button class="gbtn" onclick="restoreAll()"><span class="gtxt">전체 불러오기</span></button>
+    </div>
+  </div>
 </div>
 
 <!-- ══ 서브 ══ -->
@@ -1482,10 +1490,10 @@ function accPin(reset){
   if(!p){p=(prompt('백업 비밀번호를 입력해 주세요')||'').trim();if(p)localStorage.setItem('acc_pin',p);}
   return p;
 }
-async function accFetch(opt={}){
+async function accFetch(opt={},q=''){
   for(let i=0;i<2;i++){
     const pin=accPin(i>0);if(!pin)return null;
-    const r=await fetch('/api/acc',{...opt,cache:'no-store',headers:{...(opt.headers||{}),'x-pin':pin}});
+    const r=await fetch('/api/acc'+q,{...opt,cache:'no-store',headers:{...(opt.headers||{}),'x-pin':pin}});
     if(r.status!==401)return r;
   }
   showToast('비밀번호가 달라요');return null;
@@ -1499,6 +1507,29 @@ async function syncAccToSupabase(){
     if(!r.ok)throw 0;
     showToast('백업 완료!');
   }catch(e){showToast('백업 실패 — 로컬 저장됨');}
+}
+
+// 전체 기록(이 브라우저에 저장된 모든 것) 백업/불러오기 — 주소를 옮길 때도 이걸로 옮김
+async function backupAll(){
+  const data={};
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k!=='acc_pin')data[k]=localStorage.getItem(k);}
+  try{
+    const r=await accFetch({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({updated:new Date().toISOString(),data})},'?f=all');
+    if(!r)return;
+    if(!r.ok)throw 0;
+    showToast(`전체 백업 완료! (${Object.keys(data).length}개)`);
+  }catch(e){showToast('전체 백업 실패');}
+}
+async function restoreAll(){
+  if(!confirm('백업해 둔 기록으로 이 브라우저의 기록을 바꿀까요?'))return;
+  try{
+    const r=await accFetch({},'?f=all');
+    if(!r)return;
+    if(r.status===404){showToast('아직 전체 백업이 없어요');return;}
+    const d=await r.json();
+    Object.entries(d.data||{}).forEach(([k,v])=>localStorage.setItem(k,v));
+    showToast('불러왔어요!');setTimeout(()=>location.reload(),800);
+  }catch(e){showToast('불러오기 실패');}
 }
 
 async function loadAccFromSupabase(){
