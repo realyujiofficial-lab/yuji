@@ -155,7 +155,7 @@ textarea.finp{resize:none;min-height:90px;line-height:1.6}
   <div id="pin-section">
     <div class="pin-card">
       <div class="sec-lbl">관리자 확인</div>
-      <input type="password" id="pin-inp" class="pin-inp" placeholder="•••" maxlength="6" inputmode="numeric">
+      <input type="password" id="pin-inp" class="pin-inp" placeholder="비밀번호" maxlength="20" autocapitalize="off">
       <button class="pin-btn" onclick="checkPin()">확인</button>
     </div>
   </div>
@@ -184,11 +184,7 @@ textarea.finp{resize:none;min-height:90px;line-height:1.6}
 </div>
 
 <script>
-const SB_URL = 'https://yseynfdirbnlygwpygvp.supabase.co';
-const SB_KEY = 'SUPABASE_KEY_REDACTED';
-const BUCKET = 'okaband-screenshots';
 const MY_KEY = 'jebo_history';
-const ADMIN_PIN = '1234';
 
 let selectedType = '';
 let approvingId = null;
@@ -290,8 +286,11 @@ function renderMyHistory() {
 
 // ── 관리자 ──
 
-function checkPin() {
-  if (document.getElementById('pin-inp').value === ADMIN_PIN) {
+async function checkPin() {
+  const pin = document.getElementById('pin-inp').value.trim();
+  const ok = pin && (await fetch('/api/report', { headers: { 'x-pin': pin } })).ok;
+  if (ok) {
+    localStorage.setItem('acc_pin', pin);
     document.getElementById('pin-section').style.display = 'none';
     document.getElementById('admin-section').style.display = 'block';
     loadPending();
@@ -429,53 +428,28 @@ function closeModal(e) {
   }
 }
 
-// ── Supabase helpers ──
+// ── 저장소 helpers (유지OS /api/report, Vercel Blob 비공개) ──
+// 관리자 비밀번호는 유지OS 백업 비밀번호와 같음(acc_pin)
+const pinH = () => ({ 'x-pin': localStorage.getItem('acc_pin') || '' });
+const q = (path) => '/api/report?path=' + encodeURIComponent(path);
 
 async function sbPut(path, body, contentType) {
-  // 먼저 POST 시도, 이미 있으면 PUT
-  let res = await fetch(`${SB_URL}/storage/v1/object/${BUCKET}/${path}`, {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': contentType },
-    body
-  });
-  if (res.status === 409) {
-    res = await fetch(`${SB_URL}/storage/v1/object/${BUCKET}/${path}`, {
-      method: 'PUT',
-      headers: { 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': contentType },
-      body
-    });
-  }
-  return res;
+  return fetch(q(path), { method: 'POST', headers: { ...pinH(), 'Content-Type': contentType }, body });
 }
 
 async function sbList(prefix) {
-  const res = await fetch(`${SB_URL}/storage/v1/object/list/${BUCKET}`, {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prefix, limit: 100, offset: 0, sortBy: { column: 'created_at', order: 'asc' } })
-  });
-  const data = await res.json();
-  return Array.isArray(data) ? data.filter(f => f.name && !f.name.endsWith('/') && f.name !== '.emptyFolderPlaceholder') : [];
+  const res = await fetch('/api/report?list=' + encodeURIComponent(prefix), { headers: pinH(), cache: 'no-store' });
+  const data = res.ok ? await res.json() : [];
+  return Array.isArray(data) ? data.filter(f => f.name && !f.name.includes('/')).sort((x, y) => x.name.localeCompare(y.name)) : [];
 }
 
 async function sbGet(path) {
-  const signRes = await fetch(`${SB_URL}/storage/v1/object/sign/${BUCKET}/${path}`, {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ expiresIn: 3600 })
-  });
-  const { signedURL } = await signRes.json();
-  if (!signedURL) return null;
-  const res = await fetch(`${SB_URL}/storage/v1${signedURL}`);
+  const res = await fetch(q(path), { headers: pinH(), cache: 'no-store' });
   return res.ok ? res.json() : null;
 }
 
 async function sbDelete(path) {
-  const res = await fetch(`${SB_URL}/storage/v1/object/${BUCKET}`, {
-    method: 'DELETE',
-    headers: { 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prefixes: [path] })
-  });
+  const res = await fetch(q(path), { method: 'DELETE', headers: pinH() });
   if (!res.ok) throw new Error('delete failed');
 }
 
