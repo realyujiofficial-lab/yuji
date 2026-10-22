@@ -87,6 +87,7 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .tsub input[type=checkbox]{width:16px;height:16px;accent-color:#1a1a1a;flex-shrink:0;cursor:pointer}
 .tsub.done span{text-decoration:line-through;color:#ccc}
 .tcnt{font-size:12px;color:var(--dim);flex-shrink:0}
+.tlink{font-size:11px;font-weight:700;background:#f0f0f0;border:none;border-radius:8px;padding:4px 8px;cursor:pointer;flex-shrink:0;font-family:inherit}
 
 /* ── 이슈 ── */
 .issue-item{padding:18px 20px;border-bottom:1px solid var(--border);border-left:3px solid var(--border)}
@@ -1010,13 +1011,14 @@ function switchTab(group,tab,el){
   setAppScroll(group,tab);
 }
 
-const SUB_TITLES={writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기','acc-exercise':'운동법','personal-tips':'개인 꿀팁',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
+const SUB_TITLES={'dododok-mail':'도도독 녹음 요청 메일',writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기','acc-exercise':'운동법','personal-tips':'개인 꿀팁',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
 function renderSub(id){
   document.getElementById('sub-title').textContent=SUB_TITLES[id]||'';
   const fn={
     writing:subWriting,
     'tt-biz-plan':subTTBizPlan,
     stibee:subStibee,
+    'dododok-mail':subDododokMail,
     'tt-docs':subDocs,
     'tt-sns':subSns,
     'tt-govt':subGovt,
@@ -1104,6 +1106,7 @@ function afterSub(id){
       S.set('acc_diaries',arr);updateDiarySub();showToast('저장됐어요!');renderSub('diary');
     });
   }
+  if(id==='dododok-mail'){const ta=document.getElementById('ta-ddmail');if(ta)ta.value=localStorage.getItem('dododok_mail')??DODODOK_MAIL;}
   if(id==='stibee'){const ta=document.getElementById('ta-stibee');if(ta){ta.value=localStorage.getItem('stibee_content')||'';ta.addEventListener('input',e=>localStorage.setItem('stibee_content',e.target.value));}}
   if(id==='resume'){const ta=document.getElementById('ta-resume');if(ta){ta.value=localStorage.getItem('resume')||'';ta.addEventListener('input',e=>localStorage.setItem('resume',e.target.value));}}
   if(id==='cover'){const ta=document.getElementById('ta-cover');if(ta){ta.value=localStorage.getItem('cover')||'';ta.addEventListener('input',e=>localStorage.setItem('cover',e.target.value));}}
@@ -1116,6 +1119,43 @@ function afterSub(id){
 function v(id){return document.getElementById(id)?.value||'';}
 
 // ── 서브페이지: 스티비 ──
+// ── 서브페이지: 도도독 녹음 요청 메일 양식 ({브랜드}·{제품명}·{N}만 바꿔서 보냄) ──
+const DODODOK_MAIL=`제목: [도도독] {브랜드} 키보드 타건음 녹음 제공을 요청드려요
+
+안녕하세요, {브랜드} 마케팅 담당자님.
+키보드를 사기 전에 눌러보고 들어보는 웹서비스 도도독(https://dododok.vercel.app)을 운영하는 놀생 유지현이에요.
+
+도도독은 {브랜드}의 {제품명} 등 {N}종을 소개하고 있어요.
+사용자는 화면에서 키를 눌러 축마다 타건음을 들어볼 수 있어요.
+
+지금은 비슷한 스위치의 공개 녹음으로 소리를 들려드리고 있어요.
+{브랜드} 제품의 실제 타건음을 받을 수 있다면, "{브랜드} 공식 녹음" 표시와 함께 그대로 들려드리고 싶어요.
+
+■ 요청드리는 것
+- 제품·축별 타건음 녹음 파일 (이미 만든 타건 영상의 소리도 괜찮아요)
+- 있으면 좋은 것: 일반 키, 스페이스바, 엔터, 백스페이스를 따로 누른 소리 (각 1~3초)
+- 형식: wav 또는 mp3
+
+■ 드리는 것
+- 제품 상세에 "{브랜드} 공식 녹음" 출처 표시와 구매 링크
+- 녹음은 도도독 서비스 안에서만 사용
+- 요청하시면 언제든 바로 삭제
+
+편하실 때 회신 주시면 감사하겠어요.
+
+유지현 드림
+놀생 대표 | 도도독
+hello@nollife.com | 010-5763-5395`;
+function subDododokMail(){
+  return `<div class="ta-page">
+    <div style="font-size:12px;color:var(--sub);line-height:1.7;margin-bottom:8px">{브랜드}, {제품명}, {N}만 바꿔서 보내요.<br>보낼 곳은 홈 할일 "도도독 녹음 요청 메일 보내기"에 있어요.</div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px">
+      <button onclick="localStorage.setItem('dododok_mail',document.getElementById('ta-ddmail').value);showToast('저장됐어요!')" style="font-size:12px;background:#f5f5f5;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700">저장</button>
+      <button onclick="navigator.clipboard.writeText(document.getElementById('ta-ddmail').value).then(()=>showToast('복사됐어요!'))" style="font-size:12px;background:#1a1a1a;color:#fff;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;font-weight:700">전체 복사</button>
+    </div>
+    <textarea id="ta-ddmail" style="width:100%;min-height:560px;border:1px solid var(--border);border-radius:12px;padding:14px;font-size:13px;line-height:1.8;resize:vertical;font-family:inherit"></textarea>
+  </div>`;
+}
 function subStibee(){
   return `<div class="ta-page">
     <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px">
@@ -1924,7 +1964,7 @@ const TODO_SEED_1022=[
   ['개발','TT 카톡채널'],
   ['개발','싱플리 카카오로그인'],
   ['개발','도도독 도메인 구매'],
-  ['개발','도도독 소리 제안 메일'],
+  ['개발','도도독 녹음 요청 메일 보내기',['앱코 (ABKO·COX 11종) — abko.co.kr 고객센터에서 마케팅 메일 확인 후 발송','지클릭커 (10종) — 공식몰 하단 연락처 확인 후 발송','한성컴퓨터 (5종) — 공식몰 고객센터에서 확인 후 발송','AULA 독거미 (8종) — 한국 판매처 펀키스(브라보텍) 스마트스토어 문의로 발송','키크론 (4종) — 키크론 코리아 문의 창구 확인 후 발송','회신 오면 녹음 받아서 Claude에게 전달'],'dododok-mail'],
   ['개발','캘린더 공유 (카톡 ver)',['TT 안에 넣을지, 따로 앱 만들지 정하기']],
   ['SNS마케팅','TT 마케팅',['셋팅','1주치 7개 만들기','7개 예약 게시']],
   ['SNS마케팅','싱플리 마케팅',['셋팅','1주치 3개 만들기','3개 예약 게시']],
@@ -1945,7 +1985,7 @@ const TODO_SEED_1022=[
 (function(){
   if(S.get('todo_seed_1022',false))return;
   const base=Date.now(),arr=S.get('main-todo-list',[]);
-  const add=TODO_SEED_1022.map(([tag,text,subs],i)=>({text,tag,done:false,id:base+i,...(subs?{subs:subs.map(s=>({text:s,done:false}))}:{})}));
+  const add=TODO_SEED_1022.map(([tag,text,subs,link],i)=>({text,tag,done:false,id:base+i,...(subs?{subs:subs.map(s=>({text:s,done:false}))}:{}),...(link?{link}:{})}));
   S.set('main-todo-list',add.concat(arr));S.set('todo_seed_1022',true);
 })();
 // 처음 나눈 묶음(연락·서류 등)으로 이미 들어간 기기는 개인/사업 묶음으로 옮김
@@ -1957,13 +1997,21 @@ const TODO_SEED_1022=[
   arr.forEach(t=>{t.tag=byText[t.text]||old[t.tag]||t.tag;});
   S.set('main-todo-list',arr);S.set('todo_regroup_1022',true);
 })();
+// 이미 10-22 할일이 들어간 기기: 도도독 메일 할일에 보낼 곳·양식 붙이기
+(function(){
+  if(S.get('todo_dododok_mail_1022',false))return;
+  const seed=TODO_SEED_1022.find(x=>x[3]==='dododok-mail');
+  const arr=S.get('main-todo-list',[]),t=arr.find(t=>t.text==='도도독 소리 제안 메일');
+  if(t){t.text=seed[1];t.link=seed[3];t.subs=seed[2].map(x=>({text:x,done:false}));S.set('main-todo-list',arr);}
+  S.set('todo_dododok_mail_1022',true);
+})();
 function renderTodos(){
   const arr=S.get('main-todo-list',[]);
   const el=document.getElementById('main-todo-list');if(!el)return;
   const fold=S.get('todo_fold',{}),sections=TODO_SECTIONS.map(([s,gs])=>[s,[...gs]]),known=sections.flatMap(x=>x[1]);
   arr.forEach(t=>{const g=t.tag||'기타';if(!known.includes(g)){known.push(g);sections[1][1].push(g);}});
   const item=t=>{const subs=t.subs||[],dn=subs.filter(s=>s.done).length;
-    return `<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt">${t.text}</span>${subs.length?`<span class="tcnt">${dn}/${subs.length}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`
+    return `<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt">${t.text}</span>${t.link?`<button class="tlink" onclick="goSub('${t.link}')">양식</button>`:''}${subs.length?`<span class="tcnt">${dn}/${subs.length}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`
       +(t.done?'':subs.map((s,k)=>`<div class="tsub${s.done?' done':''}"><input type="checkbox"${s.done?' checked':''} onchange="toggleSub(${t.id},${k})"><span>${s.text}</span></div>`).join(''));};
   const grp=g=>{const list=arr.filter(t=>(t.tag||'기타')===g);if(!list.length)return '';
     const dn=list.filter(t=>t.done).length;
