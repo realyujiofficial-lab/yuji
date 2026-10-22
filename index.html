@@ -78,6 +78,13 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .tt{flex:1;line-height:1.4}
 .ttag{font-size:11px;padding:3px 9px;border-radius:8px;flex-shrink:0;background:#f5f5f5;color:#999;font-weight:600}
 .xbtn{background:none;border:none;color:#bbb;cursor:pointer;padding:0 2px;font-size:16px;display:flex;align-items:center}
+.tgrp-hd{display:flex;align-items:center;gap:8px;padding:14px 20px 10px;border-top:1px solid var(--border);font-size:13px;font-weight:700;color:#1a1a1a;cursor:pointer}
+.tgrp-hd .n{color:var(--dim);font-weight:600}
+.tgrp-hd .fold{margin-left:auto;color:#aaa;font-size:12px}
+.tsub{display:flex;align-items:center;gap:10px;padding:9px 20px 9px 52px;font-size:14px;color:var(--dim);border-bottom:1px solid var(--border)}
+.tsub input[type=checkbox]{width:16px;height:16px;accent-color:#1a1a1a;flex-shrink:0;cursor:pointer}
+.tsub.done span{text-decoration:line-through;color:#ccc}
+.tcnt{font-size:12px;color:var(--dim);flex-shrink:0}
 
 /* ── 이슈 ── */
 .issue-item{padding:18px 20px;border-bottom:1px solid var(--border);border-left:3px solid var(--border)}
@@ -314,10 +321,12 @@ textarea.finp{min-height:120px;resize:vertical}
     <div class="todo-inp-row">
       <input id="main-todo-inp" type="text" placeholder="새 할일..." onkeydown="if(event.key==='Enter')addTodo()">
       <select id="main-todo-tag">
-        <option value="사업">사업</option>
-        <option value="테이스트트립">테이스트트립</option>
-        <option value="카톡방">카톡방</option>
-        <option value="개인">개인</option>
+        <option value="연락·서류">연락·서류</option>
+        <option value="강의">강의</option>
+        <option value="앱 개발">앱 개발</option>
+        <option value="SNS·마케팅">SNS·마케팅</option>
+        <option value="사업·지원">사업·지원</option>
+        <option value="개인 SNS">개인 SNS</option>
       </select>
       <button class="add-btn" onclick="addTodo()">+</button>
     </div>
@@ -1900,10 +1909,60 @@ function addTodo(){
 }
 function toggleTodo(id){const arr=S.get('main-todo-list',[]),i=arr.findIndex(t=>t.id===id);if(i>=0){arr[i].done=!arr[i].done;S.set('main-todo-list',arr);}renderTodos();updateStats();}
 function delTodo(id){S.set('main-todo-list',S.get('main-todo-list',[]).filter(t=>t.id!==id));renderTodos();updateStats();}
+function toggleSub(id,k){const arr=S.get('main-todo-list',[]),t=arr.find(t=>t.id===id);if(t&&t.subs&&t.subs[k]){t.subs[k].done=!t.subs[k].done;t.done=t.subs.every(s=>s.done);S.set('main-todo-list',arr);}renderTodos();updateStats();}
+function foldTodoGrp(g){const f=S.get('todo_fold',{});f[g]=!f[g];S.set('todo_fold',f);renderTodos();}
+const TODO_GROUPS=['연락·서류','강의','앱 개발','SNS·마케팅','사업·지원','개인 SNS'];
+// 10-22 유지가 준 할일 목록, 기기마다 처음 열 때 한 번만 넣음
+const TODO_SEED_1022=[
+  ['연락·서류','보험사 서류 제출',['교통사고 비용처리 서류','재활 신청 서류']],
+  ['연락·서류','무신사',['공정거래조정원 신청서 제출']],
+  ['연락·서류','집 화장실 전화'],
+  ['연락·서류','관광공모전 전화'],
+  ['강의','AX컨설팅 (하나유니브)'],
+  ['강의','IR피칭'],
+  ['강의','시장조사'],
+  ['강의','강동청년 브랜딩'],
+  ['앱 개발','앱 가오픈',['가오픈 준비','SNS·지인에게 가오픈 공유']],
+  ['앱 개발','TT 카톡채널'],
+  ['앱 개발','싱플리 카카오로그인'],
+  ['앱 개발','도도독 도메인 구매'],
+  ['앱 개발','도도독 소리 제안 메일'],
+  ['앱 개발','캘린더 공유 (카톡 ver)',['TT 안에 넣을지, 따로 앱 만들지 정하기']],
+  ['SNS·마케팅','TT 마케팅',['셋팅','1주치 7개 만들기','7개 예약 게시']],
+  ['SNS·마케팅','싱플리 마케팅',['셋팅','1주치 3개 만들기','3개 예약 게시']],
+  ['SNS·마케팅','도도독 SNS'],
+  ['SNS·마케팅','유즈엔터',['SNS 만들기','프로필 셋팅']],
+  ['SNS·마케팅','노바',['노바 소개','버추얼 아이돌 만들기']],
+  ['SNS·마케팅','노바 미니1집 영상',['영상 1 편집·업로드','영상 2 편집·업로드','영상 3 편집·업로드','영상 4 편집·업로드','영상 5 편집·업로드']],
+  ['SNS·마케팅','쿠팡 파트너스'],
+  ['SNS·마케팅','새 SNS 아이디어',['SNS 덕후','드라마·영화·배우 몰입','현생 질문']],
+  ['사업·지원','코피코 연락'],
+  ['사업·지원','로컬 관련 프로그램·정부지원 다 지원'],
+  ['사업·지원','전통기법 배우기·전국투어 알아보기 (인간문화재 되기)'],
+  ['사업·지원','예창 사업자등록, 선배 조언 묻기'],
+  ['사업·지원','모창 강원도 지원금 소모 계획 세우기'],
+  ['개인 SNS','예쎄이 · 리얼유지 오피셜 글감',['내 마인드 (틀린 게 아니라 다름)','일상 생각, 대인관계에서 있던 일','드라마 보면서 오잉? 한 것, 팩트']],
+  ['개인 SNS','다이어트 광고 모집']
+];
+(function(){
+  if(S.get('todo_seed_1022',false))return;
+  const base=Date.now(),arr=S.get('main-todo-list',[]);
+  const add=TODO_SEED_1022.map(([tag,text,subs],i)=>({text,tag,done:false,id:base+i,...(subs?{subs:subs.map(s=>({text:s,done:false}))}:{})}));
+  S.set('main-todo-list',add.concat(arr));S.set('todo_seed_1022',true);
+})();
 function renderTodos(){
   const arr=S.get('main-todo-list',[]);
   const el=document.getElementById('main-todo-list');if(!el)return;
-  el.innerHTML=arr.map(t=>`<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt">${t.text}</span>${t.tag?`<span class="ttag">${t.tag}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`).join('')||'<div class="empty">할일 없음</div>';
+  const fold=S.get('todo_fold',{}),groups=[...TODO_GROUPS];
+  arr.forEach(t=>{const g=t.tag||'기타';if(!groups.includes(g))groups.push(g);});
+  const item=t=>{const subs=t.subs||[],dn=subs.filter(s=>s.done).length;
+    return `<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt">${t.text}</span>${subs.length?`<span class="tcnt">${dn}/${subs.length}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`
+      +(t.done?'':subs.map((s,k)=>`<div class="tsub${s.done?' done':''}"><input type="checkbox"${s.done?' checked':''} onchange="toggleSub(${t.id},${k})"><span>${s.text}</span></div>`).join(''));};
+  el.innerHTML=groups.map(g=>{const list=arr.filter(t=>(t.tag||'기타')===g);if(!list.length)return '';
+    const dn=list.filter(t=>t.done).length;
+    return `<div class="tgrp-hd" onclick="foldTodoGrp('${g}')">${g} <span class="n">${dn}/${list.length}</span><span class="fold">${fold[g]?'펼치기':'접기'}</span></div>`
+      +(fold[g]?'':list.slice().sort((a,b)=>a.done-b.done).map(item).join(''));
+  }).join('')||'<div class="empty">할일 없음</div>';
   const remain=arr.filter(t=>!t.done);
   const pv=document.getElementById('todo-preview');
   if(pv)pv.textContent=remain.length?`남은 할일 ${remain.length}개 — ${remain.slice(0,2).map(t=>t.text).join(', ')}${remain.length>2?' …':''}`:'모든 할일 완료';
