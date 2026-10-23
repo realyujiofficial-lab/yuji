@@ -91,6 +91,10 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .tsub.done span{text-decoration:line-through;color:#ccc}
 .tcnt{font-size:12px;color:var(--dim);flex-shrink:0}
 .todo-item .tt,.tsub span{flex:1;min-width:0;cursor:pointer;overflow-wrap:anywhere}
+.tdue{flex-shrink:0;font-size:11px;font-weight:700;color:var(--dim);background:#f0f0f0;border-radius:6px;padding:3px 6px}
+.tdue.today{background:#1a1a1a;color:#fff}
+.tdue.over{background:#e5484d;color:#fff}
+.todo-item.urgent{padding:12px 20px}
 .thas{display:inline-block;margin-left:6px;font-size:11px;color:var(--dim);font-weight:600}
 .td-wrap{padding:16px 20px 40px;display:flex;flex-direction:column;gap:16px}
 .td-l{font-size:12px;font-weight:700;color:var(--dim);margin-bottom:6px}
@@ -1626,6 +1630,19 @@ async function backupAll(){
     showToast(`전체 백업 완료! (${Object.keys(data).length}개)`);
   }catch(e){showToast('전체 백업 실패');}
 }
+// 자동 백업: 비밀번호를 한 번 넣은 기기는 하루 한 번 조용히 백업(기기마다 따로 저장해 서로 덮어쓰지 않음)
+async function autoBackup(){
+  const pin=localStorage.getItem('acc_pin'),last=Number(localStorage.getItem('auto_backup_at')||0);
+  if(!pin||Date.now()-last<864e5||location.host!=='yujios.vercel.app')return;
+  let id=localStorage.getItem('device_id');if(!id){id=(crypto.randomUUID?.()||String(Date.now())).toLowerCase();localStorage.setItem('device_id',id);}
+  const data={};
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k!=='acc_pin')data[k]=localStorage.getItem(k);}
+  try{
+    const r=await fetch('/api/acc?f=auto-'+id,{method:'POST',cache:'no-store',headers:{'Content-Type':'application/json','x-pin':pin},body:JSON.stringify({updated:new Date().toISOString(),ua:navigator.userAgent.slice(0,120),data})});
+    if(r.ok)localStorage.setItem('auto_backup_at',String(Date.now()));
+  }catch(e){}
+}
+setTimeout(autoBackup,5000);
 async function restoreAll(){
   if(!confirm('백업해 둔 기록으로 이 브라우저의 기록을 바꿀까요?'))return;
   try{
@@ -2037,6 +2054,7 @@ const TODO_SEED_1022=[
 // ── 할일 상세: 메모·장소·전화번호·사진. k가 있으면 세부 단계 하나 ──
 let CUR_TODO=null;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dday=d=>{if(!d)return '';const n=Math.round((new Date(d+'T00:00')-new Date(new Date().toDateString()))/864e5);return `<span class="tdue${n<0?' over':n===0?' today':''}">${n<0?`${-n}일 지남`:n===0?'오늘':`D-${n}`}</span>`;};
 const todoHas=o=>{const h=[o.memo&&'메모',o.place&&'장소',o.phone&&'전화',o.photos?.length&&'사진'].filter(Boolean);return h.length?`<span class="thas">${h.join('·')}</span>`:'';};
 function openTodo(id,k=null){CUR_TODO={id,k};goSub('todo');}
 function todoObj(arr){const t=arr.find(t=>t.id===CUR_TODO?.id);if(!t)return null;return CUR_TODO.k==null?t:(t.subs||[])[CUR_TODO.k];}
@@ -2050,6 +2068,7 @@ function subTodo(){
   const others=arr.filter(x=>!x.done&&x.id!==t.id);
   return `<div class="td-wrap">
     ${fld('할일',`<input class="td-in" value="${esc(o.text)}" oninput="saveTodoField('text',this.value)">`)}
+    ${fld('마감일',`<input class="td-in" type="date" value="${esc(o.due)}" onchange="saveTodoField('due',this.value)">`)}
     ${isSub?'':fld('분류',`<select class="td-in" onchange="saveTodoField('tag',this.value)">${TODO_SECTIONS.flatMap(x=>x[1]).map(g=>`<option${(o.tag||'기타')===g?' selected':''}>${g}</option>`).join('')}</select>`)}
     ${fld('메모',`<textarea class="td-in" rows="4" placeholder="자세한 내용" oninput="saveTodoField('memo',this.value)">${esc(o.memo)}</textarea>`)}
     ${fld('장소',`<div class="td-row"><input class="td-in" placeholder="주소나 장소 이름" value="${esc(o.place)}" oninput="saveTodoField('place',this.value)"><button class="td-btn" onclick="const v=this.previousElementSibling.value.trim();if(v)window.open('https://map.naver.com/p/search/'+encodeURIComponent(v))">지도</button></div>`)}
@@ -2083,13 +2102,15 @@ function renderTodos(){
   const fold=S.get('todo_fold',{}),sections=TODO_SECTIONS.map(([s,gs])=>[s,[...gs]]),known=sections.flatMap(x=>x[1]);
   arr.forEach(t=>{const g=t.tag||'기타';if(!known.includes(g)){known.push(g);sections[1][1].push(g);}});
   const item=t=>{const subs=t.subs||[],dn=subs.filter(s=>s.done).length;
-    return `<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt" onclick="openTodo(${t.id})">${t.text}${todoHas(t)}</span>${t.link?`<button class="tlink" onclick="goSub('${t.link}')">양식</button>`:''}${subs.length?`<span class="tcnt">${dn}/${subs.length}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`
-      +(t.done?'':subs.map((s,k)=>`<div class="tsub${s.done?' done':''}"><input type="checkbox"${s.done?' checked':''} onchange="toggleSub(${t.id},${k})"><span onclick="openTodo(${t.id},${k})">${s.text}${todoHas(s)}</span></div>`).join(''));};
+    return `<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt" onclick="openTodo(${t.id})">${t.text}${todoHas(t)}</span>${t.done?'':dday(t.due)}${t.link?`<button class="tlink" onclick="goSub('${t.link}')">양식</button>`:''}${subs.length?`<span class="tcnt">${dn}/${subs.length}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`
+      +(t.done?'':subs.map((s,k)=>`<div class="tsub${s.done?' done':''}"><input type="checkbox"${s.done?' checked':''} onchange="toggleSub(${t.id},${k})"><span onclick="openTodo(${t.id},${k})">${s.text}${todoHas(s)}</span>${s.done?'':dday(s.due)}</div>`).join(''));};
   const grp=g=>{const list=arr.filter(t=>(t.tag||'기타')===g);if(!list.length)return '';
     const dn=list.filter(t=>t.done).length;
     return `<div class="tgrp-hd" onclick="foldTodoGrp('${g}')">${g} <span class="n">${dn}/${list.length}</span><span class="fold">${fold[g]?'펼치기':'접기'}</span></div>`
       +(fold[g]?'':list.slice().sort((a,b)=>a.done-b.done).map(item).join(''));};
-  el.innerHTML=sections.map(([s,gs])=>{const body=gs.map(grp).join('');return body?`<div class="tsec-hd">${s}</div>`+body:'';}).join('')||'<div class="empty">할일 없음</div>';
+  const nd=new Date(),today=`${nd.getFullYear()}-${String(nd.getMonth()+1).padStart(2,'0')}-${String(nd.getDate()).padStart(2,'0')}`,urgent=[];
+  arr.forEach(t=>{if(!t.done&&t.due&&t.due<=today)urgent.push(`<div class="todo-item urgent"><span class="tt" onclick="openTodo(${t.id})">${t.text}</span>${dday(t.due)}</div>`);(t.subs||[]).forEach((x,k)=>{if(!x.done&&x.due&&x.due<=today)urgent.push(`<div class="todo-item urgent"><span class="tt" onclick="openTodo(${t.id},${k})">${x.text}<span class="thas">${t.text}</span></span>${dday(x.due)}</div>`);});});
+  el.innerHTML=(urgent.length?`<div class="tsec-hd">오늘 할일</div>`+urgent.join(''):'')+sections.map(([s,gs])=>{const body=gs.map(grp).join('');return body?`<div class="tsec-hd">${s}</div>`+body:'';}).join('')||'<div class="empty">할일 없음</div>';
   const ps=document.getElementById('main-todo-parent');
   if(ps){const cur=ps.value;const open=arr.filter(t=>!t.done);
     ps.innerHTML='<option value="">새 할일로</option>'+[...new Set(open.map(t=>t.tag||'기타'))].map(g=>`<optgroup label="${g} 아래로">${open.filter(t=>(t.tag||'기타')===g).map(t=>`<option value="${t.id}">${esc(t.text)}</option>`).join('')}</optgroup>`).join('');
