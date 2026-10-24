@@ -26,7 +26,8 @@ body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic 
 .hdr{padding:28px 20px 16px;background:#fff;position:sticky;top:0;z-index:10;border-bottom:1px solid #f5f5f5}
 .hdr-greeting{font-size:22px;font-weight:800;line-height:1.2;margin-bottom:6px}
 .hdr-date{font-size:13px;color:var(--sub);letter-spacing:.01em}
-.hdr-todo-preview{font-size:14px;color:var(--dim);margin-top:6px;font-weight:500}
+.hdr-todo-preview{font-size:14px;color:var(--dim);margin-top:6px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#greeting{white-space:nowrap}
 .back-row{display:flex;align-items:center;gap:6px;margin-bottom:2px}
 .back-btn{background:none;border:none;cursor:pointer;padding:0;color:var(--text);font-size:20px;display:flex;align-items:center}
 
@@ -111,6 +112,19 @@ textarea.td-in{resize:vertical;line-height:1.6}
 .td-sub span{flex:1;min-width:0;cursor:pointer}
 .td-sub.done span{text-decoration:line-through;color:#ccc}
 .td-sub+.td-row{margin-top:8px}
+.td-seg{display:flex;gap:8px}
+.td-seg button{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:11px 0;background:var(--card);font-size:14px;font-weight:700;color:var(--dim);cursor:pointer;font-family:inherit}
+.td-seg button.on{background:#1a1a1a;border-color:#1a1a1a;color:#fff}
+.td-dates{display:flex;gap:8px}.td-dates>.td-f{flex:1;min-width:0}
+.ttabs{display:flex;gap:6px;padding:4px 20px 10px}
+.ttabs button{border:1.5px solid var(--border);border-radius:20px;padding:6px 14px;background:var(--card);font-size:13px;font-weight:700;color:var(--dim);cursor:pointer;font-family:inherit}
+.ttabs button.on{background:#1a1a1a;border-color:#1a1a1a;color:#fff}
+.tstart{flex-shrink:0;font-size:11px;font-weight:700;color:var(--dim);border:1px solid var(--border);border-radius:6px;padding:2px 5px}
+.tdone-at{flex-shrink:0;font-size:11px;color:var(--dim)}
+.ib-guide{font-size:14px;font-weight:700;line-height:1.5}
+.ib-pick{display:block;text-align:center;padding:14px}
+.ib-note{font-size:12px;color:var(--dim)}
+.ib-n{font-weight:600;overflow-wrap:anywhere}
 .tlink{font-size:11px;font-weight:700;background:#f0f0f0;border:none;border-radius:8px;padding:4px 8px;cursor:pointer;flex-shrink:0;font-family:inherit}
 
 /* ── 이슈 ── */
@@ -359,6 +373,12 @@ textarea.finp{min-height:120px;resize:vertical}
     </div>
     <div id="main-todo-list"></div>
   </div>
+  <div class="card" style="margin:0 20px 14px">
+    <div class="row" onclick="openInbox()">
+      <div class="row-body"><div class="row-title">자료 넣기</div><div class="row-sub">파일 올려 두고 Claude에게 정리 부탁</div></div>
+      <div class="row-arr">›</div>
+    </div>
+  </div>
 
   <div class="sec"><div class="sec-lbl">이슈</div></div>
   <div class="card" style="margin:0 20px 14px">
@@ -452,7 +472,7 @@ textarea.finp{min-height:120px;resize:vertical}
   <div class="hdr">
     <div style="display:flex;align-items:center;justify-content:space-between">
       <div class="hdr-greeting">카톡방</div>
-      <a href="upload.html" style="background:#FF6B35;color:#fff;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:700;text-decoration:none">+ 대화 업로드</a>
+      <div style="display:flex;gap:6px"><button onclick="openInbox('오픈카톡방')" style="background:#1a1a1a;color:#fff;border:none;border-radius:20px;padding:7px 12px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer">대화 파일 넣기</button><a href="upload.html" style="background:#FF6B35;color:#fff;border-radius:20px;padding:7px 12px;font-size:12px;font-weight:700;text-decoration:none">+ 대화 업로드</a></div>
     </div>
     <div class="hdr-date">현지인 맛집 · 여행</div>
   </div>
@@ -983,7 +1003,7 @@ function initChks(){
 
 function showToast(msg){
   let t=document.getElementById('_toast');
-  if(!t){t=document.createElement('div');t.id='_toast';t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:opacity .2s';document.body.appendChild(t);}
+  if(!t){t=document.createElement('div');t.id='_toast';t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:opacity .2s;white-space:nowrap';document.body.appendChild(t);}
   t.textContent=msg;t.style.opacity='1';
   clearTimeout(t._to);t._to=setTimeout(()=>{t.style.opacity='0';},1800);
 }
@@ -991,7 +1011,7 @@ function showToast(msg){
 const GREETINGS=[
   "유지현, 러블리해 🌸","넌 항상 잘하고 있어 ✨","내가 널 사랑해 💛","오늘도 멋진 유지현 🌟",
   "넌 멋져, 진짜로 💪","너의 기준은 옳아 🎯","하나씩 해나가면 돼 🚶","유지현은 언제나 옳다 👑",
-  "넌 이미 충분히 잘하고 있어 🌿","오카방도 테이스트트립도 다 잘 될 거야 🚀","오늘 하루도 빛나 ☀️",
+  "넌 이미 충분히 잘하고 있어 🌿","오픈카톡방도 TT도 다 잘 될 거야 🚀","오늘 하루도 빛나 ☀️",
   "유지현이 있으면 다 잘 돼 🍀","포기하지 마, 거의 다 왔어 🏃","넌 이 길의 정답이야 🗺️",
   "힘든 날도 넌 잘 버텨왔어 🌙","유지현의 하루는 항상 의미 있어 🌈","작은 것도 다 이루어가고 있어 🌱",
   "오늘도 유지현 화이팅 💥","넌 생각보다 훨씬 강해 🦋","꾸준한 유지현, 결국 이겨 🏆",
@@ -1039,7 +1059,7 @@ function switchTab(group,tab,el){
   setAppScroll(group,tab);
 }
 
-const SUB_TITLES={'dododok-mail':'도도독 녹음 요청 메일',writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기','acc-exercise':'운동법','personal-tips':'개인 꿀팁',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
+const SUB_TITLES={inbox:'자료 넣기','dododok-mail':'도도독 녹음 요청 메일',writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기','acc-exercise':'운동법','personal-tips':'개인 꿀팁',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
 function renderSub(id){
   document.getElementById('sub-title').textContent=SUB_TITLES[id]||'';
   const fn={
@@ -1047,6 +1067,7 @@ function renderSub(id){
     'tt-biz-plan':subTTBizPlan,
     stibee:subStibee,
     todo:subTodo,
+    inbox:subInbox,
     'dododok-mail':subDododokMail,
     'tt-docs':subDocs,
     'tt-sns':subSns,
@@ -1135,6 +1156,8 @@ function afterSub(id){
       S.set('acc_diaries',arr);updateDiarySub();showToast('저장됐어요!');renderSub('diary');
     });
   }
+  if(id==='todo')loadPhs();
+  if(id==='inbox')renderInbox();
   if(id==='dododok-mail'){const ta=document.getElementById('ta-ddmail');if(ta)ta.value=localStorage.getItem('dododok_mail')??DODODOK_MAIL;}
   if(id==='stibee'){const ta=document.getElementById('ta-stibee');if(ta){ta.value=localStorage.getItem('stibee_content')||'';ta.addEventListener('input',e=>localStorage.setItem('stibee_content',e.target.value));}}
   if(id==='resume'){const ta=document.getElementById('ta-resume');if(ta){ta.value=localStorage.getItem('resume')||'';ta.addEventListener('input',e=>localStorage.setItem('resume',e.target.value));}}
@@ -1623,8 +1646,10 @@ async function syncAccToSupabase(){
 async function backupAll(){
   const data={};
   for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k!=='acc_pin')data[k]=localStorage.getItem(k);}
+  const body=JSON.stringify({updated:new Date().toISOString(),data});
+  if(body.length>4e6)showToast('기록이 4MB를 넘어 백업이 어려워요');
   try{
-    const r=await accFetch({method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({updated:new Date().toISOString(),data})},'?f=all');
+    const r=await accFetch({method:'POST',headers:{'Content-Type':'application/json'},body},'?f=all');
     if(!r)return;
     if(!r.ok)throw 0;
     showToast(`전체 백업 완료! (${Object.keys(data).length}개)`);
@@ -1632,17 +1657,47 @@ async function backupAll(){
 }
 // 자동 백업: 비밀번호를 한 번 넣은 기기는 하루 한 번 조용히 백업(기기마다 따로 저장해 서로 덮어쓰지 않음)
 async function autoBackup(){
+  if(localStorage.getItem('auto_backup_fail')){localStorage.removeItem('auto_backup_fail');showToast('자동 백업 실패');}
   const pin=localStorage.getItem('acc_pin'),last=Number(localStorage.getItem('auto_backup_at')||0);
   if(!pin||Date.now()-last<864e5||location.host!=='yujios.vercel.app')return;
   let id=localStorage.getItem('device_id');if(!id){id=(crypto.randomUUID?.()||String(Date.now())).toLowerCase();localStorage.setItem('device_id',id);}
   const data={};
   for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k!=='acc_pin')data[k]=localStorage.getItem(k);}
+  const fail=()=>localStorage.setItem('auto_backup_fail','1');
   try{
     const r=await fetch('/api/acc?f=auto-'+id,{method:'POST',cache:'no-store',headers:{'Content-Type':'application/json','x-pin':pin},body:JSON.stringify({updated:new Date().toISOString(),ua:navigator.userAgent.slice(0,120),data})});
-    if(r.ok)localStorage.setItem('auto_backup_at',String(Date.now()));
+    if(r.ok)localStorage.setItem('auto_backup_at',String(Date.now()));else fail();
+  }catch(e){fail();}
+}
+// 예전에 이 브라우저에 저장된 사진(data:)을 저장소로 옮김. 비밀번호를 넣은 기기에서만, 실패한 사진은 그대로 둠
+async function migratePhotos(){
+  if(!localStorage.getItem('acc_pin'))return;
+  const objs=a=>a.flatMap(t=>[t,...(t.subs||[])]);
+  let n=0;
+  for(const o of objs(S.get('main-todo-list',[])))for(const src of o.photos||[]){
+    if(!src.startsWith('data:'))continue;
+    const ref=await upPhoto(await (await fetch(src)).blob());if(!ref)return;
+    const arr=S.get('main-todo-list',[]),x=objs(arr).find(x=>x.photos?.includes(src));
+    if(x){x.photos[x.photos.indexOf(src)]=ref;S.set('main-todo-list',arr);n++;}
+  }
+  if(n)renderTodos();
+}
+// Claude가 자료를 정리하며 넣어 둔 할일(inbox/todos.json)을 가져와 합치고 서버 쪽은 비움. 같은 이름은 건너뜀
+async function pullInboxTodos(){
+  const pin=localStorage.getItem('acc_pin');if(!pin)return;
+  try{
+    const h={'x-pin':pin},r=await fetch('/api/acc?f=todos',{cache:'no-store',headers:h});if(!r.ok)return;
+    const add=await r.json();if(!Array.isArray(add)||!add.length)return;
+    const arr=S.get('main-todo-list',[]),have=new Set(arr.map(t=>t.text)),base=Date.now();let n=0;
+    add.forEach((x,i)=>{if(!x?.text||have.has(x.text))return;have.add(x.text);n++;
+      arr.unshift({text:String(x.text),tag:x.tag||'기타',done:false,id:base+i,...(x.due?{due:x.due}:{}),...(x.start?{start:x.start}:{}),...(x.memo?{memo:x.memo}:{}),...(x.subs?.length?{subs:x.subs.map(s=>({text:String(s.text??s),done:false}))}:{})});});
+    S.set('main-todo-list',arr);
+    await fetch('/api/acc?f=todos',{method:'DELETE',cache:'no-store',headers:h});
+    if(n){renderTodos();updateStats();showToast(`할일 ${n}개를 넣었어요`);}
   }catch(e){}
 }
 setTimeout(autoBackup,5000);
+setTimeout(()=>{pullInboxTodos();migratePhotos();},2500);
 async function restoreAll(){
   if(!confirm('백업해 둔 기록으로 이 브라우저의 기록을 바꿀까요?'))return;
   try{
@@ -1986,14 +2041,17 @@ function addTodo(){
   const tag=document.getElementById('main-todo-tag').value;
   const pid=Number(document.getElementById('main-todo-parent').value);
   const arr=S.get('main-todo-list',[]),par=pid&&arr.find(t=>t.id===pid);
-  if(par){(par.subs=par.subs||[]).push({text,done:false});par.done=false;}
+  if(par){(par.subs=par.subs||[]).push({text,done:false});setDone(par,false);}
   else arr.unshift({text,tag,done:false,id:Date.now()});
   S.set('main-todo-list',arr);
   inp.value='';renderTodos();updateStats();
 }
-function toggleTodo(id){const arr=S.get('main-todo-list',[]),i=arr.findIndex(t=>t.id===id);if(i>=0){arr[i].done=!arr[i].done;S.set('main-todo-list',arr);}renderTodos();updateStats();}
+// 완료로 바뀌면 완료일(doneAt)을 오늘로, 진행중으로 돌아가면 지움
+const todayStr=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+function setDone(o,v){if(!!o.done===v)return;o.done=v;if(v)o.doneAt=todayStr();else delete o.doneAt;}
+function toggleTodo(id){const arr=S.get('main-todo-list',[]),i=arr.findIndex(t=>t.id===id);if(i>=0){setDone(arr[i],!arr[i].done);S.set('main-todo-list',arr);}renderTodos();updateStats();}
 function delTodo(id){S.set('main-todo-list',S.get('main-todo-list',[]).filter(t=>t.id!==id));renderTodos();updateStats();}
-function toggleSub(id,k){const arr=S.get('main-todo-list',[]),t=arr.find(t=>t.id===id);if(t&&t.subs&&t.subs[k]){t.subs[k].done=!t.subs[k].done;t.done=t.subs.every(s=>s.done);S.set('main-todo-list',arr);}renderTodos();updateStats();}
+function toggleSub(id,k){const arr=S.get('main-todo-list',[]),t=arr.find(t=>t.id===id);if(t&&t.subs&&t.subs[k]){setDone(t.subs[k],!t.subs[k].done);setDone(t,t.subs.every(s=>s.done));S.set('main-todo-list',arr);}renderTodos();updateStats();}
 function foldTodoGrp(g){const f=S.get('todo_fold',{});f[g]=!f[g];S.set('todo_fold',f);renderTodos();}
 const TODO_SECTIONS=[['개인',['집','교통사고','기타']],['사업',['정부지원','강의','개발','SNS마케팅']]];
 // 10-22 유지가 준 할일 목록, 기기마다 처음 열 때 한 번만 넣음
@@ -2068,49 +2126,116 @@ function subTodo(){
   const others=arr.filter(x=>!x.done&&x.id!==t.id);
   return `<div class="td-wrap">
     ${fld('할일',`<input class="td-in" value="${esc(o.text)}" oninput="saveTodoField('text',this.value)">`)}
-    ${fld('마감일',`<input class="td-in" type="date" value="${esc(o.due)}" onchange="saveTodoField('due',this.value)">`)}
+    ${fld('상태',`<div class="td-seg"><button class="${o.done?'':'on'}" onclick="setTodoDone(false)">진행중</button><button class="${o.done?'on':''}" onclick="setTodoDone(true)">완료</button></div>`)}
+    <div class="td-dates">${fld('시작일',`<input class="td-in" type="date" value="${esc(o.start)}" onchange="saveTodoField('start',this.value)">`)}${fld('마감일',`<input class="td-in" type="date" value="${esc(o.due)}" onchange="saveTodoField('due',this.value)">`)}</div>
+    ${o.done?fld('완료일',`<input class="td-in" type="date" value="${esc(o.doneAt)}" onchange="saveTodoField('doneAt',this.value)">`):''}
     ${isSub?'':fld('분류',`<select class="td-in" onchange="saveTodoField('tag',this.value)">${TODO_SECTIONS.flatMap(x=>x[1]).map(g=>`<option${(o.tag||'기타')===g?' selected':''}>${g}</option>`).join('')}</select>`)}
     ${fld('메모',`<textarea class="td-in" rows="4" placeholder="자세한 내용" oninput="saveTodoField('memo',this.value)">${esc(o.memo)}</textarea>`)}
     ${fld('장소',`<div class="td-row"><input class="td-in" placeholder="주소나 장소 이름" value="${esc(o.place)}" oninput="saveTodoField('place',this.value)"><button class="td-btn" onclick="const v=this.previousElementSibling.value.trim();if(v)window.open('https://map.naver.com/p/search/'+encodeURIComponent(v))">지도</button></div>`)}
     ${fld('전화번호',`<div class="td-row"><input class="td-in" type="tel" placeholder="010-0000-0000" value="${esc(o.phone)}" oninput="saveTodoField('phone',this.value)"><button class="td-btn" onclick="const v=this.previousElementSibling.value.replace(/[^0-9+]/g,'');if(v)location.href='tel:'+v">전화</button></div>`)}
-    ${fld('사진',`<div class="td-photos">${(o.photos||[]).map((src,i)=>`<div class="td-ph"><img src="${src}" onclick="viewPhoto(this.src)"><button onclick="delTodoPhoto(${i})">×</button></div>`).join('')}<label class="td-add">+<input type="file" accept="image/*" multiple hidden onchange="addTodoPhotos(this.files)"></label></div>`)}
+    ${fld('사진',`<div class="td-photos">${(o.photos||[]).map((src,i)=>`<div class="td-ph">${phImg(src)}<button onclick="delTodoPhoto(${i})">×</button></div>`).join('')}<label class="td-add">+<input type="file" accept="image/*" multiple hidden onchange="addTodoPhotos(this.files)"></label></div>`)}
     ${isSub?'':fld('세부 단계',`${(o.subs||[]).map((x,k)=>`<div class="td-sub${x.done?' done':''}"><input type="checkbox"${x.done?' checked':''} onchange="toggleSub(${t.id},${k});renderSub('todo')"><span onclick="openTodo(${t.id},${k})">${esc(x.text)}${todoHas(x)}</span><button class="xbtn" onclick="delTodoSub(${k})">×</button></div>`).join('')}<div class="td-row"><input class="td-in" id="td-newsub" placeholder="세부 단계 추가" onkeydown="if(event.key==='Enter')addTodoSub()"><button class="td-btn" onclick="addTodoSub()">추가</button></div>`)}
     ${isSub||!others.length?'':fld('다른 할일 아래로 옮기기',`<select class="td-in" onchange="if(this.value)moveTodoUnder(Number(this.value))"><option value="">고르기</option>${others.map(x=>`<option value="${x.id}">${esc(x.text)}</option>`).join('')}</select>`)}
   </div>`;
 }
-function addTodoSub(){const el=document.getElementById('td-newsub'),v=el.value.trim();if(!v)return;const arr=S.get('main-todo-list',[]),o=todoObj(arr);(o.subs=o.subs||[]).push({text:v,done:false});o.done=false;S.set('main-todo-list',arr);renderSub('todo');}
+function setTodoDone(v){const arr=S.get('main-todo-list',[]),t=arr.find(t=>t.id===CUR_TODO?.id),o=todoObj(arr);if(!o)return;setDone(o,v);if(CUR_TODO.k!=null)setDone(t,t.subs.every(s=>s.done));S.set('main-todo-list',arr);renderSub('todo');renderTodos();updateStats();}
+function addTodoSub(){const el=document.getElementById('td-newsub'),v=el.value.trim();if(!v)return;const arr=S.get('main-todo-list',[]),o=todoObj(arr);(o.subs=o.subs||[]).push({text:v,done:false});setDone(o,false);S.set('main-todo-list',arr);renderSub('todo');}
 function delTodoSub(k){const arr=S.get('main-todo-list',[]),o=todoObj(arr);o.subs.splice(k,1);S.set('main-todo-list',arr);renderSub('todo');}
 function moveTodoUnder(pid){
   const arr=S.get('main-todo-list',[]),i=arr.findIndex(t=>t.id===CUR_TODO.id),par=arr.find(t=>t.id===pid);if(i<0||!par)return;
   const [t]=arr.splice(i,1),{id,tag,subs,...rest}=t;
-  (par.subs=par.subs||[]).push(rest,...(subs||[]));par.done=false;
+  (par.subs=par.subs||[]).push(rest,...(subs||[]));setDone(par,false);
   S.set('main-todo-list',arr);showToast('옮겼어요');CUR_TODO={id:pid,k:null};renderSub('todo');
 }
 function viewPhoto(src){const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center';d.innerHTML=`<img src="${src}" style="max-width:100%;max-height:100%">`;d.onclick=()=>d.remove();document.body.appendChild(d);}
-function delTodoPhoto(i){const arr=S.get('main-todo-list',[]),o=todoObj(arr);o.photos.splice(i,1);S.set('main-todo-list',arr);renderSub('todo');}
-// 사진은 긴 쪽 1000px JPEG로 줄여서 이 브라우저에 저장 (전체 백업에도 같이 들어감)
+function delTodoPhoto(i){const arr=S.get('main-todo-list',[]),o=todoObj(arr);const [src]=o.photos.splice(i,1);S.set('main-todo-list',arr);if(src?.startsWith('ph:'))accFetch({method:'DELETE'},'?f=ph-'+src.slice(3));renderSub('todo');}
+// 사진은 유지OS 저장소(photos/<id>.jpg)에 올리고 할일에는 'ph:<id>'만 남김. 화면에는 비밀번호로 받아서 보여줌
+const PH_URL={};
+const phImg=src=>src.startsWith('ph:')?(PH_URL[src.slice(3)]?`<img src="${PH_URL[src.slice(3)]}" onclick="viewPhoto(this.src)">`:`<img data-ph="${src.slice(3)}" alt="">`):`<img src="${src}" onclick="viewPhoto(this.src)">`;
+async function loadPhs(){
+  for(const im of document.querySelectorAll('img[data-ph]')){
+    const id=im.dataset.ph;
+    if(!PH_URL[id]){const r=await accFetch({},'?f=ph-'+id).catch(()=>null);if(!r?.ok)continue;PH_URL[id]=URL.createObjectURL(await r.blob());}
+    im.src=PH_URL[id];im.removeAttribute('data-ph');im.onclick=()=>viewPhoto(im.src);
+  }
+}
+const newPhId=()=>(Date.now().toString(36)+Math.random().toString(36).slice(2,8));
+async function upPhoto(blob){const id=newPhId(),r=await accFetch({method:'POST',headers:{'Content-Type':'application/octet-stream'},body:blob},'?f=ph-'+id).catch(()=>null);if(!r?.ok)return null;PH_URL[id]=URL.createObjectURL(blob);return 'ph:'+id;}
+const shrinkImg=(f,max,q)=>new Promise(res=>{const u=URL.createObjectURL(f),im=new Image();im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>res(b),'image/jpeg',q);};im.onerror=()=>{URL.revokeObjectURL(u);res(null);};im.src=u;});
+const blobToData=b=>new Promise(res=>{const r=new FileReader();r.onload=()=>res(r.result);r.readAsDataURL(b);});
+// 긴 쪽 1000px JPEG로 줄여서 올림. 올리기 실패하면 이 브라우저에 그대로 두고 다음에 다시 올림
 async function addTodoPhotos(files){
-  const shrink=f=>new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1000/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*k;c.height=im.height*k;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.72));};im.onerror=()=>res(null);im.src=r.result;};r.readAsDataURL(f);});
-  const add=(await Promise.all([...files].map(shrink))).filter(Boolean);
+  const blobs=(await Promise.all([...files].map(f=>shrinkImg(f,1000,.72)))).filter(Boolean),add=[];
+  for(const b of blobs)add.push((await upPhoto(b))||(await blobToData(b)));
+  if(add.some(x=>x.startsWith('data:')))showToast('사진은 이 기기에만 저장됐어요');
   const arr=S.get('main-todo-list',[]),o=todoObj(arr);o.photos=[...(o.photos||[]),...add];
   try{S.set('main-todo-list',arr);}catch(e){showToast('저장 공간이 부족해요');return;}
   renderSub('todo');
 }
+const md=d=>d?`${+d.slice(5,7)}/${+d.slice(8,10)}`:'';
+function setTodoView(v){S.set('todo_view',v);renderTodos();}
+// ── 자료 넣기: 파일을 유지OS 저장소(inbox/)에 올려 두면 Claude가 '자료 정리해줘' 때 읽고 나눠 넣음 ──
+let INBOX_MEMO='';
+function openInbox(memo=''){INBOX_MEMO=memo;goSub('inbox');}
+function subInbox(){
+  return `<div class="td-wrap">
+    <div class="ib-guide">파일을 올리고 Claude에게 정리를 부탁하세요.</div>
+    <div class="td-f"><div class="td-l">메모</div><input class="td-in" id="ib-memo" placeholder="어디에 넣을지 (예: 정부지원, 인사이트)" value="${esc(INBOX_MEMO)}"></div>
+    <label class="td-btn ib-pick">파일 고르기 (30개까지)<input type="file" multiple hidden accept=".txt,.csv,.pdf,.md,.json,image/*" onchange="upInbox(this.files);this.value=''"></label>
+    <div class="ib-note">메모·대화 txt, csv, 사진, pdf · 파일 하나 4MB까지</div>
+    <div id="ib-prog" class="ib-note"></div>
+    <div class="td-f"><div class="td-l">올린 자료</div><div id="ib-list"><div class="empty">불러오는 중</div></div></div>
+  </div>`;
+}
+const ibName=p=>p.replace(/^inbox\/(done\/)?/,'');
+async function renderInbox(){
+  const el=document.getElementById('ib-list');if(!el)return;
+  const r=await accFetch({},'?f=inbox').catch(()=>null);
+  if(!r?.ok){el.innerHTML='<div class="empty">목록을 못 불러왔어요</div>';return;}
+  const list=(await r.json()).sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+  el.innerHTML=list.map(x=>{const done=x.path.startsWith('inbox/done/'),n=ibName(x.path),m=n.match(/^(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})\d{2}-(.*)$/);
+    return `<div class="td-sub${done?' done':''}"><span><b class="ib-n">${esc(m?m[6]:n)}</b><span class="thas">${m?`${+m[2]}/${+m[3]} ${m[4]}:${m[5]}`:''}${done?' · 정리됨':''}</span></span><button class="xbtn" onclick="delInbox('${encodeURIComponent(x.path)}')">×</button></div>`;}).join('')||'<div class="empty">아직 올린 자료가 없어요</div>';
+}
+async function delInbox(p){if(!confirm('이 자료를 지울까요?'))return;const r=await accFetch({method:'DELETE'},'?f=inbox-file&path='+p).catch(()=>null);showToast(r?.ok?'지웠어요':'못 지웠어요');renderInbox();}
+async function upInbox(files){
+  files=[...files];
+  if(files.length>30){showToast('30개까지 올릴 수 있어요');return;}
+  if(!accPin())return;
+  const prog=document.getElementById('ib-prog'),d=new Date(),p2=n=>String(n).padStart(2,'0');
+  const stamp=`${d.getFullYear()}${p2(d.getMonth()+1)}${p2(d.getDate())}-${p2(d.getHours())}${p2(d.getMinutes())}${p2(d.getSeconds())}`;
+  const memo=(document.getElementById('ib-memo')?.value||'').trim();
+  const put=(name,body,type)=>accFetch({method:'POST',headers:{'Content-Type':'application/octet-stream'},body},`?f=inbox-file&type=${encodeURIComponent(type)}&path=${encodeURIComponent(`inbox/${stamp}-${name}`)}`).then(r=>r?.ok).catch(()=>false);
+  let ok=0,big=[],bad=0;
+  for(const [i,f] of files.entries()){
+    if(prog)prog.textContent=`올리는 중 ${i+1}/${files.length}`;
+    let body=f,type=f.type||'application/octet-stream',name=f.name.replace(/[\/\\?#%\x00-\x1f]/g,'_').slice(0,150);
+    if(f.type.startsWith('image/')&&f.type!=='image/gif'){const b=await shrinkImg(f,1600,.82);if(b){body=b;type='image/jpeg';name=name.replace(/\.[^.]+$/,'')+'.jpg';}}
+    if(body.size>4*1024*1024){big.push(f.name);continue;}
+    (await put(name,body,type))?ok++:bad++;
+  }
+  if(memo&&ok)await put('메모.txt',new Blob([`${memo}\n\n${files.map(f=>f.name).join('\n')}`],{type:'text/plain'}),'text/plain; charset=utf-8');
+  if(prog)prog.textContent='';
+  showToast(big.length||bad?`${ok}개 올림 · ${big.length+bad}개 실패`:`${ok}개 올렸어요`);if(big.length)setTimeout(()=>showToast('4MB 넘는 파일은 못 올려요'),2000);
+  renderInbox();
+}
 function renderTodos(){
-  const arr=S.get('main-todo-list',[]);
+  const arr=S.get('main-todo-list',[]),view=S.get('todo_view','ing'),tdy=todayStr();
   const el=document.getElementById('main-todo-list');if(!el)return;
   const fold=S.get('todo_fold',{}),sections=TODO_SECTIONS.map(([s,gs])=>[s,[...gs]]),known=sections.flatMap(x=>x[1]);
   arr.forEach(t=>{const g=t.tag||'기타';if(!known.includes(g)){known.push(g);sections[1][1].push(g);}});
   const item=t=>{const subs=t.subs||[],dn=subs.filter(s=>s.done).length;
-    return `<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt" onclick="openTodo(${t.id})">${t.text}${todoHas(t)}</span>${t.done?'':dday(t.due)}${t.link?`<button class="tlink" onclick="goSub('${t.link}')">양식</button>`:''}${subs.length?`<span class="tcnt">${dn}/${subs.length}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`
+    return `<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt" onclick="openTodo(${t.id})">${t.text}${todoHas(t)}</span>${t.start>tdy&&!t.done?`<span class="tstart">${md(t.start)} 시작</span>`:''}${t.done?'':dday(t.due)}${t.link?`<button class="tlink" onclick="goSub('${t.link}')">양식</button>`:''}${subs.length?`<span class="tcnt">${dn}/${subs.length}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`
       +(t.done?'':subs.map((s,k)=>`<div class="tsub${s.done?' done':''}"><input type="checkbox"${s.done?' checked':''} onchange="toggleSub(${t.id},${k})"><span onclick="openTodo(${t.id},${k})">${s.text}${todoHas(s)}</span>${s.done?'':dday(s.due)}</div>`).join(''));};
-  const grp=g=>{const list=arr.filter(t=>(t.tag||'기타')===g);if(!list.length)return '';
-    const dn=list.filter(t=>t.done).length;
-    return `<div class="tgrp-hd" onclick="foldTodoGrp('${g}')">${g} <span class="n">${dn}/${list.length}</span><span class="fold">${fold[g]?'펼치기':'접기'}</span></div>`
-      +(fold[g]?'':list.slice().sort((a,b)=>a.done-b.done).map(item).join(''));};
+  const grp=g=>{const list=arr.filter(t=>(t.tag||'기타')===g),open=list.filter(t=>!t.done);if(!open.length)return '';
+    return `<div class="tgrp-hd" onclick="foldTodoGrp('${g}')">${g} <span class="n">${list.length-open.length}/${list.length}</span><span class="fold">${fold[g]?'펼치기':'접기'}</span></div>`
+      +(fold[g]?'':open.map(item).join(''));};
+  const done=arr.filter(t=>t.done).sort((a,b)=>(b.doneAt||'').localeCompare(a.doneAt||''));
+  const tabs=`<div class="ttabs"><button class="${view==='done'?'':'on'}" onclick="setTodoView('ing')">진행중 ${arr.length-done.length}</button><button class="${view==='done'?'on':''}" onclick="setTodoView('done')">완료 ${done.length}</button></div>`;
   const nd=new Date(),today=`${nd.getFullYear()}-${String(nd.getMonth()+1).padStart(2,'0')}-${String(nd.getDate()).padStart(2,'0')}`,urgent=[];
   arr.forEach(t=>{if(!t.done&&t.due&&t.due<=today)urgent.push(`<div class="todo-item urgent"><span class="tt" onclick="openTodo(${t.id})">${t.text}</span>${dday(t.due)}</div>`);(t.subs||[]).forEach((x,k)=>{if(!x.done&&x.due&&x.due<=today)urgent.push(`<div class="todo-item urgent"><span class="tt" onclick="openTodo(${t.id},${k})">${x.text}<span class="thas">${t.text}</span></span>${dday(x.due)}</div>`);});});
-  el.innerHTML=(urgent.length?`<div class="tsec-hd">오늘 할일</div>`+urgent.join(''):'')+sections.map(([s,gs])=>{const body=gs.map(grp).join('');return body?`<div class="tsec-hd">${s}</div>`+body:'';}).join('')||'<div class="empty">할일 없음</div>';
+  el.innerHTML=tabs+(view==='done'
+    ?done.map(t=>`<div class="todo-item done"><input type="checkbox" checked onchange="toggleTodo(${t.id})"><span class="tt" onclick="openTodo(${t.id})">${t.text}<span class="thas">${t.tag||'기타'}</span></span><span class="tdone-at">${t.doneAt?md(t.doneAt)+' 완료':''}</span><button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`).join('')||'<div class="empty">완료한 할일 없음</div>'
+    :(urgent.length?`<div class="tsec-hd">오늘 할일</div>`+urgent.join(''):'')+sections.map(([s,gs])=>{const body=gs.map(grp).join('');return body?`<div class="tsec-hd">${s}</div>`+body:'';}).join('')||'<div class="empty">할일 없음</div>');
   const ps=document.getElementById('main-todo-parent');
   if(ps){const cur=ps.value;const open=arr.filter(t=>!t.done);
     ps.innerHTML='<option value="">새 할일로</option>'+[...new Set(open.map(t=>t.tag||'기타'))].map(g=>`<optgroup label="${g} 아래로">${open.filter(t=>(t.tag||'기타')===g).map(t=>`<option value="${t.id}">${esc(t.text)}</option>`).join('')}</optgroup>`).join('');
@@ -2400,6 +2525,9 @@ function renderDayStats(){
 }
 loadDash();
 
+// 인사말은 한 줄: 넘치면 글자를 줄임
+function fitGreeting(){const g=document.getElementById('greeting');g.style.fontSize='';let f=22;while(g.scrollWidth>g.clientWidth&&f>14)g.style.fontSize=(--f)+'px';}
+new MutationObserver(fitGreeting).observe(document.getElementById('greeting'),{childList:true,characterData:true,subtree:true});fitGreeting();document.fonts?.ready.then(fitGreeting);
 // ── 초기화 ──
 initAccData();
 renderTodos();
