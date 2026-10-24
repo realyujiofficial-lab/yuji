@@ -341,6 +341,27 @@ textarea.finp{min-height:120px;resize:vertical}
 .content-txt{flex:1;font-size:12px;line-height:1.5;color:var(--text)}
 .content-txt.done{text-decoration:line-through;color:#ccc}
 
+/* ── 사업 탭: 브랜드·SNS 줄 ── */
+.biz-row{padding:12px 16px;border-bottom:1px solid var(--border)}
+.biz-row:last-child{border-bottom:none}
+.biz-name{font-size:15px;font-weight:800;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.biz-name span{font-size:12px;font-weight:500;color:var(--sub);margin-left:6px}
+.biz-links{display:flex;flex-wrap:wrap;gap:6px}
+.biz-links a{font-size:13px;font-weight:700;color:var(--text);background:#f5f5f5;border-radius:8px;padding:7px 12px;text-decoration:none}
+.govt-todo{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer}
+.govt-todo:last-child{border-bottom:none}
+.govt-todo .govt-st{flex-shrink:0;font-size:11px;font-weight:700;background:#1a1a1a;color:#fff;border-radius:6px;padding:3px 6px}
+.govt-todo.done .govt-st{background:#f0f0f0;color:var(--dim)}
+.govt-todo .govt-tt{flex:1;min-width:0;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.govt-todo.done .govt-tt{color:#bbb;text-decoration:line-through}
+.mine-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.mine-row:last-child{border-bottom:none}
+.mine-row span{color:var(--dim);text-align:right}
+.mine-issue{padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.6}
+.mine-issue:last-child{border-bottom:none}
+.mine-issue b{display:block}
+.mine-issue span{color:var(--dim)}
+
 /* ── 링크 버튼 ── */
 .link-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer;text-decoration:none;color:var(--text)}
 .link-row:active{background:#f5f5f5}
@@ -412,29 +433,39 @@ textarea.finp{min-height:120px;resize:vertical}
 </div>
 
 <!-- ══ 사업 ══ -->
+<!-- 놀생 리틀리(litt.ly/nol_life.official) 순서·주소 기준. 브랜드·SNS 링크는 BIZ_BRANDS·BIZ_SNS 한 곳에서만 고침 -->
 <div class="page" id="pg-biz">
   <div class="hdr">
     <div class="hdr-greeting">사업</div>
-    <div class="hdr-date">놀생 · 테이스트트립</div>
+    <div class="hdr-date">놀생 · TT · 싱플리 · 도도독 · 유즈</div>
   </div>
 
   <div class="sec" style="margin-top:8px"><div class="sec-lbl">놀생</div></div>
   <div class="card" style="margin:0 20px 14px">
-    <div class="btn-grid-2">
+    <div class="btn-grid-3">
       <a class="gbtn" href="https://litt.ly/nol_life.official" target="_blank"><span class="gtxt">리틀리</span></a>
       <button class="gbtn" onclick="goSub('stibee')"><span class="gtxt">스티비</span></button>
+      <a class="gbtn" href="mailto:hello@nollife.com"><span class="gtxt">문의 메일</span></a>
     </div>
   </div>
 
-  <div class="sec"><div class="sec-lbl">테이스트트립</div></div>
-  <div class="card" style="margin:0 20px 4px">
-    <div class="btn-grid-3">
-      <a class="gbtn" href="https://litt.ly/spotontaste_tastetrip.official" target="_blank"><span class="gtxt">리틀리</span></a>
-      <a class="gbtn" href="https://sot-tastetrip.vercel.app/#/places" target="_blank"><span class="gtxt">라이브</span></a>
-      <a class="gbtn" href="https://dev-sot-tastetrip.vercel.app/#/places" target="_blank"><span class="gtxt">데브</span></a>
+  <div class="sec"><div class="sec-lbl">브랜드</div></div>
+  <div class="card" style="margin:0 20px 14px" id="biz-brands"></div>
+
+  <div class="sec"><div class="sec-lbl">일</div></div>
+  <div class="card" style="margin:0 20px 14px">
+    <div class="row" onclick="goSub('tt-govt')">
+      <div class="row-body"><div class="row-title">정부지원</div><div class="row-sub" id="biz-govt-sub">드라이브 폴더 · 진행 현황</div></div>
+      <div class="row-arr">›</div>
     </div>
-  </div>
-  <div class="card" style="margin:0 20px 16px">
+    <div class="row" onclick="goSub('biz-insight')">
+      <div class="row-body"><div class="row-title">사업 인사이트</div><div class="row-sub">드라이브 리서치 폴더 바로 열기</div></div>
+      <div class="row-arr">›</div>
+    </div>
+    <div class="row" onclick="goSub('tt-mine')">
+      <div class="row-body"><div class="row-title">오픈카톡방 분석</div><div class="row-sub" id="biz-mine-sub">텍스트마이닝 현황</div></div>
+      <div class="row-arr">›</div>
+    </div>
     <div class="row" onclick="goSub('tt-biz-plan')">
       <div class="row-body"><div class="row-title">사업계획서</div><div class="row-sub">복붙용 · 범용</div></div>
       <div class="row-arr">›</div>
@@ -444,27 +475,13 @@ textarea.finp{min-height:120px;resize:vertical}
       <div class="row-arr">›</div>
     </div>
     <div class="row" onclick="goSub('tt-sns')">
-      <div class="row-body"><div class="row-title">SNS / 마케팅</div></div>
-      <div class="row-arr">›</div>
-    </div>
-    <div class="row" onclick="goSub('tt-govt')">
-      <div class="row-body"><div class="row-title">정부지원</div></div>
-      <div class="row-arr">›</div>
-    </div>
-    <div class="row" onclick="goSub('tt-mine')">
-      <div class="row-body"><div class="row-title">텍스트마이닝</div></div>
+      <div class="row-body"><div class="row-title">SNS 콘텐츠 메모</div></div>
       <div class="row-arr">›</div>
     </div>
   </div>
 
-  <div class="sec"><div class="sec-lbl">리서치 바로가기</div></div>
-  <div class="card" style="margin:0 20px 16px">
-    <div class="btn-grid-3">
-      <a class="gbtn" href="https://drive.google.com/drive/folders/1fMefnqAzBqvmNM8G310BsyzBqEN5OkyT" target="_blank"><span class="gtxt">정부지원</span></a>
-      <a class="gbtn" href="https://drive.google.com/drive/folders/1njwsSxE6XAaxWkE9QniGsul7y_-kGu6g" target="_blank"><span class="gtxt">마케팅/사업트렌드</span></a>
-      <a class="gbtn" href="https://drive.google.com/drive/folders/1qdmK8W1kZvwzsauOSnnF0wBb9VtMa3f8" target="_blank"><span class="gtxt">참고자료</span></a>
-    </div>
-  </div>
+  <div class="sec"><div class="sec-lbl">SNS</div></div>
+  <div class="card" style="margin:0 20px 16px" id="biz-sns"></div>
 </div>
 
 <!-- ══ 카톡방 ══ -->
@@ -472,7 +489,7 @@ textarea.finp{min-height:120px;resize:vertical}
   <div class="hdr">
     <div style="display:flex;align-items:center;justify-content:space-between">
       <div class="hdr-greeting">카톡방</div>
-      <div style="display:flex;gap:6px"><button onclick="openInbox('오픈카톡방')" style="background:#1a1a1a;color:#fff;border:none;border-radius:20px;padding:7px 12px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer">대화 파일 넣기</button><a href="upload.html" style="background:#FF6B35;color:#fff;border-radius:20px;padding:7px 12px;font-size:12px;font-weight:700;text-decoration:none">+ 대화 업로드</a></div>
+      <div style="display:flex;gap:6px"><button onclick="openInbox('오픈카톡방')" style="background:#1a1a1a;color:#fff;border:none;border-radius:20px;padding:7px 12px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer">파일·사진 올리기</button><a href="upload.html" style="background:#f0f0f0;color:#1a1a1a;border-radius:20px;padding:7px 12px;font-size:12px;font-weight:700;text-decoration:none">멤버 제보함</a></div>
     </div>
     <div class="hdr-date">현지인 맛집 · 여행</div>
   </div>
@@ -655,7 +672,7 @@ textarea.finp{min-height:120px;resize:vertical}
 <div class="page" id="pg-personal">
   <div class="hdr">
     <div class="hdr-greeting">개인</div>
-    <div class="hdr-date">교통사고 · 인맥 · FNB마케터</div>
+    <div class="hdr-date">교통사고 · 꿀팁 · 인맥 · 유지</div>
   </div>
 
   <div class="sec" style="margin-top:8px"><div class="sec-lbl">교통사고 <span style="font-size:10px;font-weight:400;color:var(--sub)">2025.09.25 · DB손해보험</span></div></div>
@@ -694,46 +711,24 @@ textarea.finp{min-height:120px;resize:vertical}
 
   <div class="sec"><div class="sec-lbl">유지</div></div>
   <div class="card" style="margin:0 20px 14px">
-    <div class="row" onclick="goSub('yuji-resume')">
-      <div class="row-body"><div class="row-title">이력서</div><div class="row-sub">사람인 기준</div></div>
+    <div class="row" onclick="goSub('yd-resume')">
+      <div class="row-body"><div class="row-title">이력서</div><div class="row-sub">기본 · FNB마케터 · 기획자 · 사업기획</div></div>
+      <div class="row-arr">›</div>
+    </div>
+    <div style="height:1px;background:var(--border);margin:0 20px"></div>
+    <div class="row" onclick="goSub('yd-cover')">
+      <div class="row-body"><div class="row-title">자소서</div><div class="row-sub">FNB마케터 · 기획자 · 사업기획</div></div>
+      <div class="row-arr">›</div>
+    </div>
+    <div style="height:1px;background:var(--border);margin:0 20px"></div>
+    <div class="row" onclick="goSub('yd-portfolio')">
+      <div class="row-body"><div class="row-title">포트폴리오</div><div class="row-sub">어필·스토리 · FNB마케터 · 기획자 · 사업기획</div></div>
       <div class="row-arr">›</div>
     </div>
     <div style="height:1px;background:var(--border);margin:0 20px"></div>
     <div class="row" onclick="goSub('yuji-career')">
-      <div class="row-body"><div class="row-title">커리어</div><div class="row-sub">유지 한일 전체</div></div>
+      <div class="row-body"><div class="row-title">커리어</div><div class="row-sub">유지가 한 일 전체</div></div>
       <div class="row-arr">›</div>
-    </div>
-    <div style="height:1px;background:var(--border);margin:0 20px"></div>
-    <div class="row" onclick="goSub('yuji-portfolio')">
-      <div class="row-body"><div class="row-title">포트폴리오</div><div class="row-sub">어필 · 스토리</div></div>
-      <div class="row-arr">›</div>
-    </div>
-  </div>
-
-  <div class="sec"><div class="sec-lbl">FNB마케터 / 프리랜서</div></div>
-  <div class="card" style="margin:0 20px 14px">
-    <div class="btn-grid-3">
-      <button class="gbtn" onclick="goSub('fnb-resume')"><span class="gtxt">이력서</span></button>
-      <button class="gbtn" onclick="goSub('fnb-cover')"><span class="gtxt">자소서</span></button>
-      <button class="gbtn" onclick="goSub('fnb-portfolio')"><span class="gtxt">포트폴리오</span></button>
-    </div>
-  </div>
-
-  <div class="sec"><div class="sec-lbl">기획자</div></div>
-  <div class="card" style="margin:0 20px 14px">
-    <div class="btn-grid-3">
-      <button class="gbtn" onclick="goSub('plan-resume')"><span class="gtxt">이력서</span></button>
-      <button class="gbtn" onclick="goSub('plan-cover')"><span class="gtxt">자소서</span></button>
-      <button class="gbtn" onclick="goSub('plan-portfolio')"><span class="gtxt">포트폴리오</span></button>
-    </div>
-  </div>
-
-  <div class="sec"><div class="sec-lbl">사업기획</div></div>
-  <div class="card" style="margin:0 20px 14px">
-    <div class="btn-grid-3">
-      <button class="gbtn" onclick="goSub('biz-resume')"><span class="gtxt">이력서</span></button>
-      <button class="gbtn" onclick="goSub('biz-cover')"><span class="gtxt">자소서</span></button>
-      <button class="gbtn" onclick="goSub('biz-portfolio')"><span class="gtxt">포트폴리오</span></button>
     </div>
   </div>
 
@@ -1036,6 +1031,7 @@ function setAppScroll(){}
 function goPage(id){
   PAGES.forEach(p=>document.getElementById('pg-'+p)?.classList.remove('active'));
   document.getElementById('pg-'+id)?.classList.add('active');
+  if(id==='biz')renderBiz();
   const idx={home:0,biz:1,kakao:2,personal:3};
   if(id!=='sub'){
     document.querySelectorAll('.gnb-btn').forEach(b=>b.classList.remove('active'));
@@ -1059,7 +1055,7 @@ function switchTab(group,tab,el){
   setAppScroll(group,tab);
 }
 
-const SUB_TITLES={inbox:'자료 넣기','dododok-mail':'도도독 녹음 요청 메일',writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS / 마케팅','tt-govt':'정부지원','tt-mine':'텍스트마이닝',acc:'치료기록',diary:'일기','acc-exercise':'운동법','personal-tips':'개인 꿀팁',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
+const SUB_TITLES={inbox:'자료 넣기','yd-resume':'이력서','yd-cover':'자소서','yd-portfolio':'포트폴리오','dododok-mail':'도도독 녹음 요청 메일',writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS 콘텐츠 메모','tt-govt':'정부지원','tt-mine':'오픈카톡방 분석','biz-insight':'사업 인사이트',acc:'치료기록',diary:'일기','acc-exercise':'운동법','personal-tips':'개인 꿀팁',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
 function renderSub(id){
   document.getElementById('sub-title').textContent=SUB_TITLES[id]||'';
   const fn={
@@ -1072,12 +1068,17 @@ function renderSub(id){
     'tt-docs':subDocs,
     'tt-sns':subSns,
     'tt-govt':subGovt,
-    'tt-mine':()=>`<div class="form-wrap" style="margin-top:16px;display:flex;flex-direction:column;gap:10px"><button class="submit-btn" onclick="alert('터미널: bash run_all_files.sh')">파이프라인 실행</button><button class="submit-btn" style="background:#f5f5f5;color:#333" onclick="window.open('okaband.html','_blank')">대시보드 열기</button><button class="submit-btn" style="background:#f5f5f5;color:#333">랜딩페이지</button></div>`,
+    'tt-mine':subMine,
+    'biz-insight':subInsight,
+    'tt-mine-old':()=>`<div class="form-wrap" style="margin-top:16px;display:flex;flex-direction:column;gap:10px"><button class="submit-btn" onclick="alert('터미널: bash run_all_files.sh')">파이프라인 실행</button><button class="submit-btn" style="background:#f5f5f5;color:#333" onclick="window.open('okaband.html','_blank')">대시보드 열기</button><button class="submit-btn" style="background:#f5f5f5;color:#333">랜딩페이지</button></div>`,
     acc:subAcc,
     diary:subDiary,
     'acc-exercise':subAccExercise,
     'personal-tips':subPersonalTips,
     network:subNetwork,
+    'yd-resume':()=>subYujiDoc('resume'),
+    'yd-cover':()=>subYujiDoc('cover'),
+    'yd-portfolio':()=>subYujiDoc('portfolio'),
     'yuji-resume':()=>subTextEditor('yuji-resume','이력서 (사람인)'),
     'yuji-career':()=>subTextEditor('yuji-career','커리어'),
     'yuji-portfolio':()=>subTextEditor('yuji-portfolio','포트폴리오'),
@@ -1374,6 +1375,11 @@ function toggleSnsAction(i,el){
 }
 
 // ── 서브페이지: 정부지원 ──
+function govtTodos(){
+  const l=S.get('main-todo-list',[]).filter(t=>t.tag==='정부지원').sort((a,b)=>a.done-b.done||String(a.due||'9').localeCompare(String(b.due||'9')));
+  if(!l.length)return '<div class="empty">정부지원 할일이 없어요</div>';
+  return l.map(t=>{const subs=t.subs||[],dn=subs.filter(x=>x.done).length;return `<div class="govt-todo${t.done?' done':''}" onclick="openTodo(${t.id})"><span class="govt-st">${t.done?'완료':'진행중'}</span><span class="govt-tt">${esc(t.text)}</span>${t.done?'':dday(t.due)}${subs.length?`<span class="tcnt">${dn}/${subs.length}</span>`:''}</div>`;}).join('');
+}
 function subGovt(){
   const interestChips=['로컬','FNB','숙소','카페','로컬크리에이터','관광','여행','IT·데이터'];
   const portals=[
@@ -1389,9 +1395,14 @@ function subGovt(){
     </div>
     <div class="card" style="margin:0 20px 14px">
       <a href="https://drive.google.com/drive/folders/1fMefnqAzBqvmNM8G310BsyzBqEN5OkyT" target="_blank" class="link-row">
-        <div><div style="font-size:13px;font-weight:700">📁 09_투자지원 폴더에서 자세히 보기</div><div class="link-url">마감일·D-day·적합도 정리된 통합 시트는 여기서 확인</div></div>
+        <div><div style="font-size:13px;font-weight:700">09_투자지원 폴더</div><div class="link-url">공고 통합 시트(마감임박순)</div></div>
+      </a>
+      <a href="https://drive.google.com/drive/folders/1KPi4PDJj_vJHFvl-fOtt5UOTtQ-Gof6A" target="_blank" class="link-row">
+        <div><div style="font-size:13px;font-weight:700">지원사업 통합관리 폴더</div><div class="link-url">아이템별 시트 7개</div></div>
       </a>
     </div>
+    <div class="sec-lbl" style="padding:0 20px 8px">진행 현황 (홈 할일 '정부지원')</div>
+    <div class="card" style="margin:0 20px 14px">${govtTodos()}</div>
     <div class="card" style="margin:0 20px 14px">
       <div class="p">
         <div style="font-size:13px;font-weight:800;margin-bottom:10px">정부지원 자동 탐색 — 주요 포털</div>
@@ -1836,6 +1847,20 @@ const YUJI_DEFAULTS={
   'yuji-portfolio': "\ub0b4\uac00 \uc5b4\ud544\ud558\uace0 \uc2f6\uc740 \ubd80\ubd84\uc740 \n\ub098 \uc720\uc9c0,\n\ucd08\ub4f1\ud559\uc0dd\ub54c \ub3d9\uc0dd\uc744 \uae30\ub974\uba70,\n\uc721\uc544 \uad00\ub828 \ucc45\uc744 \uc4f0\uace0 \uc2f6\uc5c8\ub2e4.\n\u3134 \uc5c4\ub9c8\uac00 \ub3d9\uc0dd\uc758 \ub9c8\uc74c\uacfc \uc0dd\uac01\uc744 \uc774\ud574\ud574, \ub3d9\uc0dd\uc744 \uc27d\uac8c \ubcf4\uc558\uc73c\uba74 \ud588\ub2e4.\n\u3134 \ub2e4\ud589\ud788 \ub098\ub294 \ub3d9\uc0dd\uacfc 4\uc0b4 \ucc28\uc774\ub85c \ub3d9\uc0dd\uc758 \uc5b8\uc5b4, \uc0dd\uac01\uc744 \ub9ce\uc774 \uc774\ud574\ud560 \uc218 \uc788\uc5c8\ub2e4.\n\n\n2013\ub144 \uc0bc\uc131\ubaa8\ubc14\uc77c \uc54c\ubc14\ub97c \ud558\uba70,\n\ube14\ub85c\uadf8 \uad00\ub9ac\ub97c \ud588\uc5c8\ub2e4.\n\uc0bc\uc131 \uc81c\ud488 \ud3ec\uc2a4\ud305 \uc678 \uc77c\uc0c1/TV \ud504\ub85c\uadf8\ub7a8 \ud2b8\ub80c\ub4dc \ub9ac\ubdf0\ub97c \uc62c\ub838\uc9c0.\n\ubc29\ubb38\uc790 300\uba85\ucc0d\uace0 \uc7ac\ubc0c\uc5b4\uc11c \uacc4\uc18d \ud588\ub2e4.\n\n\n\uc54c\ubc14\ub97c \uadf8\ub9cc\ub450\uace0 \ub09c \ub0b4 \uac1c\uc778 \ube14\ub85c\uadf8 \uacc4\uc815\uc744 \uc6b4\uc601\ud588\ub2e4.\n\ub0b4\uac00 \ub9db\uc788\uac8c \uba39\uc740 \uc74c\uc2dd\uc810, \uc7ac\ubc0c\uac8c \ud558\ub358 \uac8c\uc784 \uacf5\ub7b5\ubc95,\n\uc0c8\ub85c\uc6b4 \ube0c\ub79c\ub4dc \uc774\ub9c8\ud2b8 \ub178\ube0c\ub79c\ub4dc\uc0c1\ud488, \uc790\ucde8\uc0dd \uc9d1\ubc25 \uc694\ub9ac\ub97c \ub9ac\ubdf0\ud588\ub2e4.\n\n\uac00\uace0\uc2f6\uc740 \ub9e4\uc7a5\uc5d0 \uc74c\uc2dd\uc744 \uc2dc\ucf1c \uc0ac\uc9c4\uc744 \ucc0d\uc5c8\ub2e4. \ube14\ub85c\uadf8\ub97c \ud558\ub0d0 \ubb3c\uc5b4\ubcf4\ub354\ub2c8 \uc11c\ube44\uc2a4\ub97c \uc8fc\uc168\ub2e4. \uc7ac\ubc0c\uc5c8\ub2e4.\n\ud558\uc9c0\ub9cc \ubb34\ub8cc \ud611\ucc2c \uc81c\uc758\uac00 \ub4e4\uc5b4\uc624\uc790,\n\ub2e8\uc21c \ud765\ubbf8\uc640 \uc815\ubcf4\uc131\uc73c\ub85c \uc6b4\uc601\ud558\ub358 \ube14\ub85c\uadf8\uc5d0 \ud765\ubbf8\uac00 \uc0ac\ub77c\uc84c\ub2e4.\n\u3134\uad11\uace0\ud310\uc774 \uc2eb\uc5c8\uae30 \ub584\ubb38\uc774\ub2e4.\n\u3134\ub09c \ub0b4\uac00 \uc9c4\uc2ec\uc73c\ub85c \uc88b\uc544\ud558\ub294\uac78 \ucc3e\uace0, \uc0c1\ub300\ubc29\ub3c4 \uc9c4\uc2ec\uc73c\ub85c \uc88b\uc544\ud558\ub294 \uac78 \ucc3e\uae38 \ubc14\ub7ac\ub2e4. \uadf8\uc5d0 \ub530\ub77c \ub0b4 \ube14\ub85c\uadf8 \uae00\uc774 \uadf8 \uc0ac\ub78c\uc758 \uc120\ud0dd\uc5d0 \ub354 \ub3c4\uc6c0\uc774 \ub418\uae38 \ubc14\ub7ac\ub2e4.\n\n\n\uadf8\ub9ac\uace0 2016\ub144\n\uc720\ud29c\ube0c\uc5d0 3\ucd08 \uc9e7\uc740 \ub098\uc758 \uc601\uc0c1\uc744 \uc62c\ub9ac\uae30 \uc2dc\uc791\ud588\ub2e4.\n@\uc0ac\uc545\ubbf8\uc778\n\uc5b8\uc820\uac00 \uc18c\uac1c\ubc1b\uc740 \uc0ac\ub78c\uc774, \uc720\ud29c\ube0c\uc5d0\uc11c \ub098\ub97c \ubd24\ub2e4\uace0 \ud55c\ub2e4..\n\ub0b4\uac00 \uc65c\ub728\uc9c0..\n\n\n\uadf8\ub9ac\uace0 2017\ub144\n\ub864\uc740 \uc774\ubbf8 \uc811\uc218, \ubc30\ud2c0\uadf8\ub77c\uc6b4\ub4dc\ub97c \uc798\ud558\uace0 \uc2f6\uc5c8\ub2e4.\n\uc0ac\ub179\ub9f5.. \uba40\ubbf8\uac00 \ub108\ubb34 \uc2ec\ud588\ub2e4\n\uad6c\uc815\ubb3c\uc774 \uc218\ub3c4\uad00\uc5d0\uc11c \ub5a8\uc5b4\uc9c0\uace0, \ud30c\ub9ac\uc18c\ub9ac\uc5d0 \ud1a0\ud560\uac70\uac19\uc558\ub2e4.\n\ubaa8\ubc14\uc77c \uac8c\uc784\uc774 \uc27d\ub2e4\ub2c8, \ubaa8\ubc14\uc77c \uac8c\uc784\uc744 \ud588\ub2e4.\n\uc11c\ub4e0\uc5d0\uc11c \ub099\uc0c1\ub9cc\uc73c\ub85c\ub3c4 \uc7ac\ubc0c\ub358 \ub0b4\uac00, \ubaa8\ubc30\uc5d0 \uc7ac\ubbf8\uac00 \uc0dd\uacbc\ub2e4.\n\uc791\ub144 \ud504\ub85c\ub4c0\uc2a4101\ud558\ub358 \uc2dc\uc808\uc774 \uc0dd\uac01\ub0ac\ub2e4.\n\ub098 \uc720\uc9c0\ub97c \ubaa8\ubc30 \uace0\uc218\ub85c \ub9cc\ub4e4\uc5b4 \uc904 \uad6d\ubbfc\uac8c\uc774\uba38\ub4e4\uc5d0\uac8c \ubc30\uc6b0\uace0 \uc990\uae30\uace0\uc2f6\uc5c8\ub2e4.\n\uc2a4\ud2b8\ub9ac\ud2b8\uac8c\uc774\uba38\ub77c\ub294 \ubc29\uc1a1 \uc5b4\ud50c\uc5d0\uc11c 1\ub4f1\uc744 \ud588\ub2e4\n\uc11c\uc11c\ud788 \ucd1d\uc5d0 \uc7a5\ub2e8\uc810\ub4e4\uc744 \uc54c\ub824\uc8fc\uace0, \ub204\uad70\uac00 \ubcc4\ud48d\uac19\uc740\uac78 \uc408\ub2e4..\n\uc7ac\ubbf8\uac00 \uc5c6\uc5b4\uc84c\ub2e4..\n\n\n2018\ub144\n\ub77c\uc774\ube0c \ubc29\uc1a1\uc744 \ud588\ub2e4. \uc544\ud504\ub9ac\uce74bj \uc790\uc2e0 \uc5c6\uc5c8\ub2e4\n\ub108\ubb34 \uc0c1\ucc98\ub97c \uc798 \ubc1b\ub294 \ud3b8\uc774\uace0 \ub9d0\ube68\ub3c4 \uc88b\uc9c0 \uc54a\uc558\ub2e4\n\uadf8\uc800 \uc21c\ub529\ud55c \uc5bc\uad74\ubfd0\uc774\uc600\ub2e4.\n\ud55c\uad6d\uc778\uc774 \uac70\uc758 \uc5c6\ub294 \ubc29\uc1a1\ud50c\ub7ab\ud3fc\uc744 \ud558\uba70, \uc678\uad6d\uc5b4 \ubc30\uc6b8\uacb8 \ud588\ub2e4.\n\uc990\ucc3e 500\uc774 \ub118\uc5c8\ub2e4.\n\uc7ac\ubc0c\uc5c8\ub2e4.\n\n\n2019\ub144\n\uc2a4\ud1a0\uc5b4\ud31c\uc774 \uc0dd\uaca8\uc11c \uac01\uc885 \ub3c4\ub9e4\ub85c \ud310\ub9e4\ud558\ub294 \uacf3\ub4e4\uc774 \uc0dd\uacbc\ub2e4.\n\uc0c1\ud488\uc744 \ubbf8\ub9ac \uad6c\ub9e4\ud574\uc11c \ube14\ub85c\uadf8\ucc98\ub7fc \ubbf8\ub9ac \uc124\uba85\uc744 \ud574 \uc54c\ub824\uc8fc\uba74 \uc5b4\ub5a8\uae4c?\n\ub0b4\uac00 \ubc29\uc1a1\ud558\ub4ef \uc0c1\ud488\uc744 \uc124\uba85\ud574\uc900\ub2e4\uba74 \uc2e0\ub8b0\ub3c4 \uc0c1\uc2b9\uc774\uaca0\ub2e4\n\uadf8\ub7fc \uc5b4\ub5bb\uac8c \ubb36\uc5b4\uc11c \ud310\ub9e4\ud560\uae4c?\n\uace0\ubbfc\ub9cc \ud558\ub2e4 \uadf8\ub807\uac8c \uc2dc\uac04\uc774 \ud758\ub800\ub2e4.\n\n\n2025\ub144\n\ub85c\uceec\uc5d0 \uaf42\ud614\ub2e4.\n\uc778\uac04\ub2e4\uc6c0, \ubb38\ud654\uc7ac, \ub85c\uceec\uc5d0 \uaf42\ud613\ub2e4.\n\n\n3N\uc138 \uc720\uc9c0\n\uc774\uc81c \uc0dd\uac01\uc5d0\uc11c \uadf8\uce58\ub294\uac8c \uc544\ub2c8\ub77c \uc2e4\uc81c \uad6c\uccb4\ud654\ub97c \ud574 \uc218\uc775\uc744 \ub9cc\ub4e4\uc5b4\ub098\uac08\uaebc\ub2e4."
 };
 
+// 유지 문서: 이력서·자소서·포트폴리오 한 화면에 직무별 탭. 저장 키(yuji_doc_*)는 예전 그대로
+const YD_TABS={
+  resume:{title:'이력서',tabs:[['yuji-resume','기본 (사람인)'],['fnb-resume','FNB마케터'],['plan-resume','기획자'],['biz-resume','사업기획']],old:'resume'},
+  cover:{title:'자소서',tabs:[['fnb-cover','FNB마케터'],['plan-cover','기획자'],['biz-cover','사업기획']],old:'cover'},
+  portfolio:{title:'포트폴리오',tabs:[['yuji-portfolio','어필·스토리'],['fnb-portfolio','FNB마케터'],['plan-portfolio','기획자'],['biz-portfolio','사업기획']]},
+};
+const YD_CUR={};
+function subYujiDoc(kind){
+  const d=YD_TABS[kind],tabs=[...d.tabs];
+  // 아주 예전 메모(localStorage resume·cover)가 남아 있으면 지우지 않고 탭으로 보여줌
+  if(d.old&&localStorage.getItem(d.old)){YUJI_DEFAULTS['old-'+d.old]=localStorage.getItem(d.old);tabs.push(['old-'+d.old,'예전 메모']);}
+  const cur=tabs.some(t=>t[0]===YD_CUR[kind])?YD_CUR[kind]:tabs[0][0];
+  return `<div class="tabs">${tabs.map(([k,t])=>`<div class="tab${k===cur?' active':''}" onclick="YD_CUR['${kind}']='${k}';renderSub('yd-${kind}')">${t}</div>`).join('')}</div>`+subTextEditor(cur,d.title+' '+tabs.find(t=>t[0]===cur)[1]);
+}
 function subTextEditor(key, label){
   const def = YUJI_DEFAULTS[key] || '';
   const saved = localStorage.getItem('yuji_doc_'+key);
@@ -2029,6 +2054,69 @@ function renderGovtList(){
   const el=document.getElementById('govt-list');if(!el)return;
   el.innerHTML=S.get('govt',[]).map(g=>`<div class="govt-item"><div class="govt-top"><span class="govt-name">${g.name}</span><span class="govt-st g${g.status}">${g.status}</span></div><div class="govt-dl">${g.deadline||'마감일 미정'}</div>${g.url?`<a href="${g.url}" target="_blank" style="font-size:11px;color:var(--royal-blue,#0047AB)">링크 열기</a>`:''}<button onclick="delGovt(${g.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:2px;margin-left:8px">삭제</button></div>`).join('')||'<div class="empty">없음</div>';
 }
+// ── 사업 탭: 놀생 리틀리 기준 브랜드·SNS (주소 바뀌면 여기만) ──
+const BIZ_BRANDS=[
+  {name:'TasteTrip',sub:'여행 결정 플랫폼',links:[['라이브','https://www.sot-tastetrip.com/'],['데브','https://dev-sot-tastetrip.vercel.app/'],['TT매거진','https://www.sot-tastetrip.com/#/magazine']]},
+  {name:'트로펫',sub:'TT매거진 소식 모으는 곳',links:[['열기','https://tlf-io.vercel.app/']]},
+  {name:'싱플리',sub:'노래방 플레이리스트',links:[['사이트','https://www.singply.com/']]},
+  {name:'도도독',sub:'사기 전에 눌러보는 키보드',links:[['사이트','https://dododok.vercel.app/'],['관리자','https://dododok.vercel.app/?v=admin']]},
+  {name:'유즈엔터',sub:'그때 그 노래를 트렌디하게',links:[['유튜브','https://www.youtube.com/@YUZ.official']]},
+];
+const BIZ_SNS=[
+  {name:'TasteTrip',links:[['인스타','https://instagram.com/spotontaste_tastetrip'],['틱톡','https://www.tiktok.com/@sot_tastetrip'],['유튜브','https://www.youtube.com/@spotontaste_tastetrip'],['스레드','https://www.threads.net/@spotontaste_tastetrip']]},
+  {name:'오픈카톡방',links:[['들어가기','http://bit.ly/4s1NlNV']]},
+  {name:'YUZ.ENT',links:[['유튜브','https://www.youtube.com/@YUZ.official'],['인스타','https://www.instagram.com/yuz.ent.official'],['틱톡','https://www.tiktok.com/@yuz.ent.official']]},
+  {name:'CEO Yuji',links:[['인스타','https://www.instagram.com/realyuji.official/'],['스레드','https://www.threads.net/@realyuji.official'],['유튜브','https://www.youtube.com/@realyuji.official']]},
+  {name:'Y.essay',links:[['인스타','https://www.instagram.com/y.essay_by_y'],['스레드','https://www.threads.net/@y.essay_by_y'],['X','https://x.com/y.essay34666']]},
+];
+// 구글 드라이브 폴더. 13_리서치인박스 하위 폴더는 id를 아직 못 받아서 드라이브 검색으로 엶
+const DRIVE=id=>'https://drive.google.com/drive/folders/'+id;
+const DRIVE_FIND=n=>'https://drive.google.com/drive/search?q='+encodeURIComponent('title:'+n);
+const BIZ_INSIGHT=[
+  ['마케팅·사업 트렌드',DRIVE('1njwsSxE6XAaxWkE9QniGsul7y_-kGu6g')],
+  ['참고자료',DRIVE('1qdmK8W1kZvwzsauOSnnF0wBb9VtMa3f8')],
+  ['강의 교안 (나루)',DRIVE('1h4Ds4bv5tniBohSJr3gw2ziv8_jDySQ7')],
+  ['13_리서치인박스 전체',DRIVE_FIND('13_리서치인박스')],
+  ...['마케팅트렌드','마케팅소스','BM소스','AI트렌드','AI소스','AI사용법','자기계발자격증'].map(n=>[n,DRIVE_FIND(n)]),
+];
+const linkBtns=ls=>`<div class="biz-links">${ls.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join('')}</div>`;
+function renderBiz(){
+  const b=document.getElementById('biz-brands'),n=document.getElementById('biz-sns');
+  if(b)b.innerHTML=BIZ_BRANDS.map(x=>`<div class="biz-row"><div class="biz-name">${x.name}<span>${x.sub}</span></div>${linkBtns(x.links)}</div>`).join('');
+  if(n)n.innerHTML=BIZ_SNS.map(x=>`<div class="biz-row"><div class="biz-name">${x.name}</div>${linkBtns(x.links)}</div>`).join('');
+  const g=document.getElementById('biz-govt-sub');
+  if(g){const l=S.get('main-todo-list',[]).filter(t=>t.tag==='정부지원'&&!t.done);g.textContent=l.length?`진행 중 ${l.length}건 · 드라이브 폴더`:'드라이브 폴더 · 진행 현황';}
+}
+function subInsight(){
+  return `<div class="card" style="margin:12px 20px 20px">${BIZ_INSIGHT.map(([t,u])=>`<a href="${u}" target="_blank" class="link-row"><div style="font-size:14px;font-weight:700">${t}</div><div class="row-arr">›</div></a>`).join('')}</div>`;
+}
+// 오픈카톡방 텍스트마이닝 현황: repo/data.json (Claude가 대화 파일로 다시 만들면 갱신)
+function subMine(){
+  setTimeout(async()=>{
+    const el=document.getElementById('mine-body');if(!el)return;
+    try{
+      const d=await (await fetch('/data.json',{cache:'no-store'})).json();
+      const days=d.all_dates||[];
+      const top=Object.values(d.contribution||{}).sort((a,b)=>b.msgs-a.msgs).slice(0,3);
+      el.innerHTML=`<div class="card" style="margin:12px 20px 14px"><div class="p">
+        <div class="mine-row"><b>기준</b><span>${esc(d.generated_at)}</span></div>
+        <div class="mine-row"><b>기간</b><span>${esc(days[0]||'')} ~ ${esc(days[days.length-1]||'')}</span></div>
+        <div class="mine-row"><b>멤버</b><span>${d.member_count}명</span></div>
+        <div class="mine-row"><b>최근 7일 하루 평균</b><span>메시지 ${d.recent_7d_avg}개</span></div>
+        <div class="mine-row"><b>공유된 장소</b><span>${d.place_stats?.total??0}곳</span></div>
+        <div class="mine-row"><b>조용해진 멤버</b><span>${Object.keys(d.at_risk||{}).length}명</span></div>
+        <div class="mine-row"><b>많이 말한 3명</b><span>${top.map(x=>esc(x.nick)).join(' · ')}</span></div>
+      </div></div>
+      ${(d.issues||[]).length?`<div class="sec-lbl" style="padding:0 20px 8px">눈여겨볼 점</div><div class="card" style="margin:0 20px 14px"><div class="p">${d.issues.map(i=>`<div class="mine-issue"><b>${esc(i.title)}</b><span>${esc(i.detail).split(/(?<=[.!?])\s+/).join('<br>')}</span></div>`).join('')}</div></div>`:''}`;
+    }catch(e){el.innerHTML='<div class="empty">분석 자료를 못 불러왔어요</div>';}
+  });
+  return `<div id="mine-body"><div class="empty">불러오는 중</div></div>
+    <div class="form-wrap" style="display:flex;flex-direction:column;gap:10px;padding-bottom:30px">
+      <button class="submit-btn" onclick="openInbox('오픈카톡방')">대화 파일·사진 올리기</button>
+      <button class="submit-btn" style="background:#f5f5f5;color:#333" onclick="window.open('okaband.html','_blank')">자세한 대시보드</button>
+    </div>`;
+}
+
 function renderListInEl(elId,stKey){
   const el=document.getElementById(elId);if(!el)return;
   const arr=S.get(stKey,[]);
