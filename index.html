@@ -344,10 +344,12 @@ textarea.finp{min-height:120px;resize:vertical}
 /* ── 사업 탭: 브랜드·SNS 줄 ── */
 .biz-row{padding:12px 16px;border-bottom:1px solid var(--border)}
 .biz-row:last-child{border-bottom:none}
-.biz-name{font-size:15px;font-weight:800;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.biz-name span{font-size:12px;font-weight:500;color:var(--sub);margin-left:6px}
-.biz-links{display:flex;flex-wrap:wrap;gap:6px}
-.biz-links a{font-size:13px;font-weight:700;color:var(--text);background:#f5f5f5;border-radius:8px;padding:7px 12px;text-decoration:none}
+.biz-name{font-size:15px;font-weight:800;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.biz-name i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;vertical-align:1px}
+.biz-line{font-size:13px;color:var(--dim);line-height:1.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.biz-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.biz-links a,.biz-links button{font-size:13px;font-weight:700;color:var(--text);background:#f5f5f5;border:none;border-radius:8px;padding:7px 12px;text-decoration:none;font-family:inherit;cursor:pointer}
+.biz-links .off{font-size:12px;font-weight:600;color:#bbb;border:1px dashed #ddd;border-radius:8px;padding:6px 10px}
 .govt-todo{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer}
 .govt-todo:last-child{border-bottom:none}
 .govt-todo .govt-st{flex-shrink:0;font-size:11px;font-weight:700;background:#1a1a1a;color:#fff;border-radius:6px;padding:3px 6px}
@@ -433,24 +435,14 @@ textarea.finp{min-height:120px;resize:vertical}
 </div>
 
 <!-- ══ 사업 ══ -->
-<!-- 놀생 리틀리(litt.ly/nol_life.official) 순서·주소 기준. 브랜드·SNS 링크는 BIZ_BRANDS·BIZ_SNS 한 곳에서만 고침 -->
+<!-- 놀생 리틀리(litt.ly/nol_life.official) 구성 그대로. 링크는 BIZ_LITTLY 한 곳에서만 고침 -->
 <div class="page" id="pg-biz">
   <div class="hdr">
     <div class="hdr-greeting">사업</div>
-    <div class="hdr-date">놀생 · TT · 싱플리 · 도도독 · 유즈</div>
+    <div class="hdr-date">놀생 리틀리 구성 그대로</div>
   </div>
 
-  <div class="sec" style="margin-top:8px"><div class="sec-lbl">놀생</div></div>
-  <div class="card" style="margin:0 20px 14px">
-    <div class="btn-grid-3">
-      <a class="gbtn" href="https://litt.ly/nol_life.official" target="_blank"><span class="gtxt">리틀리</span></a>
-      <button class="gbtn" onclick="goSub('stibee')"><span class="gtxt">스티비</span></button>
-      <a class="gbtn" href="mailto:hello@nollife.com"><span class="gtxt">문의 메일</span></a>
-    </div>
-  </div>
-
-  <div class="sec"><div class="sec-lbl">브랜드</div></div>
-  <div class="card" style="margin:0 20px 14px" id="biz-brands"></div>
+  <div id="biz-littly"></div>
 
   <div class="sec"><div class="sec-lbl">일</div></div>
   <div class="card" style="margin:0 20px 14px">
@@ -480,8 +472,6 @@ textarea.finp{min-height:120px;resize:vertical}
     </div>
   </div>
 
-  <div class="sec"><div class="sec-lbl">SNS</div></div>
-  <div class="card" style="margin:0 20px 16px" id="biz-sns"></div>
 </div>
 
 <!-- ══ 카톡방 ══ -->
@@ -2055,19 +2045,26 @@ function renderGovtList(){
   el.innerHTML=S.get('govt',[]).map(g=>`<div class="govt-item"><div class="govt-top"><span class="govt-name">${g.name}</span><span class="govt-st g${g.status}">${g.status}</span></div><div class="govt-dl">${g.deadline||'마감일 미정'}</div>${g.url?`<a href="${g.url}" target="_blank" style="font-size:11px;color:var(--royal-blue,#0047AB)">링크 열기</a>`:''}<button onclick="delGovt(${g.id})" style="font-size:11px;color:var(--sub);background:none;border:none;cursor:pointer;margin-top:2px;margin-left:8px">삭제</button></div>`).join('')||'<div class="empty">없음</div>';
 }
 // ── 사업 탭: 놀생 리틀리 기준 브랜드·SNS (주소 바뀌면 여기만) ──
-const BIZ_BRANDS=[
-  {name:'TasteTrip',sub:'여행 결정 플랫폼',links:[['라이브','https://www.sot-tastetrip.com/'],['데브','https://dev-sot-tastetrip.vercel.app/'],['TT매거진','https://www.sot-tastetrip.com/#/magazine']]},
-  {name:'트로펫',sub:'TT매거진 소식 모으는 곳',links:[['열기','https://tlf-io.vercel.app/']]},
-  {name:'싱플리',sub:'노래방 플레이리스트',links:[['사이트','https://www.singply.com/']]},
-  {name:'도도독',sub:'사기 전에 눌러보는 키보드',links:[['사이트','https://dododok.vercel.app/'],['관리자','https://dododok.vercel.app/?v=admin']]},
-  {name:'유즈엔터',sub:'그때 그 노래를 트렌디하게',links:[['유튜브','https://www.youtube.com/@YUZ.official']]},
-];
-const BIZ_SNS=[
-  {name:'TasteTrip',links:[['인스타','https://instagram.com/spotontaste_tastetrip'],['틱톡','https://www.tiktok.com/@sot_tastetrip'],['유튜브','https://www.youtube.com/@spotontaste_tastetrip'],['스레드','https://www.threads.net/@spotontaste_tastetrip']]},
-  {name:'오픈카톡방',links:[['들어가기','http://bit.ly/4s1NlNV']]},
-  {name:'YUZ.ENT',links:[['유튜브','https://www.youtube.com/@YUZ.official'],['인스타','https://www.instagram.com/yuz.ent.official'],['틱톡','https://www.tiktok.com/@yuz.ent.official']]},
-  {name:'CEO Yuji',links:[['인스타','https://www.instagram.com/realyuji.official/'],['스레드','https://www.threads.net/@realyuji.official'],['유튜브','https://www.youtube.com/@realyuji.official']]},
-  {name:'Y.essay',links:[['인스타','https://www.instagram.com/y.essay_by_y'],['스레드','https://www.threads.net/@y.essay_by_y'],['X','https://x.com/y.essay34666']]},
+// 놀생 리틀리(litt.ly/nol_life.official)와 같은 구성. 칸은 브랜드마다 똑같이 두고, 주소가 없으면 '준비중'(생기면 여기만 채움)
+const BIZ_SLOTS=['사이트','인스타','틱톡','유튜브','스레드'];
+const BIZ_LITTLY=[
+  {sec:'놀생',items:[
+    {name:'NolLife ㅣ 놀생',color:'#1a1a1a',lines:['일상을 놀이처럼','인생을 여행처럼'],links:{'리틀리':'https://litt.ly/nol_life.official','사이트':'','문의 메일':'mailto:hello@nollife.com'},slots:['리틀리','사이트','문의 메일']},
+  ]},
+  {sec:'자사 브랜드 서비스',items:[
+    {name:'TasteTrip ㅣ 테이스트트립',color:'#0047AB',lines:['"어디 가지?" 고민 끝!','여행 결정 플랫폼'],links:{'사이트':'https://www.sot-tastetrip.com/','데브':'https://dev-sot-tastetrip.vercel.app/','인스타':'https://instagram.com/spotontaste_tastetrip','틱톡':'https://www.tiktok.com/@sot_tastetrip','유튜브':'https://www.youtube.com/@spotontaste_tastetrip','스레드':'https://www.threads.net/@spotontaste_tastetrip'},slots:['사이트','데브',...BIZ_SLOTS.slice(1)]},
+    {name:'TT Magazine ㅣ TT매거진',color:'#1AA7EC',lines:['이번 주말 뭐하고 놀지?','지금 핫한 지역은 어디야?'],links:{'사이트':'https://www.sot-tastetrip.com/#/magazine','구독':'https://litt.ly/nol_life.official','트로펫':'https://tlf-io.vercel.app/'},slots:['사이트','구독','트로펫',...BIZ_SLOTS.slice(1)]},
+    {name:'SingPly ㅣ 싱플리',color:'#00C27A',lines:['내가 부르는 노래방 플레이리스트','떨리면 18번도 생각 안나..미리미리'],links:{'사이트':'https://www.singply.com/'},slots:BIZ_SLOTS},
+    {name:'Dododok ㅣ 도도독',color:'#E8613C',lines:['기계식 키보드 종류가 몇개인데','사기 전에 눌러봐야죠'],links:{'사이트':'https://dododok.vercel.app/','관리자':'https://dododok.vercel.app/?v=admin'},slots:['사이트','관리자',...BIZ_SLOTS.slice(1)]},
+    {name:'YUZ.ENT ㅣ 유즈.엔터',color:'#FF4B3A',lines:['요즘 노래보다 추억이 생각나는','그때 그 노래를 트렌디하게'],links:{'유튜브':'https://www.youtube.com/@YUZ.official','인스타':'https://www.instagram.com/yuz.ent.official','틱톡':'https://www.tiktok.com/@yuz.ent.official'},slots:BIZ_SLOTS},
+  ]},
+  {sec:'TasteTrip 커뮤니티',items:[
+    {name:'여행 정보 품앗이 오픈카톡방',color:'#FEE500',lines:['광고 말고 진짜 후기','여행 다녀온 사람들끼리 정보 나눠요'],links:{'들어가기':'http://bit.ly/4s1NlNV'},slots:['들어가기'],extra:[['분석 현황',"goSub('tt-mine')"]]},
+  ]},
+  {sec:'유지 SNS',items:[
+    {name:'CEO Yuji',color:'#1a1a1a',lines:['이거 누가 만들었냐고요?','저요!'],links:{'인스타':'https://www.instagram.com/realyuji.official/','스레드':'https://www.threads.net/@realyuji.official','유튜브':'https://www.youtube.com/@realyuji.official'},slots:['인스타','틱톡','유튜브','스레드']},
+    {name:'Y.essay',color:'#8a8a8a',lines:['말로 하긴 오글거려서','글로 남겨요'],links:{'인스타':'https://www.instagram.com/y.essay_by_y','스레드':'https://www.threads.net/@y.essay_by_y','X':'https://x.com/y.essay34666'},slots:['인스타','스레드','X']},
+  ]},
 ];
 // 구글 드라이브 폴더. 13_리서치인박스 하위 폴더는 id를 아직 못 받아서 드라이브 검색으로 엶
 const DRIVE=id=>'https://drive.google.com/drive/folders/'+id;
@@ -2079,11 +2076,10 @@ const BIZ_INSIGHT=[
   ['13_리서치인박스 전체',DRIVE_FIND('13_리서치인박스')],
   ...['마케팅트렌드','마케팅소스','BM소스','AI트렌드','AI소스','AI사용법','자기계발자격증'].map(n=>[n,DRIVE_FIND(n)]),
 ];
-const linkBtns=ls=>`<div class="biz-links">${ls.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join('')}</div>`;
+const bizSlot=(t,u)=>u?`<a href="${u}"${u.startsWith('mailto')?'':' target="_blank" rel="noopener"'}>${t}</a>`:`<span class="off">${t} 준비중</span>`;
 function renderBiz(){
-  const b=document.getElementById('biz-brands'),n=document.getElementById('biz-sns');
-  if(b)b.innerHTML=BIZ_BRANDS.map(x=>`<div class="biz-row"><div class="biz-name">${x.name}<span>${x.sub}</span></div>${linkBtns(x.links)}</div>`).join('');
-  if(n)n.innerHTML=BIZ_SNS.map(x=>`<div class="biz-row"><div class="biz-name">${x.name}</div>${linkBtns(x.links)}</div>`).join('');
+  const el=document.getElementById('biz-littly');
+  if(el)el.innerHTML=BIZ_LITTLY.map(g=>`<div class="sec"><div class="sec-lbl">${g.sec}</div></div><div class="card" style="margin:0 20px 14px">${g.items.map(x=>`<div class="biz-row"><div class="biz-name"><i style="background:${x.color}"></i>${x.name}</div>${x.lines.map(l=>`<div class="biz-line">${l}</div>`).join('')}<div class="biz-links">${x.slots.map(t=>bizSlot(t,x.links[t])).join('')}${(x.extra||[]).map(([t,f])=>`<button onclick="${f}">${t}</button>`).join('')}</div></div>`).join('')}</div>`).join('');
   const g=document.getElementById('biz-govt-sub');
   if(g){const l=S.get('main-todo-list',[]).filter(t=>t.tag==='정부지원'&&!t.done);g.textContent=l.length?`진행 중 ${l.length}건 · 드라이브 폴더`:'드라이브 폴더 · 진행 현황';}
 }
