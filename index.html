@@ -359,6 +359,7 @@ textarea.finp{min-height:120px;resize:vertical}
 .mine-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
 .mine-row:last-child{border-bottom:none}
 .mine-row span{color:var(--dim);text-align:right}
+.ch-line{font-size:13px;line-height:1.7;color:var(--text)}
 .mine-issue{padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;line-height:1.6}
 .mine-issue:last-child{border-bottom:none}
 .mine-issue b{display:block}
@@ -448,6 +449,10 @@ textarea.finp{min-height:120px;resize:vertical}
   <div class="card" style="margin:0 20px 14px">
     <div class="row" onclick="goSub('tt-govt')">
       <div class="row-body"><div class="row-title">정부지원</div><div class="row-sub" id="biz-govt-sub">드라이브 폴더 · 진행 현황</div></div>
+      <div class="row-arr">›</div>
+    </div>
+    <div class="row" onclick="goSub('biz-channels')">
+      <div class="row-body"><div class="row-title">CEO Yuji · 유즈엔터 채널 운영</div><div class="row-sub">구글 계정 하나로 같이 운영</div></div>
       <div class="row-arr">›</div>
     </div>
     <div class="row" onclick="goSub('biz-insight')">
@@ -1045,7 +1050,7 @@ function switchTab(group,tab,el){
   setAppScroll(group,tab);
 }
 
-const SUB_TITLES={inbox:'자료 넣기','yd-resume':'이력서','yd-cover':'자소서','yd-portfolio':'포트폴리오','dododok-mail':'도도독 녹음 요청 메일',writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS 콘텐츠 메모','tt-govt':'정부지원','tt-mine':'오픈카톡방 분석','biz-insight':'사업 인사이트',acc:'치료기록',diary:'일기','acc-exercise':'운동법','personal-tips':'개인 꿀팁',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
+const SUB_TITLES={inbox:'자료 넣기','yd-resume':'이력서','yd-cover':'자소서','yd-portfolio':'포트폴리오','dododok-mail':'도도독 녹음 요청 메일',writing:'작성법','tt-biz-plan':'사업계획서','stibee':'스티비','tt-docs':'개발 문서','tt-sns':'SNS 콘텐츠 메모','tt-govt':'정부지원','tt-mine':'오픈카톡방 분석','biz-insight':'사업 인사이트','biz-channels':'채널 운영',acc:'치료기록',diary:'일기','acc-exercise':'운동법','personal-tips':'개인 꿀팁',network:'인맥','yuji-resume':'이력서','yuji-career':'커리어','yuji-portfolio':'포트폴리오','fnb-resume':'FNB 이력서','fnb-cover':'FNB 자소서','fnb-portfolio':'FNB 포트폴리오','plan-resume':'기획자 이력서','plan-cover':'기획자 자소서','plan-portfolio':'기획자 포트폴리오','biz-resume':'사업기획 이력서','biz-cover':'사업기획 자소서','biz-portfolio':'사업기획 포트폴리오',resume:'이력서',cover:'자소서','sns-fl':'SNS 메모'};
 function renderSub(id){
   document.getElementById('sub-title').textContent=SUB_TITLES[id]||'';
   const fn={
@@ -1060,6 +1065,7 @@ function renderSub(id){
     'tt-govt':subGovt,
     'tt-mine':subMine,
     'biz-insight':subInsight,
+    'biz-channels':subChannels,
     'tt-mine-old':()=>`<div class="form-wrap" style="margin-top:16px;display:flex;flex-direction:column;gap:10px"><button class="submit-btn" onclick="alert('터미널: bash run_all_files.sh')">파이프라인 실행</button><button class="submit-btn" style="background:#f5f5f5;color:#333" onclick="window.open('okaband.html','_blank')">대시보드 열기</button><button class="submit-btn" style="background:#f5f5f5;color:#333">랜딩페이지</button></div>`,
     acc:subAcc,
     diary:subDiary,
@@ -1690,11 +1696,16 @@ async function pullInboxTodos(){
     const h={'x-pin':pin},r=await fetch('/api/acc?f=todos',{cache:'no-store',headers:h});if(!r.ok)return;
     const add=await r.json();if(!Array.isArray(add)||!add.length)return;
     const arr=S.get('main-todo-list',[]),have=new Set(arr.map(t=>t.text)),base=Date.now();let n=0;
-    add.forEach((x,i)=>{if(!x?.text||have.has(x.text))return;have.add(x.text);n++;
+    add.forEach((x,i)=>{if(!x?.text)return;
+      // 이름이 같은 할일이 이미 있으면 새로 만들지 않고, 없는 세부 단계·빈 메모·빈 날짜만 채움
+      const old=arr.find(t=>t.text===x.text);
+      if(old){const subs=old.subs||[],names=new Set(subs.map(s=>s.text));(x.subs||[]).map(s=>String(s.text??s)).filter(s=>!names.has(s)).forEach(s=>{subs.push({text:s,done:false});n++;});if(subs.length){old.subs=subs;if(old.done&&subs.some(s=>!s.done))old.done=false;}
+        if(x.memo&&!old.memo)old.memo=x.memo;if(x.due&&!old.due)old.due=x.due;if(x.start&&!old.start)old.start=x.start;return;}
+      have.add(x.text);n++;
       arr.unshift({text:String(x.text),tag:x.tag||'기타',done:false,id:base+i,...(x.due?{due:x.due}:{}),...(x.start?{start:x.start}:{}),...(x.memo?{memo:x.memo}:{}),...(x.subs?.length?{subs:x.subs.map(s=>({text:String(s.text??s),done:false}))}:{})});});
     S.set('main-todo-list',arr);
     await fetch('/api/acc?f=todos',{method:'DELETE',cache:'no-store',headers:h});
-    if(n){renderTodos();updateStats();showToast(`할일 ${n}개를 넣었어요`);}
+    if(n){renderTodos();updateStats();showToast('Claude가 할일을 넣었어요');}
   }catch(e){}
 }
 setTimeout(autoBackup,5000);
@@ -2082,6 +2093,35 @@ function renderBiz(){
   if(el)el.innerHTML=BIZ_LITTLY.map(g=>`<div class="sec"><div class="sec-lbl">${g.sec}</div></div><div class="card" style="margin:0 20px 14px">${g.items.map(x=>`<div class="biz-row"><div class="biz-name"><i style="background:${x.color}"></i>${x.name}</div>${x.lines.map(l=>`<div class="biz-line">${l}</div>`).join('')}<div class="biz-links">${x.slots.map(t=>bizSlot(t,x.links[t])).join('')}${(x.extra||[]).map(([t,f])=>`<button onclick="${f}">${t}</button>`).join('')}</div></div>`).join('')}</div>`).join('');
   const g=document.getElementById('biz-govt-sub');
   if(g){const l=S.get('main-todo-list',[]).filter(t=>t.tag==='정부지원'&&!t.done);g.textContent=l.length?`진행 중 ${l.length}건 · 드라이브 폴더`:'드라이브 폴더 · 진행 현황';}
+}
+// CEO Yuji·유즈엔터 채널: 10-24 정한 운영 방식(리얼유지오피셜 구글 하나에 같이), sns-strategy.md 최신표 기준
+const CHANNELS=[
+  {name:'CEO Yuji',id:'@realyuji.official',what:['대표 공식 계정이에요.','싱플리·도도독 홍보와 만드는 이야기를 올려요.','놀생 소식도 여기서 전해요.'],where:'인스타 · 스레드 · 유튜브',who:'싱플리 10~30대 · 도도독 10~36세',often:'싱플리 주 3회 + 도도독 주 3회'},
+  {name:'YUZ.ENT 유즈엔터',id:'유튜브 @YUZ.official · 인스타·틱톡 @yuz.ent.official',what:['그때 그 노래를 Z세대와 같이 들어요.','레이블 컨셉은 "그 시절을 꺼내 듣는 서랍"이에요.','첫 아티스트는 NOVA 미니 1집 《핑크캐비넷》이에요.'],where:'유튜브 · 인스타 · 틱톡',who:'2세대 K-POP 듣던 세대 + Z세대',often:'아직 안 정함'},
+];
+function subChannels(){
+  const card=c=>`<div class="card" style="margin:0 20px 14px"><div class="p">
+    <div style="font-size:16px;font-weight:800">${c.name}</div><div class="link-url" style="margin-bottom:8px">${c.id}</div>
+    ${c.what.map(t=>`<div class="ch-line">${t}</div>`).join('')}
+    <div class="mine-row" style="margin-top:8px"><b>플랫폼</b><span>${c.where}</span></div>
+    <div class="mine-row"><b>타깃</b><span>${c.who}</span></div>
+    <div class="mine-row"><b>빈도</b><span>${c.often}</span></div></div></div>`;
+  return `<div class="sec-lbl" style="padding:14px 20px 8px">같이 운영하는 방식</div>
+    <div class="card" style="margin:0 20px 14px"><div class="p">
+      <div class="ch-line">두 채널 모두 리얼유지오피셜 구글 계정 하나로 운영해요.</div>
+      <div class="ch-line">유튜브는 브랜드 계정으로 채널을 두 개 둬요.</div>
+      <div class="ch-line">나중에 유즈엔터만 떼어 넘길 수도 있어요.</div>
+      <div class="ch-line">도메인을 사면 유즈엔터 메일을 만들어요.</div>
+      <div class="ch-line">그 메일로 인스타·틱톡 로그인 메일을 바꿔요.</div>
+    </div></div>
+    <div class="sec-lbl" style="padding:0 20px 8px">채널</div>${CHANNELS.map(card).join('')}
+    <div class="sec-lbl" style="padding:0 20px 8px">남은 일</div>
+    <div class="card" style="margin:0 20px 30px"><div class="p">
+      <div class="ch-line">@YUZ.official 채널이 어느 구글 계정에 있는지 확인</div>
+      <div class="ch-line">유즈엔터 도메인 사기 (할일에 있어요)</div>
+      <div class="ch-line">유즈엔터 틱톡 아이디 확인</div>
+      <div class="ch-line">ENTJ 계정을 리얼유지오피셜로 합칠지 정하기</div>
+    </div></div>`;
 }
 function subInsight(){
   return `<div class="card" style="margin:12px 20px 20px">${BIZ_INSIGHT.map(([t,u])=>`<a href="${u}" target="_blank" class="link-row"><div style="font-size:14px;font-weight:700">${t}</div><div class="row-arr">›</div></a>`).join('')}</div>`;
