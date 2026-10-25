@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>유지현 OS</title>
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FF6B35">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
@@ -379,7 +384,7 @@ textarea.finp{min-height:120px;resize:vertical}
 <!-- ══ 홈 ══ -->
 <div class="page active" id="pg-home">
   <div class="hdr">
-    <div class="hdr-greeting" id="greeting">유지현, 러블리해</div>
+    <div class="hdr-greeting" id="greeting">시작한 건 끝까지, 유지현</div>
     <div class="hdr-date" id="today-date"></div>
     <div class="hdr-todo-preview" id="todo-preview"></div>
   </div>
@@ -1011,7 +1016,10 @@ const GREETINGS=[
   "넌 틀리지 않았어, 계속 가 🧭","유지현의 감각은 늘 맞아 👁️","잘 쉬는 것도 실력이야 ☕",
   "너답게 하면 다 잘 돼 🎨","어떤 날도 유지현은 빛나 🌠","믿어, 넌 할 수 있어 🔥","유지현 파이팅!! 💫"
 ];
+// 맨 위 문구(10-26 유지): 책임감 있게 끝까지 해내고 맺고 끊음을 단단히. 예전 응원 문구(GREETINGS)는 남겨 둠
+const MOTTO='시작한 건 끝까지, 유지현';
 function getGreeting(){
+  return MOTTO;
   const issues=S.get('issues',[]).filter(i=>i.level==='high').length;
   if(issues>0)return "이슈 있어도 괜찮아, 넌 잘 해결할 수 있어";
   const todos=S.get('main-todo-list',[]).filter(t=>!t.done).length;
