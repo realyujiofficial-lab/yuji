@@ -119,6 +119,8 @@ textarea.td-in{resize:vertical;line-height:1.6}
 .ttabs{display:flex;gap:6px;padding:4px 20px 10px}
 .ttabs button{border:1.5px solid var(--border);border-radius:20px;padding:6px 14px;background:var(--card);font-size:13px;font-weight:700;color:var(--dim);cursor:pointer;font-family:inherit}
 .ttabs button.on{background:#1a1a1a;border-color:#1a1a1a;color:#fff}
+.cal-day.sel{box-shadow:inset 0 0 0 2px var(--accent)}
+.tcal-n{font-size:10px;font-weight:800;color:var(--accent);line-height:1;margin-top:2px}
 .tstart{flex-shrink:0;font-size:11px;font-weight:700;color:var(--dim);border:1px solid var(--border);border-radius:6px;padding:2px 5px}
 .tdone-at{flex-shrink:0;font-size:11px;color:var(--dim)}
 .ib-guide{font-size:14px;font-weight:700;line-height:1.5}
@@ -2298,6 +2300,24 @@ async function addTodoPhotos(files){
 }
 const md=d=>d?`${+d.slice(5,7)}/${+d.slice(8,10)}`:'';
 function setTodoView(v){S.set('todo_view',v);renderTodos();}
+// 달력: 마감일 있는 할일을 날짜에 개수로 보여 주고, 날짜를 누르면 그날 할일
+let TCAL_M=null,TCAL_D=null;
+function todoCalMove(d){const n=new Date(TCAL_M[0],TCAL_M[1]+d,1);TCAL_M=[n.getFullYear(),n.getMonth()];renderTodos();}
+function todoCalPick(ds){TCAL_D=ds;renderTodos();}
+function todoCal(arr,tdy){
+  if(!TCAL_M){const n=new Date();TCAL_M=[n.getFullYear(),n.getMonth()];}
+  if(!TCAL_D)TCAL_D=tdy;
+  const [y,m]=TCAL_M,first=new Date(y,m,1).getDay(),last=new Date(y,m+1,0).getDate(),p2=n=>String(n).padStart(2,'0'),byDay={};
+  const put=(d,h)=>(byDay[d]=byDay[d]||[]).push(h);
+  arr.forEach(t=>{if(t.done)return;
+    if(t.due)put(t.due,`<div class="todo-item"><span class="tt" onclick="openTodo(${t.id})">${t.text}<span class="thas">${t.tag||'기타'}</span></span>${dday(t.due)}</div>`);
+    (t.subs||[]).forEach((x,k)=>{if(!x.done&&x.due)put(x.due,`<div class="todo-item"><span class="tt" onclick="openTodo(${t.id},${k})">${x.text}<span class="thas">${t.text}</span></span>${dday(x.due)}</div>`);});});
+  let g='';for(let i=0;i<first;i++)g+='<div></div>';
+  for(let d=1;d<=last;d++){const ds=`${y}-${p2(m+1)}-${p2(d)}`,n=(byDay[ds]||[]).length;g+=`<div class="cal-day${ds===tdy?' today':''}${ds===TCAL_D?' sel':''}" onclick="todoCalPick('${ds}')">${d}${n?`<div class="tcal-n">${n}</div>`:''}</div>`;}
+  return `<div class="cal-nav"><button class="cal-nbtn" onclick="todoCalMove(-1)">‹</button><span class="cal-m">${y}년 ${m+1}월</span><button class="cal-nbtn" onclick="todoCalMove(1)">›</button></div>`
+    +`<div class="cal-grid">${[...'일월화수목금토'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}</div><div class="cal-grid">${g}</div>`
+    +`<div class="tsec-hd">${md(TCAL_D)} 할일</div>`+((byDay[TCAL_D]||[]).join('')||'<div class="empty">이날 할일 없음</div>');
+}
 // ── 자료 넣기: 파일을 유지OS 저장소(inbox/)에 올려 두면 Claude가 '자료 정리해줘' 때 읽고 나눠 넣음 ──
 let INBOX_MEMO='';
 function openInbox(memo=''){INBOX_MEMO=memo;goSub('inbox');}
@@ -2354,10 +2374,10 @@ function renderTodos(){
     return `<div class="tgrp-hd" onclick="foldTodoGrp('${g}')">${g} <span class="n">${list.length-open.length}/${list.length}</span><span class="fold">${fold[g]?'펼치기':'접기'}</span></div>`
       +(fold[g]?'':open.map(item).join(''));};
   const done=arr.filter(t=>t.done).sort((a,b)=>(b.doneAt||'').localeCompare(a.doneAt||''));
-  const tabs=`<div class="ttabs"><button class="${view==='done'?'':'on'}" onclick="setTodoView('ing')">진행중 ${arr.length-done.length}</button><button class="${view==='done'?'on':''}" onclick="setTodoView('done')">완료 ${done.length}</button></div>`;
+  const tabs=`<div class="ttabs"><button class="${view==='ing'?'on':''}" onclick="setTodoView('ing')">진행중 ${arr.length-done.length}</button><button class="${view==='done'?'on':''}" onclick="setTodoView('done')">완료 ${done.length}</button><button class="${view==='cal'?'on':''}" onclick="setTodoView('cal')">달력</button></div>`;
   const nd=new Date(),today=`${nd.getFullYear()}-${String(nd.getMonth()+1).padStart(2,'0')}-${String(nd.getDate()).padStart(2,'0')}`,urgent=[];
   arr.forEach(t=>{if(!t.done&&t.due&&t.due<=today)urgent.push(`<div class="todo-item urgent"><span class="tt" onclick="openTodo(${t.id})">${t.text}</span>${dday(t.due)}</div>`);(t.subs||[]).forEach((x,k)=>{if(!x.done&&x.due&&x.due<=today)urgent.push(`<div class="todo-item urgent"><span class="tt" onclick="openTodo(${t.id},${k})">${x.text}<span class="thas">${t.text}</span></span>${dday(x.due)}</div>`);});});
-  el.innerHTML=tabs+(view==='done'
+  el.innerHTML=tabs+(view==='cal'?todoCal(arr,tdy):view==='done'
     ?done.map(t=>`<div class="todo-item done"><input type="checkbox" checked onchange="toggleTodo(${t.id})"><span class="tt" onclick="openTodo(${t.id})">${t.text}<span class="thas">${t.tag||'기타'}</span></span><span class="tdone-at">${t.doneAt?md(t.doneAt)+' 완료':''}</span><button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`).join('')||'<div class="empty">완료한 할일 없음</div>'
     :(urgent.length?`<div class="tsec-hd">오늘 할일</div>`+urgent.join(''):'')+sections.map(([s,gs])=>{const body=gs.map(grp).join('');return body?`<div class="tsec-hd">${s}</div>`+body:'';}).join('')||'<div class="empty">할일 없음</div>');
   const ps=document.getElementById('main-todo-parent');
