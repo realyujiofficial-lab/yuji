@@ -62,7 +62,7 @@ function feed(todos) {
   const ev = todos.filter((t) => t.date).map((t) => {
     const n = new Date(t.date + 'T00:00:00Z'); n.setUTCDate(n.getUTCDate() + 1)
     return ['BEGIN:VEVENT', `UID:yujios-${t.key}@yujios`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${ymd(t.date)}`, `DTEND;VALUE=DATE:${ymd(n.toISOString().slice(0, 10))}`,
-      `SUMMARY:${icsEsc((t.kind === 'start' ? '[시작] ' : '[할일] ') + t.text)}`, `DESCRIPTION:${icsEsc([t.st, t.tag, t.parent].filter(Boolean).join(' · '))}`, 'TRANSP:TRANSPARENT', 'END:VEVENT'].join('\r\n')
+      `SUMMARY:${icsEsc(({start: '[시작] ', day: '[할 날] '}[t.kind] || '[할일] ') + t.text)}`, `DESCRIPTION:${icsEsc([t.st, t.tag, t.parent].filter(Boolean).join(' · '))}`, 'TRANSP:TRANSPARENT', 'END:VEVENT'].join('\r\n')
   })
   return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//yujios//todo//KO', 'CALSCALE:GREGORIAN', 'X-WR-CALNAME:유지OS 할일', 'X-WR-TIMEZONE:Asia/Seoul', ...ev, 'END:VCALENDAR', ''].join('\r\n')
 }

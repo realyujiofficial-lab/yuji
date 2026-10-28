@@ -140,6 +140,17 @@ textarea.td-in{resize:vertical;line-height:1.6}
 .tst.st-doing{background:#1a1a1a;border-color:#1a1a1a;color:#fff}
 .tst.st-wait{background:#FFF4D6;border-color:#F2D58A;color:#8A6400}
 .tsec-n{color:var(--dim);font-weight:600;font-size:13px}
+.tsec-row{display:flex;align-items:center;justify-content:space-between}
+.tadd{border:none;background:#1a1a1a;color:#fff;border-radius:16px;min-width:32px;height:32px;padding:0 12px;font-size:18px;font-weight:800;cursor:pointer;font-family:inherit}
+.tadd.on{font-size:13px;background:var(--card);color:#1a1a1a;border:1.5px solid var(--border)}
+.tpick{margin:6px 20px 10px;border:1.5px solid var(--border);border-radius:12px;padding:10px;max-height:340px;overflow-y:auto;background:var(--card)}
+.tpick-g{font-size:12px;font-weight:800;color:var(--dim);padding:10px 4px 4px}
+.tpick-row{display:flex;align-items:center;gap:8px;padding:10px 4px;border-bottom:1px solid var(--border);font-size:14px;cursor:pointer}
+.tpick-row.sub{padding-left:22px;font-size:13px;color:#444}
+.tpick-row.on .tpick-t{font-weight:700}
+.tpick-ck{flex-shrink:0;width:20px;height:20px;border:1.5px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.tpick-row.on .tpick-ck{background:#1a1a1a;border-color:#1a1a1a;color:#fff}
+.tpick-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tstart{flex-shrink:0;font-size:11px;font-weight:700;color:var(--dim);border:1px solid var(--border);border-radius:6px;padding:2px 5px}
 .tdone-at{flex-shrink:0;font-size:11px;color:var(--dim)}
 .ib-guide{font-size:14px;font-weight:700;line-height:1.5}
@@ -2362,6 +2373,8 @@ function pushCalTodos(arr){
   arr.forEach(t=>{if(t.done)return;const st=ST_NAME[stOf(t)];
     if(t.due&&!t.gcal)list.push({key:String(t.id),date:t.due,text:t.text,st,tag:t.tag||'기타'});
     if(t.start&&t.start!==t.due)list.push({key:t.id+'s',kind:'start',date:t.start,text:t.text,st,tag:t.tag||'기타'});
+    (t.days||[]).forEach(d=>{if(d!==t.due)list.push({key:`${t.id}d${d}`,kind:'day',date:d,text:t.text,st,tag:t.tag||'기타'});});
+    (t.subs||[]).forEach((x,k)=>{if(!x.done)(x.days||[]).forEach(d=>{if(d!==x.due)list.push({key:`${t.id}-${k}d${d}`,kind:'day',date:d,text:x.text,parent:t.text,st:ST_NAME[stOf(x)]});});});
     (t.subs||[]).forEach((x,k)=>{if(!x.done&&x.due)list.push({key:`${t.id}-${k}`,date:x.due,text:x.text,parent:t.text,st:ST_NAME[stOf(x)]});});});
   const js=JSON.stringify(list);if(js===localStorage.getItem('cal_push'))return;
   clearTimeout(CAL_PUSH_T);
@@ -2374,9 +2387,29 @@ function evToTodo(uid){
   arr.unshift({text:ev.title||'제목 없는 일정',tag:'기타',done:false,id:Date.now(),due:ev.date,gcal:ev.uid,...(ev.time?{memo:`${ev.time} 일정`}:{})});
   S.set('main-todo-list',arr);renderTodos();updateStats();showToast('할일로 넣었어요');
 }
+// 10-28 유지: 날짜를 고르고 + 를 누르면 이미 있는 할일·세부 단계를 그날 '할 날'로 넣음(마감일은 그대로)
+let TCAL_ADD=false;
+function calAddToggle(){TCAL_ADD=!TCAL_ADD;renderTodos();if(TCAL_ADD)setTimeout(()=>document.getElementById('tpick-q')?.focus(),50);}
+function toggleDay(id,k){
+  const arr=S.get('main-todo-list',[]),t=arr.find(t=>t.id===id);if(!t)return;
+  const o=k==null?t:(t.subs||[])[k];if(!o)return;
+  const ds=new Set(o.days||[]);ds.has(TCAL_D)?ds.delete(TCAL_D):ds.add(TCAL_D);
+  if(ds.size)o.days=[...ds].sort();else delete o.days;
+  S.set('main-todo-list',arr);renderTodos();
+}
+function tpickFilter(v){v=v.trim();document.querySelectorAll('.tpick-row').forEach(r=>{r.style.display=!v||r.dataset.q.includes(v)?'':'none';});}
 function dueToDay(id){
   const arr=S.get('main-todo-list',[]),t=arr.find(t=>t.id===id);if(!t)return;
   t.due=TCAL_D;S.set('main-todo-list',arr);renderTodos();showToast(`${md(TCAL_D)} 할일로 넣었어요`);
+}
+// + 를 누르면 나오는 목록: 진행 중인 할일과 세부 단계를 분류별로, 누르면 그날 '할 날'로 넣고 빼기
+function tpick(arr){
+  const on=o=>(o.days||[]).includes(TCAL_D)||o.due===TCAL_D,open=arr.filter(t=>!t.done),groups=[...new Set(open.map(t=>t.tag||'기타'))];
+  const row=(t,k)=>{const o=k==null?t:t.subs[k],c=on(o),due=o.due===TCAL_D;
+    return `<div class="tpick-row${c?' on':''}${k==null?'':' sub'}" data-q="${esc((o.text+' '+(k==null?'':t.text)).toLowerCase())}"${due?'':` onclick="toggleDay(${t.id}${k==null?'':','+k})"`}><span class="tpick-ck">${c?'✓':''}</span><span class="tpick-t">${esc(o.text)}</span>${due?'<span class="thas">마감일</span>':o.due?dday(o.due):''}</div>`;};
+  return `<div class="tpick"><input class="td-in" id="tpick-q" placeholder="할일 찾기" oninput="tpickFilter(this.value.toLowerCase())">`
+    +(groups.map(g=>`<div class="tpick-g">${g}</div>`+open.filter(t=>(t.tag||'기타')===g).map(t=>row(t)+(t.subs||[]).map((x,k)=>x.done?'':row(t,k)).join('')).join('')).join('')||'<div class="empty">진행 중인 할일 없음</div>')
+    +'</div>';
 }
 function todoCal(arr,tdy){
   if(!TCAL_M){const n=new Date();TCAL_M=[n.getFullYear(),n.getMonth()];}
@@ -2387,7 +2420,10 @@ function todoCal(arr,tdy){
   arr.forEach(t=>{if(t.done)return;
     if(t.due)put(t.due,`<div class="todo-item"><span class="tt" onclick="openTodo(${t.id})">${esc(t.text)}<span class="thas">${t.tag||'기타'}</span></span>${dday(t.due)}${stChip(t)}</div>`);
     if(t.start&&t.start!==t.due)put(t.start,`<div class="todo-item"><span class="tt" onclick="openTodo(${t.id})">${esc(t.text)}<span class="thas">시작</span></span>${dday(t.due)}${stChip(t)}</div>`);
-    (t.subs||[]).forEach((x,k)=>{if(!x.done&&x.due)put(x.due,`<div class="todo-item"><span class="tt" onclick="openTodo(${t.id},${k})">${esc(x.text)}<span class="thas">${esc(t.text)}</span></span>${dday(x.due)}</div>`);});});
+    (t.days||[]).forEach(d=>{if(d!==t.due)put(d,`<div class="todo-item"><span class="tt" onclick="openTodo(${t.id})">${esc(t.text)}<span class="thas">할 날</span></span>${dday(t.due)}${stChip(t)}<button class="xbtn" onclick="TCAL_D='${d}';toggleDay(${t.id})">×</button></div>`);});
+    (t.subs||[]).forEach((x,k)=>{if(x.done)return;
+      if(x.due)put(x.due,`<div class="todo-item"><span class="tt" onclick="openTodo(${t.id},${k})">${esc(x.text)}<span class="thas">${esc(t.text)}</span></span>${dday(x.due)}</div>`);
+      (x.days||[]).forEach(d=>{if(d!==x.due)put(d,`<div class="todo-item"><span class="tt" onclick="openTodo(${t.id},${k})">${esc(x.text)}<span class="thas">${esc(t.text)} · 할 날</span></span>${dday(x.due)}<button class="xbtn" onclick="TCAL_D='${d}';toggleDay(${t.id},${k})">×</button></div>`);});});});
   // 여러 날 종일 일정은 끝나는 날 전날까지 매일(최대 31일)
   (GCAL?.events||[]).forEach(e=>{let d=new Date(e.date+'T00:00');const end=e.end&&!e.time?new Date(e.end+'T00:00'):null;
     for(let i=0;i<31;i++){const ds=`${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`;(evDay[ds]=evDay[ds]||[]).push(e);d.setDate(d.getDate()+1);if(!end||d>=end)break;}});
@@ -2406,7 +2442,9 @@ function todoCal(arr,tdy){
     +`<div class="cal-grid">${[...'일월화수목금토'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}</div><div class="cal-grid">${g}</div>`
     +`<div class="tcal-key"><span class="tcal-n">3</span> 할일 <span class="tcal-ev"></span> 구글 일정</div>`
     +(GCAL?.linked===false?'':`<div class="tsec-hd">${md(TCAL_D)} 일정</div>`+gstate)
-    +`<div class="tsec-hd">${md(TCAL_D)} 할일</div>`+((byDay[TCAL_D]||[]).join('')||'<div class="empty">이날 할일 없음</div>')
+    +`<div class="tsec-hd tsec-row">${md(TCAL_D)} 할일<button class="tadd${TCAL_ADD?' on':''}" onclick="calAddToggle()">${TCAL_ADD?'닫기':'+'}</button></div>`
+    +(TCAL_ADD?tpick(arr):'')
+    +((byDay[TCAL_D]||[]).join('')||'<div class="empty">이날 할일 없음</div>')
     +(nodate.length?`<div class="td-row tcal-pick"><select class="td-in" onchange="if(this.value)dueToDay(Number(this.value))"><option value="">날짜 없는 할일을 이날로 넣기</option>${nodate.map(t=>`<option value="${t.id}">${esc(t.text)}</option>`).join('')}</select></div>`:'')
     +link;
 }
