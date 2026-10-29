@@ -4,10 +4,14 @@
 import { put, get } from '@vercel/blob'
 import { randomBytes } from 'node:crypto'
 
+// 파일이 정말 없을 때만 기본값. 잠깐 못 읽은 걸 "없음"으로 보면 config를 새로 써서 구글 주소·구독 키가 날아간다(10-30 리뷰)
 async function readJson(path, def) {
-  const r = await get(path, { access: 'private', useCache: false }).catch(() => null)
-  if (!r || r.statusCode !== 200) return def
-  try { return JSON.parse(Buffer.from(await new Response(r.stream).arrayBuffer()).toString('utf8')) } catch { return def }
+  let r
+  try { r = await get(path, { access: 'private', useCache: false }) }
+  catch (e) { if (/not.?found|404/i.test(String(e?.name) + String(e?.message))) return def; throw e }
+  if (!r) return def
+  if (r.statusCode !== 200) throw new Error(`${path} 읽기 실패 ${r.statusCode}`)
+  return JSON.parse(Buffer.from(await new Response(r.stream).arrayBuffer()).toString('utf8'))
 }
 const save = (path, obj) => put(path, JSON.stringify(obj), { access: 'private', contentType: 'application/json', addRandomSuffix: false, allowOverwrite: true })
 async function config() {

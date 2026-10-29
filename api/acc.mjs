@@ -80,7 +80,8 @@ export default async function handler(req, res) {
     return res.status(200).send(Buffer.from(await new Response(r.stream).arrayBuffer()).toString('utf8'))
   }
 
-  const PATH = f === 'all' ? 'all-data.json' : /^auto-[a-z0-9-]{8,40}$/.test(f) ? `auto/${f.slice(5)}.json` : 'accident-data.json'
+  const PATH = f === 'all' ? 'all-data.json' : /^auto-[a-z0-9-]{8,40}$/.test(f) ? `auto/${f.slice(5)}.json` : f === '' ? 'accident-data.json' : null
+  if (!PATH) return res.status(400).json({ error: 'f' })
   if (req.method === 'POST') {
     const body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body)
     await put(PATH, body, { access: 'private', contentType: 'application/json', addRandomSuffix: false, allowOverwrite: true })
