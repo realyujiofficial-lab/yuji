@@ -184,6 +184,8 @@ textarea.finp{resize:none;min-height:90px;line-height:1.6}
 </div>
 
 <script>
+// 익명 제보가 그대로 HTML로 들어가 관리 화면에서 스크립트가 돌 수 있었다(10-31 리뷰)
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const MY_KEY = 'jebo_history';
 
 let selectedType = '';
@@ -316,18 +318,18 @@ async function loadPending() {
       .filter(Boolean)
       .sort((a,b) => a.submittedAt > b.submittedAt ? 1 : -1)
       .map(r => `
-        <div class="report-card" id="rc-${r.id}">
+        <div class="report-card" id="rc-${Number(r.id)||0}">
           <div class="rc-meta">
-            <span class="rc-nick">${r.nick}</span>
-            <span class="rc-type">${r.type}</span>
-            ${r.region ? `<span class="rc-region">${r.region}</span>` : ''}
-            <span class="rc-dt">${r.datetime ? r.datetime.slice(5,16).replace('T',' ') : ''}</span>
+            <span class="rc-nick">${esc(r.nick)}</span>
+            <span class="rc-type">${esc(r.type)}</span>
+            ${r.region ? `<span class="rc-region">${esc(r.region)}</span>` : ''}
+            <span class="rc-dt">${r.datetime ? esc(String(r.datetime).slice(5,16).replace('T',' ')) : ''}</span>
           </div>
-          <div class="rc-body">${r.content}</div>
-          ${r.source ? `<div class="rc-source">${r.source}</div>` : ''}
+          <div class="rc-body">${esc(r.content)}</div>
+          ${r.source ? `<div class="rc-source">${esc(r.source)}</div>` : ''}
           <div class="rc-actions">
-            <button class="rc-btn ok" onclick="openApproveModal(${r.id})">⭕ 승인</button>
-            <button class="rc-btn no" onclick="rejectReport(${r.id})">❌ 거절</button>
+            <button class="rc-btn ok" onclick="openApproveModal(${Number(r.id)||0})">⭕ 승인</button>
+            <button class="rc-btn no" onclick="rejectReport(${Number(r.id)||0})">❌ 거절</button>
           </div>
         </div>`).join('');
   } catch(e) {

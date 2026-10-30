@@ -821,7 +821,9 @@ textarea.finp{min-height:120px;resize:vertical}
     const r=await fetch('/api/acc?f=all',{cache:'no-store',headers:{'x-pin':pin}});
     if(!r.ok){note('불러오기에 실패했어요.\n개인 탭 맨 아래 "전체 불러오기"를 눌러주세요.');return;}
     const d=await r.json();
-    Object.entries(d.data||{}).forEach(([k,v])=>localStorage.setItem(k,v));
+    // 기기마다 다른 값까지 복원하면 두 기기가 같은 자동 백업 칸을 덮어썼다(10-31 리뷰)
+    const MINE=['device_id','auto_backup_at','auto_backup_fail','cal_push','acc_pin'];
+    Object.entries(d.data||{}).forEach(([k,v])=>{if(!MINE.includes(k))localStorage.setItem(k,v);});
     location.replace('/');
   }
 })();
@@ -1752,7 +1754,9 @@ async function restoreAll(){
     if(!r)return;
     if(r.status===404){showToast('아직 전체 백업이 없어요');return;}
     const d=await r.json();
-    Object.entries(d.data||{}).forEach(([k,v])=>localStorage.setItem(k,v));
+    // 기기마다 다른 값까지 복원하면 두 기기가 같은 자동 백업 칸을 덮어썼다(10-31 리뷰)
+    const MINE=['device_id','auto_backup_at','auto_backup_fail','cal_push','acc_pin'];
+    Object.entries(d.data||{}).forEach(([k,v])=>{if(!MINE.includes(k))localStorage.setItem(k,v);});
     showToast('불러왔어요!');setTimeout(()=>location.reload(),800);
   }catch(e){showToast('불러오기 실패');}
 }
@@ -2408,7 +2412,7 @@ function tpick(arr){
   const row=(t,k)=>{const o=k==null?t:t.subs[k],c=on(o),due=o.due===TCAL_D;
     return `<div class="tpick-row${c?' on':''}${k==null?'':' sub'}" data-q="${esc((o.text+' '+(k==null?'':t.text)).toLowerCase())}"${due?'':` onclick="toggleDay(${t.id}${k==null?'':','+k})"`}><span class="tpick-ck">${c?'✓':''}</span><span class="tpick-t">${esc(o.text)}</span>${due?'<span class="thas">마감일</span>':o.due?dday(o.due):''}</div>`;};
   return `<div class="tpick"><input class="td-in" id="tpick-q" placeholder="할일 찾기" oninput="tpickFilter(this.value.toLowerCase())">`
-    +(groups.map(g=>`<div class="tpick-g">${g}</div>`+open.filter(t=>(t.tag||'기타')===g).map(t=>row(t)+(t.subs||[]).map((x,k)=>x.done?'':row(t,k)).join('')).join('')).join('')||'<div class="empty">진행 중인 할일 없음</div>')
+    +(groups.map(g=>`<div class="tpick-g">${esc(g)}</div>`+open.filter(t=>(t.tag||'기타')===g).map(t=>row(t)+(t.subs||[]).map((x,k)=>x.done?'':row(t,k)).join('')).join('')).join('')||'<div class="empty">진행 중인 할일 없음</div>')
     +'</div>';
 }
 function todoCal(arr,tdy){
@@ -2418,7 +2422,7 @@ function todoCal(arr,tdy){
   const [y,m]=TCAL_M,first=new Date(y,m,1).getDay(),last=new Date(y,m+1,0).getDate(),p2=n=>String(n).padStart(2,'0'),byDay={},evDay={};
   const put=(d,h)=>(byDay[d]=byDay[d]||[]).push(h);
   arr.forEach(t=>{if(t.done)return;
-    if(t.due)put(t.due,`<div class="todo-item"><span class="tt" onclick="openTodo(${t.id})">${esc(t.text)}<span class="thas">${t.tag||'기타'}</span></span>${dday(t.due)}${stChip(t)}</div>`);
+    if(t.due)put(t.due,`<div class="todo-item"><span class="tt" onclick="openTodo(${t.id})">${esc(t.text)}<span class="thas">${esc(t.tag||'기타')}</span></span>${dday(t.due)}${stChip(t)}</div>`);
     if(t.start&&t.start!==t.due)put(t.start,`<div class="todo-item"><span class="tt" onclick="openTodo(${t.id})">${esc(t.text)}<span class="thas">시작</span></span>${dday(t.due)}${stChip(t)}</div>`);
     (t.days||[]).forEach(d=>{if(d!==t.due)put(d,`<div class="todo-item"><span class="tt" onclick="openTodo(${t.id})">${esc(t.text)}<span class="thas">할 날</span></span>${dday(t.due)}${stChip(t)}<button class="xbtn" onclick="TCAL_D='${d}';toggleDay(${t.id})">×</button></div>`);});
     (t.subs||[]).forEach((x,k)=>{if(x.done)return;
@@ -2468,7 +2472,7 @@ async function renderInbox(){
   if(!r?.ok){el.innerHTML='<div class="empty">목록을 못 불러왔어요</div>';return;}
   const list=(await r.json()).sort((a,b)=>String(b.at).localeCompare(String(a.at)));
   el.innerHTML=list.map(x=>{const done=x.path.startsWith('inbox/done/'),n=ibName(x.path),m=n.match(/^(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})\d{2}-(.*)$/);
-    return `<div class="td-sub${done?' done':''}"><span><b class="ib-n">${esc(m?m[6]:n)}</b><span class="thas">${m?`${+m[2]}/${+m[3]} ${m[4]}:${m[5]}`:''}${done?' · 정리됨':''}</span></span><button class="xbtn" onclick="delInbox('${encodeURIComponent(x.path)}')">×</button></div>`;}).join('')||'<div class="empty">아직 올린 자료가 없어요</div>';
+    return `<div class="td-sub${done?' done':''}"><span><b class="ib-n">${esc(m?m[6]:n)}</b><span class="thas">${m?`${+m[2]}/${+m[3]} ${m[4]}:${m[5]}`:''}${done?' · 정리됨':''}</span></span><button class="xbtn" data-p="${esc(x.path)}" onclick="delInbox(encodeURIComponent(this.dataset.p))">×</button></div>`;}).join('')||'<div class="empty">아직 올린 자료가 없어요</div>';
 }
 async function delInbox(p){if(!confirm('이 자료를 지울까요?'))return;const r=await accFetch({method:'DELETE'},'?f=inbox-file&path='+p).catch(()=>null);showToast(r?.ok?'지웠어요':'못 지웠어요');renderInbox();}
 async function upInbox(files){
@@ -2501,17 +2505,17 @@ function renderTodos(){
     return `<div class="todo-item${t.done?' done':''}"><input type="checkbox"${t.done?' checked':''} onchange="toggleTodo(${t.id})"><span class="tt" onclick="openTodo(${t.id})">${esc(t.text)}${todoHas(t)}</span>${t.start>tdy&&!t.done?`<span class="tstart">${md(t.start)} 시작</span>`:''}${t.done?'':dday(t.due)}${t.done?'':stChip(t)}${t.link?`<button class="tlink" onclick="goSub('${t.link}')">양식</button>`:''}${subs.length?`<span class="tcnt">${dn}/${subs.length}</span>`:''}<button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`
       +(t.done?'':subs.map((s,k)=>`<div class="tsub${s.done?' done':''}"><input type="checkbox"${s.done?' checked':''} onchange="toggleSub(${t.id},${k})"><span onclick="openTodo(${t.id},${k})">${esc(s.text)}${todoHas(s)}</span>${s.done?'':dday(s.due)}</div>`).join(''));};
   const grp=g=>{const list=arr.filter(t=>(t.tag||'기타')===g),open=list.filter(t=>!t.done);if(!open.length)return '';
-    return `<div class="tgrp-hd" onclick="foldTodoGrp('${g}')">${g} <span class="n">${list.length-open.length}/${list.length}</span><span class="fold">${fold[g]?'펼치기':'접기'}</span></div>`
+    return `<div class="tgrp-hd" data-g="${esc(g)}" onclick="foldTodoGrp(this.dataset.g)">${esc(g)} <span class="n">${list.length-open.length}/${list.length}</span><span class="fold">${fold[g]?'펼치기':'접기'}</span></div>`
       +(fold[g]?'':open.map(item).join(''));};
   const done=arr.filter(t=>t.done).sort((a,b)=>(b.doneAt||'').localeCompare(a.doneAt||''));
   const tabs=`<div class="ttabs">${[['ing','분류'],['st','단계'],['cal','달력'],['done',`완료 ${done.length}`]].map(([k,l])=>`<button class="${view===k?'on':''}" onclick="setTodoView('${k}')">${l}</button>`).join('')}</div>`;
   // 단계 보기: 할 일·하는 중·기다림 칸마다 모아 보기(분류는 옆에 작게)
-  const byStage=()=>TODO_ST.map(([k,l])=>{const list=arr.filter(t=>!t.done&&stOf(t)===k);return list.length?`<div class="tsec-hd">${l} <span class="tsec-n">${list.length}</span></div>`+list.map(t=>item(t).replace(`${esc(t.text)}${todoHas(t)}`,`${esc(t.text)}<span class="thas">${t.tag||'기타'}</span>${todoHas(t)}`)).join(''):'';}).join('')||'<div class="empty">할일 없음</div>';
+  const byStage=()=>TODO_ST.map(([k,l])=>{const list=arr.filter(t=>!t.done&&stOf(t)===k);return list.length?`<div class="tsec-hd">${l} <span class="tsec-n">${list.length}</span></div>`+list.map(t=>item(t).replace(`${esc(t.text)}${todoHas(t)}`,`${esc(t.text)}<span class="thas">${esc(t.tag||'기타')}</span>${todoHas(t)}`)).join(''):'';}).join('')||'<div class="empty">할일 없음</div>';
   const nd=new Date(),today=`${nd.getFullYear()}-${String(nd.getMonth()+1).padStart(2,'0')}-${String(nd.getDate()).padStart(2,'0')}`,urgent=[];
   arr.forEach(t=>{if(!t.done&&t.due&&t.due<=today)urgent.push(`<div class="todo-item urgent"><span class="tt" onclick="openTodo(${t.id})">${esc(t.text)}</span>${dday(t.due)}</div>`);(t.subs||[]).forEach((x,k)=>{if(!x.done&&x.due&&x.due<=today)urgent.push(`<div class="todo-item urgent"><span class="tt" onclick="openTodo(${t.id},${k})">${esc(x.text)}<span class="thas">${esc(t.text)}</span></span>${dday(x.due)}</div>`);});});
   pushCalTodos(arr);
   el.innerHTML=tabs+(view==='cal'?todoCal(arr,tdy):view==='st'?(urgent.length?`<div class="tsec-hd">오늘 할일</div>`+urgent.join(''):'')+byStage():view==='done'
-    ?done.map(t=>`<div class="todo-item done"><input type="checkbox" checked onchange="toggleTodo(${t.id})"><span class="tt" onclick="openTodo(${t.id})">${esc(t.text)}<span class="thas">${t.tag||'기타'}</span></span><span class="tdone-at">${t.doneAt?md(t.doneAt)+' 완료':''}</span><button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`).join('')||'<div class="empty">완료한 할일 없음</div>'
+    ?done.map(t=>`<div class="todo-item done"><input type="checkbox" checked onchange="toggleTodo(${t.id})"><span class="tt" onclick="openTodo(${t.id})">${esc(t.text)}<span class="thas">${esc(t.tag||'기타')}</span></span><span class="tdone-at">${t.doneAt?md(t.doneAt)+' 완료':''}</span><button class="xbtn" onclick="delTodo(${t.id})">×</button></div>`).join('')||'<div class="empty">완료한 할일 없음</div>'
     :(urgent.length?`<div class="tsec-hd">오늘 할일</div>`+urgent.join(''):'')+sections.map(([s,gs])=>{const body=gs.map(grp).join('');return body?`<div class="tsec-hd">${s}</div>`+body:'';}).join('')||'<div class="empty">할일 없음</div>');
   const ps=document.getElementById('main-todo-parent');
   if(ps){const cur=ps.value;const open=arr.filter(t=>!t.done);

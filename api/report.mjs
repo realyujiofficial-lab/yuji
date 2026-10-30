@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     const body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body)
     if (body.length > 20000) return res.status(413).json({ error: 'big' })
-    await put(path, body, { access: 'private', contentType: 'application/json', addRandomSuffix: false, allowOverwrite: true })
+    await put(path, body, { access: 'private', contentType: 'application/json', addRandomSuffix: false, allowOverwrite: admin })   // 누구나 올리는 제보는 남의 제보를 덮어쓰지 못하게(10-31)
     return res.status(200).json({ ok: true })
   }
   if (req.method === 'DELETE') {
