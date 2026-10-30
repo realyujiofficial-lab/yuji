@@ -399,7 +399,9 @@ async function confirmApprove() {
   }
 
   try {
-    const data = approvingData || {};
+    // 제보 내용을 받기 전에 승인하면 빈 내용으로 저장하고 원본을 지웠다(10-31 리뷰) → 아직이면 기다리고, 끝내 없으면 멈춘다
+    const data = approvingData || await sbGet(`reports/pending/${approvingId}.json`);
+    if (!data) { alert('제보 내용을 못 불러왔어요.\n잠시 뒤 다시 눌러 주세요.'); return; }
     const approved = { ...data, status: 'approved', category: selectedCat, ...extra, approvedAt: new Date().toISOString() };
     // approved 폴더에 저장
     await sbPut(`reports/approved/${selectedCat}/${approvingId}.json`, JSON.stringify(approved), 'application/json');
