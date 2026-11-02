@@ -1538,15 +1538,24 @@ function updateDiarySub(){
 }
 
 // ── 서브페이지: 운동법 (트로펫/카톡 등에서 수집한 재활·스트레칭 팁 모음) ──
+function getEx(){
+  // 저장본이 있어도 코드에 새로 추가된 운동법(삭제한 적 없는 것)은 합쳐서 보여준다(11-03)
+  const arr=S.get('acc_exercises',null);if(!arr)return ACC_EXERCISE_INIT;
+  const ids=new Set(arr.map(e=>e.id)),del=S.get('acc_exercises_del');
+  return arr.concat(ACC_EXERCISE_INIT.filter(e=>!ids.has(e.id)&&!del.includes(e.id)));
+}
 const ACC_EXERCISE_INIT=[
   {id:1,tag:'목·어깨',title:'승모근 빼는 법 (전거근 활성화)',summary:'재활·도수치료에서 알려주는 동작. 승모근이 뭉치는 원인인 전거근 비활성화를 먼저 해결해야 함 — 전거근은 어깨 안정화에도 중요.',source:'X @minto_000_'},
   {id:2,tag:'목·어깨',title:'승모근 예쁘게 만드는 법 (목빗근 이완)',summary:'승모근은 문지른다고 안 없어짐. 목빗근을 풀어주는 게 핵심 — 자기 전에 풀어주면 수면에도 도움.',source:'X @minto_000_'},
   {id:3,tag:'얼굴',title:'얼굴 비대칭 관리 운동',summary:'귓구멍 앞쪽 1cm 아래를 누르고 입 벌렸다 닫기 20회 등 STEP별 동작으로 얼굴 비대칭 완화.',source:'X @Captain_Dotori'},
   {id:4,tag:'골반',title:'골반전방경사 스트레칭',summary:'골반전방경사가 심할 때 SNPE 방식 동작. 준비 스트레칭 없이 무작정 하면 허리 다칠 수 있어 순서대로 진행 필요.',source:'X @sonsudiggng'},
   {id:5,tag:'등',title:'벽 하나로 굳은 등 풀어주는 법',summary:'벽을 이용해 굳은 등 근육을 이완하는 스트레칭 튜토리얼.',source:'YouTube Shorts'},
+  {id:6,tag:'등',title:'견갑골 운동으로 예쁜 체형 만들기',summary:'견갑골(날개뼈)을 움직이는 운동 영상. 굽은 등·말린 어깨를 펴서 체형을 바르게.',source:'X @Rhayuumi https://x.com/Rhayuumi/status/2116654943360942574'},
+  {id:7,tag:'목·어깨',title:'상체 커 보일 때 하루 5분 운동',summary:'상체가 커 보이는 사람용 하루 5분 동작 영상.',source:'X @zipbaab https://x.com/zipbaab/status/2116676889024868421'},
+  {id:8,tag:'등',title:'자기 전 스트레칭 (잡고 엎드리기)',summary:'자기 전에 하는 스트레칭. 잡고 엎드릴 때 수직으로 내려오면 더 시원함. 덜 풀리면 영상 속 다음 단계까지.',source:'X @Docter_road https://x.com/Docter_road/status/2116546168683700641'},
 ];
 function subAccExercise(){
-  const arr=S.get('acc_exercises',ACC_EXERCISE_INIT);
+  const arr=getEx();
   const list=arr.map(e=>`
     <div class="acc-item">
       <div class="acc-top">${e.title}<span class="acc-ins-tag" style="margin-left:auto">${e.tag||''}</span></div>
@@ -1568,16 +1577,17 @@ function subAccExercise(){
 }
 function addExercise(){
   const title=v('ex-title');if(!title)return;
-  const arr=S.get('acc_exercises',ACC_EXERCISE_INIT).slice();
+  const arr=getEx().slice();
   arr.unshift({id:Date.now(),tag:v('ex-tag'),title,summary:v('ex-summary'),source:v('ex-source')});
   S.set('acc_exercises',arr);updateAccExSub();showToast('저장됐어요!');renderSub('acc-exercise');
 }
 function delExercise(id){
-  const arr=S.get('acc_exercises',ACC_EXERCISE_INIT).filter(e=>e.id!==id);
+  const arr=getEx().filter(e=>e.id!==id);
+  S.set('acc_exercises_del',S.get('acc_exercises_del').concat(id));
   S.set('acc_exercises',arr);updateAccExSub();renderSub('acc-exercise');
 }
 function updateAccExSub(){
-  const arr=S.get('acc_exercises',ACC_EXERCISE_INIT);
+  const arr=getEx();
   const el=document.getElementById('acc-ex-sub');
   if(!el)return;
   el.textContent=arr.length?`${arr.length}건`:'기록 없음';
@@ -1614,7 +1624,8 @@ const PERSONAL_TIPS_INIT=[
   {id:27,category:'기술·앱',title:'성의 없는 엑셀 받았을 때 한 번에 정리하기',summary:'Ctrl+A → Alt H O I(열 너비 자동) → Alt H O A(행 높이 자동) → Ctrl+H(찾아바꾸기) 순서로 정리.',source:'X @ginipigi'},
   {id:28,category:'기술·앱',title:'칼퇴서류 - 업무 양식 무료 작성 사이트',summary:'회의록, 주간업무 보고서, 업무일지, 시장조사 보고서 등 양식을 한글/엑셀/워드 없이 웹에서 작성·다운로드. 무료. https://xn--9v2b15lq3lrld.com/',source:'X @BBBang9900'},
   {id:29,category:'생활',title:'큰 숫자가 안 읽히는 진짜 이유',summary:'세 자리 콤마(서양식) 때문에 만 단위로 읽는 한국어와 어긋나서 헷갈린다는 설명 영상.',source:'X @ceolmh3'},
-  {id:30,category:'집·주거',title:'청년미래보금자리론 - 빌라·오피스텔 살 때 쓰는 대출 (2027년 출시 예정)',summary:'만 39세 이하·연소득 7천만원 이하 생애최초 구입자 대상. 4억원 이하·전용 85㎡ 이하 빌라·오피스텔 등 비아파트, LTV 최대 80%. 예: 2.5억 오피스텔을 2억 대출(연 3%, 30년)로 사면 월 원리금 약 85만원(비아파트 평균 월세 약 80만원과 비슷). 비아파트를 사도 생애최초 우대 자격이 남아 나중에 아파트 살 때 다시 혜택 가능. 주의: 비아파트는 되팔기 어렵고 가격 하락·전세사기 이후 신뢰 문제 있음. 출처 금융위원회·머니투데이.',source:'Instagram @pochack.now'},
+  {id:30,category:'집·주거',title:'청년미래보금자리론 - 빌라·오피스텔 살 때 쓰는 대출 (2027년 출시 예정)',summary:'만 39세 이하·연소득 7천만원 이하 생애최초 구입자 대상. 4억원 이하·전용 85㎡ 이하 빌라·오피스텔 등 비아파트, LTV 최대 80%. 예: 2.5억 오피스텔을 2억 대출(연 3%, 30년)로 사면 월 원리금 약 85만원(비아파트 평균 월세 약 80만원과 비슷). 비아파트를 사도 생애최초 우대 자격이 남아 나중에 아파트 살 때 다시 혜택 가능. 주의: 비아파트는 되팔기 어렵고 가격 하락·전세사기 이후 신뢰 문제 있음. 출처 금융위원회·머니투데이.',source:'Instagram @pochack.now'},,
+  {id:31,category:'기술·앱',title:'네이버 부계정으로 업무용 메일 만들기',summary:'네이버는 한 사람이 부계정을 2개까지 만들 수 있음. 장난스러운 옛 메일 대신 업무용 주소를 따로 만들어 쓰기.',source:'X @murrmur1 https://x.com/murrmur1/status/2116756617920184765'}
 ];
 function getTips(){
   // 저장본이 있어도 코드에 새로 추가된 꿀팁(삭제한 적 없는 것)은 합쳐서 보여준다
