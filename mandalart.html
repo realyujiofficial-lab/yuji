@@ -41,6 +41,14 @@ h2{font-size:clamp(22px,3.6vw,36px)}
 .nav button{font-family:var(--display);font-size:18px;border:3px solid var(--ink);background:var(--card);color:var(--ink);border-radius:14px;padding:6px 18px;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
 .nav button.go{background:var(--mint)}
 .nav button:disabled{opacity:.35;box-shadow:none;cursor:default}
+.mid{position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 12px;min-width:0}
+.pg{display:flex;align-items:center;gap:8px;border:2px solid var(--ink);border-radius:999px;background:#fff;padding:5px 12px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer;white-space:nowrap}
+.pg b{font-family:var(--display);font-size:16px}.pg i{font-style:normal;color:var(--soft);font-size:12px}
+.toc{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);margin:0;padding:8px;list-style:none;background:var(--card);border:2px solid var(--ink);border-radius:14px;box-shadow:4px 4px 0 var(--ink);min-width:230px;max-height:70vh;overflow:auto;z-index:20}
+.toc li button{display:flex;gap:10px;width:100%;text-align:left;border:0;background:none;font:inherit;font-size:15px;color:var(--ink);padding:7px 10px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.toc li button:hover{background:var(--mint-bg)}.toc li button[aria-current="true"]{background:var(--ink);color:var(--paper)}
+.toc li b{font-family:var(--display);min-width:22px}
+@media (max-width:520px){.pg span{display:none}}
 .dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .dots button{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:transparent;padding:0;cursor:pointer}
 .dots button[aria-current="true"]{background:var(--ink)}
@@ -81,6 +89,9 @@ textarea{resize:vertical;min-height:44px}
 .meter{height:16px;border:2px solid var(--ink);border-radius:999px;overflow:hidden;background:#fff}
 .meter i{display:block;height:100%;background:var(--mint);width:0;transition:width .3s}
 .count{font-family:var(--display);font-variant-numeric:tabular-nums;font-size:22px}
+.mhost{display:contents}
+.mtitle{font-family:var(--display);font-size:clamp(20px,2.4vw,30px);margin:6px 0 4px}
+.mtitle.A{color:var(--a)}.mtitle.B{color:var(--b)}
 .boardbox{min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;overflow:auto}
 .mgrid{display:grid;grid-template-columns:repeat(3,auto);gap:6px;width:max-content}
 .blk{display:grid;grid-template-columns:repeat(3,var(--cell));grid-auto-rows:var(--cell);gap:3px;padding:4px;border:2px solid var(--ink);border-radius:10px;background:#fff}
@@ -342,7 +353,11 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
 
   <div class="nav">
     <button id="prev" aria-label="이전">← 이전</button>
-    <div class="dots" id="dots"></div>
+    <div class="mid">
+      <button type="button" class="pg" id="pg" aria-expanded="false" aria-controls="toc"><b id="pgNum">1 / 11</b><span id="pgName">표지</span><i>목차 ▾</i></button>
+      <div class="dots" id="dots"></div>
+      <ol class="toc" id="toc" hidden></ol>
+    </div>
     <button id="next" class="go" aria-label="다음">다음 →</button>
   </div>
 </div>
@@ -380,7 +395,7 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
   function qrows(el, list, prefix){
     list.forEach((q,i)=>{
       const row=document.createElement("div"); row.className="qrow";
-      row.innerHTML='<span class="q"></span><textarea rows="2" data-who="A" data-key="'+prefix+i+'"></textarea><textarea rows="2" data-who="B" data-key="'+prefix+i+'"></textarea>';
+      row.innerHTML='<span class="q"></span><textarea rows="1" data-who="A" data-key="'+prefix+i+'"></textarea><textarea rows="1" data-who="B" data-key="'+prefix+i+'"></textarea>';
       row.querySelector(".q").textContent=q;
       row.querySelectorAll("textarea").forEach(t=>{ t.setAttribute("aria-label",q); t.id=prefix+i+t.dataset.who; t.classList.add("ph-"+t.dataset.who); });
       el.appendChild(row);
@@ -498,7 +513,10 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
     document.querySelectorAll("textarea.ph-B").forEach(e=>e.placeholder=nm("B"));
     meter();
     renderSlots();
+    requestAnimationFrame(fitText);
   }
+  function fitCell(el){ el.style.fontSize=""; let f=parseFloat(getComputedStyle(el).fontSize); let n=0; while(el.scrollHeight>el.clientHeight+1 && f>6 && n<40){ f-=0.5; el.style.fontSize=f+"px"; n++; } }
+  function fitText(){ document.querySelectorAll("#board textarea.cell").forEach(fitCell); document.querySelectorAll(".qrow textarea").forEach(el=>{ if(!el.offsetParent) return; el.style.height="auto"; el.style.height=(el.scrollHeight+2)+"px"; }); }
   function meter(){ const n=filled(boardWho); $("#meterBar").style.width=(n/73*100)+"%"; $("#countTxt").textContent=n+" / 73칸"; }
 
   // ---------- 저장 ----------
@@ -522,6 +540,7 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
     const el=e.target; if(!el.dataset||!el.dataset.who||!el.dataset.key) return;
     setVal(el.dataset.who,el.dataset.key,el.value);
     if(el.dataset.key[0]==="s"||el.dataset.key.startsWith("name")) renderValues(); else meter();
+    if(el.classList.contains("cell")) fitCell(el); else if(el.closest(".qrow")){ el.style.height="auto"; el.style.height=(el.scrollHeight+2)+"px"; }
   });
   document.addEventListener("focusout",e=>{
     const el=e.target; if(!el.classList||!el.classList.contains("cell")) return;
@@ -559,13 +578,17 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
   // ---------- 나는 누구 ----------
   function setMe(w){ me=w; ls.set("mandal_me",w); $("#meA").setAttribute("aria-pressed",w==="A"); $("#meB").setAttribute("aria-pressed",w==="B"); setBoard(w); }
   $("#meA").onclick=()=>{setMe("A");toast("반가워요! 빨강 칸에 쓰면 돼요")}; $("#meB").onclick=()=>{setMe("B");toast("반가워요! 파랑 칸에 쓰면 돼요")};
-  function setBoard(w){ boardWho=w; $("#tabA").setAttribute("aria-pressed",w==="A"); $("#tabB").setAttribute("aria-pressed",w==="B"); buildBoard(); }
+  function setBoard(w){ boardWho=w; $("#tabA").setAttribute("aria-pressed",w==="A"); $("#tabB").setAttribute("aria-pressed",w==="B"); buildBoard(); renderValues(); }
   $("#tabA").onclick=()=>setBoard("A"); $("#tabB").onclick=()=>setBoard("B");
 
   // ---------- 슬라이드 ----------
   const slides=[...document.querySelectorAll(".slide")];
-  slides.forEach((s,i)=>{ const d=document.createElement("button"); d.type="button"; d.setAttribute("aria-label",(i+1)+". "+s.dataset.title); d.onclick=()=>go(i); $("#dots").appendChild(d); });
-  function go(i){ cur=Math.max(0,Math.min(slides.length-1,i)); slides.forEach((s,j)=>s.hidden=j!==cur); [...$("#dots").children].forEach((d,j)=>d.setAttribute("aria-current",j===cur)); $("#prev").disabled=cur===0; $("#next").disabled=cur===slides.length-1; if(location.hash!=="#s"+(cur+1)) history.replaceState(null,"","#s"+(cur+1)); requestAnimationFrame(fitBoard); if(slides[cur].dataset.title==="마무리") setTimeout(burst,200); }
+  slides.forEach((s,i)=>{ const d=document.createElement("button"); d.type="button"; d.setAttribute("aria-label",(i+1)+". "+s.dataset.title); d.onclick=()=>go(i); $("#dots").appendChild(d);
+    const li=document.createElement("li"), tb=document.createElement("button"); tb.type="button"; tb.innerHTML="<b></b><span></span>"; tb.querySelector("b").textContent=i+1; tb.querySelector("span").textContent=s.dataset.title; tb.onclick=()=>{ go(i); toc(false); }; li.appendChild(tb); $("#toc").appendChild(li); });
+  function toc(open){ $("#toc").hidden=!open; $("#pg").setAttribute("aria-expanded",open); }
+  $("#pg").onclick=e=>{ e.stopPropagation(); toc($("#toc").hidden); };
+  document.addEventListener("click",e=>{ if(!$("#toc").hidden && !e.target.closest(".mid")) toc(false); });
+  function go(i){ cur=Math.max(0,Math.min(slides.length-1,i)); slides.forEach((s,j)=>s.hidden=j!==cur); [...$("#dots").children].forEach((d,j)=>d.setAttribute("aria-current",j===cur)); [...$("#toc").querySelectorAll("button")].forEach((d,j)=>d.setAttribute("aria-current",j===cur)); $("#pgNum").textContent=(cur+1)+" / "+slides.length; $("#pgName").textContent=slides[cur].dataset.title; $("#prev").disabled=cur===0; $("#next").disabled=cur===slides.length-1; if(location.hash!=="#s"+(cur+1)) history.replaceState(null,"","#s"+(cur+1)); requestAnimationFrame(fitBoard); requestAnimationFrame(fitText); if(slides[cur].dataset.title==="마무리") setTimeout(burst,200); }
   $("#prev").onclick=()=>go(cur-1); $("#next").onclick=()=>go(cur+1);
   document.addEventListener("keydown",e=>{ if(/INPUT|TEXTAREA/.test(document.activeElement.tagName)) return; if(e.key==="ArrowRight"||e.key==="PageDown") go(cur+1); if(e.key==="ArrowLeft"||e.key==="PageUp") go(cur-1); });
 
@@ -574,7 +597,7 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
 
   // ---------- 시작 ----------
   ["A","B","X"].forEach(w=>{ try{ const v=JSON.parse(ls.get("mandal_"+w)||"null"); if(v) S[w]=v; }catch(e){} });
-  const saved=ls.get("mandal_me"); if(saved==="A"||saved==="B") setMe(saved); else buildBoard();
+  const saved=ls.get("mandal_me"); buildBoard(); if(saved==="A"||saved==="B") setMe(saved);
   const h=/^#s(\d+)$/.exec(location.hash); go(h?+h[1]-1:0);
   renderValues();
 
@@ -598,7 +621,6 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
       const ae=document.activeElement;
       ["A","B","X"].forEach(w=>{
         const next=Object.assign({},d[w]||{}); for(const k in pending[w]) next[k]=pending[w][k];
-        if(first){ const loc=S[w]||{}; const push={}; for(const k in loc) if(next[k]===undefined){ next[k]=loc[k]; push[k]=loc[k]; } if(Object.keys(push).length) post(w,push); }
         S[w]=next;
         if(w!=="X"){ lastFill[w]=Math.max(lastFill[w],filled(w)); checkNewSeals(w); }
       });
