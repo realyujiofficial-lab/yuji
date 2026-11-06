@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>우리 둘의 8주 만다라트</title>
+<title>우리 둘만의 8주 만다라트</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap">
 <style>
@@ -159,11 +159,11 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
 
 <div class="wrap">
   <header>
-    <div class="brand">우리 둘의 8주 <span class="dday" id="dday">D-55</span></div>
-    <div class="who" role="group" aria-label="나는 누구">
-      <span>나는</span>
-      <button class="A" id="meA" aria-pressed="false"><span data-name="A">나</span></button>
-      <button class="B" id="meB" aria-pressed="false"><span data-name="B">친구</span></button>
+    <div class="brand">우리 둘만의 8주 <span class="dday" id="dday">D-55</span></div>
+    <div class="who" role="group" aria-label="누구예요">
+      <span>누구?</span>
+      <button class="A" id="meA" aria-pressed="false"><span data-name="A">사람1</span></button>
+      <button class="B" id="meB" aria-pressed="false"><span data-name="B">사람2</span></button>
     </div>
   </header>
   <div class="banner" id="banner" hidden></div>
@@ -179,11 +179,11 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
       <p>다 하면 서로 도장 찍어 주기예요.</p>
     </div>
     <div class="cover-names">
-      <input type="text" id="nameA" class="A" data-who="X" data-key="nameA" placeholder="내 이름" aria-label="첫 번째 사람 이름">
+      <input type="text" id="nameA" class="A" data-who="X" data-key="nameA" placeholder="사람1 이름" aria-label="첫 번째 사람 이름">
       <span>&amp;</span>
-      <input type="text" id="nameB" class="B" data-who="X" data-key="nameB" placeholder="친구 이름" aria-label="두 번째 사람 이름">
+      <input type="text" id="nameB" class="B" data-who="X" data-key="nameB" placeholder="사람2 이름" aria-label="두 번째 사람 이름">
     </div>
-    <div class="lines"><p class="note">오른쪽 위 "나는"에서 내 이름을 눌러요.</p></div>
+    <div class="lines"><p class="note">오른쪽 위에서 자기 이름을 눌러요.</p></div>
   </section>
 
   <!-- 2 오늘 순서 -->
@@ -193,7 +193,7 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
     <div class="steps">
       <div class="step"><b>1. 몸풀기 질문</b><span>올해를 한 줄로 돌아봐요.</span><span class="min">5분</span></div>
       <div class="step"><b>2. 만트라 고르기</b><span>힘들 때 외울 한 문장이에요.</span><span class="min">5분</span></div>
-      <div class="step"><b>3. 만다라트 채우기</b><span>다 쓰면 친구한테 제출해요.</span><span class="min">20분</span></div>
+      <div class="step"><b>3. 만다라트 채우기</b><span>다 쓰면 서로에게 제출해요.</span><span class="min">20분</span></div>
       <div class="step"><b>4. 이번 주 할 것 3개</b><span>주말마다 제출하고 도장 받아요.</span><span class="min">5분</span></div>
     </div>
     <div class="lines">
@@ -206,7 +206,7 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
   <section class="slide" data-title="몸풀기" hidden>
     <div class="tag">1단계 · 몸풀기</div>
     <h2>올해를 한 줄씩만 돌아봐요</h2>
-    <div class="qrow qhead"><span></span><span class="chip A" data-name="A">나</span><span class="chip B" data-name="B">친구</span></div>
+    <div class="qrow qhead"><span></span><span class="chip A" data-name="A">사람1</span><span class="chip B" data-name="B">사람2</span></div>
     <div id="qs" style="display:flex;flex-direction:column;gap:12px"></div>
   </section>
 
@@ -214,11 +214,11 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
   <section class="slide" data-title="만트라" hidden>
     <div class="tag">2단계 · 만트라</div>
     <h2>힘들 때 속으로 외울 한 문장</h2>
-    <div class="lines"><p>문장을 누르면 내 칸에 들어가요.</p><p>내 말로 고쳐 써도 좋아요.</p></div>
+    <div class="lines"><p>문장을 누르면 자기 칸에 들어가요.</p><p>자기 말로 고쳐 써도 좋아요.</p></div>
     <div class="quotes" id="quotes"></div>
     <div class="grid2 mantra">
-      <div class="box A"><div class="who-label"><span class="chip A" data-name="A">나</span>의 만트라</div><input type="text" id="mantraA" data-who="A" data-key="mantra" placeholder="예: 작게, 매일"></div>
-      <div class="box B"><div class="who-label"><span class="chip B" data-name="B">친구</span>의 만트라</div><input type="text" id="mantraB" data-who="B" data-key="mantra" placeholder="예: 끝날 때까지 끝난 게 아니다"></div>
+      <div class="box A"><div class="who-label"><span class="chip A" data-name="A">사람1</span>의 만트라</div><input type="text" id="mantraA" data-who="A" data-key="mantra" placeholder="예: 작게, 매일"></div>
+      <div class="box B"><div class="who-label"><span class="chip B" data-name="B">사람2</span>의 만트라</div><input type="text" id="mantraB" data-who="B" data-key="mantra" placeholder="예: 끝날 때까지 끝난 게 아니다"></div>
     </div>
   </section>
 
@@ -241,7 +241,7 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
         <p class="wrapok"><b>① 가운데</b>: 12월 31일까지 이루고 싶은 것 하나.</p>
         <p class="wrapok"><b>② 둘레 8칸</b>: 그걸 위해 필요한 것. 4개만 써도 돼요.</p>
         <p class="wrapok"><b>③ 바깥 칸</b>: 오늘 바로 할 수 있는 행동.</p>
-        <p class="wrapok"><b>④ 제출</b>: 다 쓰면 친구한테 내고 도장 받기.</p>
+        <p class="wrapok"><b>④ 제출</b>: 다 쓰면 상대에게 내고 도장 받기.</p>
         <p class="wrapok note">"책 읽기"보다 "자기 전 10쪽"이 훨씬 좋아요.</p>
       </div>
     </div>
@@ -253,8 +253,8 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
       <div class="mside">
         <div class="tag">3단계 · 만다라트</div>
         <div class="tabs">
-          <button class="A" id="tabA" aria-pressed="true"><span data-name="A">나</span>의 표</button>
-          <button class="B" id="tabB" aria-pressed="false"><span data-name="B">친구</span>의 표</button>
+          <button class="A" id="tabA" aria-pressed="true"><span data-name="A">사람1</span>의 표</button>
+          <button class="B" id="tabB" aria-pressed="false"><span data-name="B">사람2</span>의 표</button>
         </div>
         <div class="count" id="countTxt">0 / 73칸</div>
         <div class="meter" aria-hidden="true"><i id="meterBar"></i></div>
@@ -270,26 +270,26 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
     <div class="tag">4단계 · 매주 할 것</div>
     <h2>만다라트 바깥 칸에서 3개만 골라요</h2>
     <div class="grid2">
-      <div class="box A"><div class="who-label"><span class="chip A" data-name="A">나</span>의 매주 할 것</div>
+      <div class="box A"><div class="who-label"><span class="chip A" data-name="A">사람1</span>의 매주 할 것</div>
         <input type="text" id="wA0" data-who="A" data-key="w0" placeholder="① 예: 주 3번 30분 걷기">
         <input type="text" id="wA1" data-who="A" data-key="w1" placeholder="② 예: 자기 전 10쪽">
         <input type="text" id="wA2" data-who="A" data-key="w2" placeholder="③ 예: 배달 주 2회까지"></div>
-      <div class="box B"><div class="who-label"><span class="chip B" data-name="B">친구</span>의 매주 할 것</div>
+      <div class="box B"><div class="who-label"><span class="chip B" data-name="B">사람2</span>의 매주 할 것</div>
         <input type="text" id="wB0" data-who="B" data-key="w0" placeholder="①">
         <input type="text" id="wB1" data-who="B" data-key="w1" placeholder="②">
         <input type="text" id="wB2" data-who="B" data-key="w2" placeholder="③"></div>
     </div>
     <div class="lines">
       <p>한 주 동안 한 것에 체크해요.</p>
-      <p>일요일에 제출하면 친구가 도장을 찍어 줘요.</p>
+      <p>일요일에 제출하면 상대가 도장을 찍어 줘요.</p>
     </div>
   </section>
 
   <!-- 8 도장판 -->
   <section class="slide" data-title="도장판" hidden>
     <div class="tag">8주 도장판</div>
-    <h2>체크하고 제출하면, 친구가 도장 쾅</h2>
-    <div class="weeks"><table class="wk"><thead><tr><th>주</th><th data-name="A">나</th><th>받은 도장</th><th data-name="B">친구</th><th>받은 도장</th></tr></thead><tbody id="weeks"></tbody></table></div>
+    <h2>체크하고 제출하면, 상대가 도장 쾅</h2>
+    <div class="weeks"><table class="wk"><thead><tr><th>주</th><th data-name="A">사람1</th><th>받은 도장</th><th data-name="B">사람2</th><th>받은 도장</th></tr></thead><tbody id="weeks"></tbody></table></div>
   </section>
 
   <!-- 9 체크인 -->
@@ -320,10 +320,10 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
     <div class="tag">8주 돌아보기</div>
     <h2>8주 동안 우리가 한 것</h2>
     <div class="grid2">
-      <div class="box A"><div class="who-label"><span class="chip A" data-name="A">나</span></div><div class="stats" id="statsA"></div></div>
-      <div class="box B"><div class="who-label"><span class="chip B" data-name="B">친구</span></div><div class="stats" id="statsB"></div></div>
+      <div class="box A"><div class="who-label"><span class="chip A" data-name="A">사람1</span></div><div class="stats" id="statsA"></div></div>
+      <div class="box B"><div class="who-label"><span class="chip B" data-name="B">사람2</span></div><div class="stats" id="statsB"></div></div>
     </div>
-    <div class="qrow qhead"><span></span><span class="chip A" data-name="A">나</span><span class="chip B" data-name="B">친구</span></div>
+    <div class="qrow qhead"><span></span><span class="chip A" data-name="A">사람1</span><span class="chip B" data-name="B">사람2</span></div>
     <div id="rs" style="display:flex;flex-direction:column;gap:10px"></div>
   </section>
 
@@ -371,7 +371,7 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
 
   const $ = s => document.querySelector(s);
   const other = w => w==="A"?"B":"A";
-  const nm = w => (S.X[w==="A"?"nameA":"nameB"]||"").trim() || (w==="A"?"나":"친구");
+  const nm = w => (S.X[w==="A"?"nameA":"nameB"]||"").trim() || (w==="A"?"사람1":"사람2");
   const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const ls = { get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}} };
 
@@ -535,7 +535,7 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
     if(t.dataset.act==="submit"){ if(!needMe()) return; setNow(t.dataset.w,"sub"+t.dataset.k,true); renderValues(); toast(nm(other(t.dataset.w))+"한테 제출 완료! 두근두근"); return; }
     if(t.dataset.act==="give"){ if(!needMe()) return; const w=t.dataset.w; setNow(me,"give"+t.dataset.k,+t.dataset.t); renderValues(); toast(nm(w)+"한테 '"+SEALS[+t.dataset.t]+"' 도장 꾹!"); if(t.dataset.k==="F") burst(); return; }
   });
-  function needMe(){ if(me) return true; toast("오른쪽 위 \"나는\"부터 눌러 주세요"); return false; }
+  function needMe(){ if(me) return true; toast("오른쪽 위에서 자기 이름부터 눌러 주세요"); return false; }
 
   // 받은 도장 알림
   const seen={A:null,B:null};
@@ -558,7 +558,7 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
 
   // ---------- 나는 누구 ----------
   function setMe(w){ me=w; ls.set("mandal_me",w); $("#meA").setAttribute("aria-pressed",w==="A"); $("#meB").setAttribute("aria-pressed",w==="B"); setBoard(w); }
-  $("#meA").onclick=()=>{setMe("A");toast("반가워요! 내 칸은 빨강이에요")}; $("#meB").onclick=()=>{setMe("B");toast("반가워요! 내 칸은 파랑이에요")};
+  $("#meA").onclick=()=>{setMe("A");toast("반가워요! 빨강 칸에 쓰면 돼요")}; $("#meB").onclick=()=>{setMe("B");toast("반가워요! 파랑 칸에 쓰면 돼요")};
   function setBoard(w){ boardWho=w; $("#tabA").setAttribute("aria-pressed",w==="A"); $("#tabB").setAttribute("aria-pressed",w==="B"); buildBoard(); }
   $("#tabA").onclick=()=>setBoard("A"); $("#tabB").onclick=()=>setBoard("B");
 
