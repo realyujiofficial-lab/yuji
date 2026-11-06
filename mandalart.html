@@ -89,9 +89,9 @@ textarea{resize:vertical;min-height:44px}
 .meter{height:16px;border:2px solid var(--ink);border-radius:999px;overflow:hidden;background:#fff}
 .meter i{display:block;height:100%;background:var(--mint);width:0;transition:width .3s}
 .count{font-family:var(--display);font-variant-numeric:tabular-nums;font-size:22px}
-.mhost{display:contents}
 .mtitle{font-family:var(--display);font-size:clamp(20px,2.4vw,30px);margin:6px 0 4px}
 .mtitle.A{color:var(--a)}.mtitle.B{color:var(--b)}
+.peek{position:fixed;z-index:40;max-width:240px;background:#fff;border:2px solid var(--ink);border-radius:10px;box-shadow:3px 3px 0 var(--ink);padding:8px 10px;font-size:11px;line-height:1.5;color:var(--ink);white-space:pre-wrap;word-break:keep-all;pointer-events:none}
 .boardbox{min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;overflow:auto}
 .mgrid{display:grid;grid-template-columns:repeat(3,auto);gap:6px;width:max-content}
 .blk{display:grid;grid-template-columns:repeat(3,var(--cell));grid-auto-rows:var(--cell);gap:3px;padding:4px;border:2px solid var(--ink);border-radius:10px;background:#fff}
@@ -517,6 +517,18 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
   }
   function fitCell(el){ el.style.fontSize=""; let f=parseFloat(getComputedStyle(el).fontSize); let n=0; while(el.scrollHeight>el.clientHeight+1 && f>6 && n<40){ f-=0.5; el.style.fontSize=f+"px"; n++; } }
   function fitText(){ document.querySelectorAll("#board textarea.cell").forEach(fitCell); document.querySelectorAll(".qrow textarea").forEach(el=>{ if(!el.offsetParent) return; el.style.height="auto"; el.style.height=(el.scrollHeight+2)+"px"; }); }
+  // 글이 길어 작아진 칸: 마우스를 올리거나 쓰는 동안 11px로 크게 보여 주기
+  const peek=document.createElement("div"); peek.className="peek"; peek.hidden=true; document.body.appendChild(peek);
+  let peekEl=null;
+  function showPeek(el){ if(!el.style.fontSize||!el.value.trim()){ hidePeek(); return; } peekEl=el; peek.textContent=el.value; peek.hidden=false;
+    const r=el.getBoundingClientRect(), pw=peek.offsetWidth, ph=peek.offsetHeight;
+    let x=Math.min(Math.max(8,r.left+r.width/2-pw/2),innerWidth-pw-8), y=r.bottom+6; if(y+ph>innerHeight-8) y=Math.max(8,r.top-ph-6);
+    peek.style.left=x+"px"; peek.style.top=y+"px"; }
+  function hidePeek(){ peek.hidden=true; peekEl=null; }
+  document.addEventListener("mouseover",e=>{ const el=e.target.closest&&e.target.closest("#board textarea.cell"); if(el) showPeek(el); });
+  document.addEventListener("mouseout",e=>{ const el=e.target.closest&&e.target.closest("#board textarea.cell"); if(el&&el!==document.activeElement&&peekEl===el) hidePeek(); });
+  document.addEventListener("focusin",e=>{ if(e.target.matches&&e.target.matches("#board textarea.cell")) showPeek(e.target); });
+  document.addEventListener("focusout",e=>{ if(peekEl===e.target) hidePeek(); });
   function meter(){ const n=filled(boardWho); $("#meterBar").style.width=(n/73*100)+"%"; $("#countTxt").textContent=n+" / 73칸"; }
 
   // ---------- 저장 ----------
@@ -540,7 +552,7 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
     const el=e.target; if(!el.dataset||!el.dataset.who||!el.dataset.key) return;
     setVal(el.dataset.who,el.dataset.key,el.value);
     if(el.dataset.key[0]==="s"||el.dataset.key.startsWith("name")) renderValues(); else meter();
-    if(el.classList.contains("cell")) fitCell(el); else if(el.closest(".qrow")){ el.style.height="auto"; el.style.height=(el.scrollHeight+2)+"px"; }
+    if(el.classList.contains("cell")){ fitCell(el); if(document.activeElement===el) showPeek(el); } else if(el.closest(".qrow")){ el.style.height="auto"; el.style.height=(el.scrollHeight+2)+"px"; }
   });
   document.addEventListener("focusout",e=>{
     const el=e.target; if(!el.classList||!el.classList.contains("cell")) return;
