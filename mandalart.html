@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>우리 둘의 8주 만다라트</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap">
+<style>
+/* 레이아웃: 버터색 모눈 위, 화면 높이에 꽉 맞는 스티커 카드 한 장씩 넘기는 슬라이드. 나=토마토, 친구=하늘, 도장=빨간 인주 */
+:root{
+  --paper:#FFF3C4; --card:#FFFDF6; --ink:#2B2350; --soft:#6B6390;
+  --a:#FF6B5B; --a-bg:#FFE3DF; --b:#3D9BF2; --b-bg:#DDEEFF;
+  --mint:#3FC7A4; --mint-bg:#DDF6EE; --pink:#FF9BC4; --line:#2B235022; --seal:#E8283C;
+  --display:"Jua","Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --cell:64px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.2px);background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 14px}
+.wrap{max-width:1180px;height:100%;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;flex:none}
+.brand{font-family:var(--display);font-size:20px;display:flex;align-items:center;gap:8px}
+.dday{background:var(--ink);color:var(--paper);border-radius:999px;padding:3px 10px;font-size:15px}
+.who{display:flex;gap:6px;align-items:center;font-size:14px}
+.who button{font:inherit;font-family:var(--display);border:2px solid var(--ink);background:var(--card);color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+.who button[aria-pressed="true"].A{background:var(--a);color:#fff}
+.who button[aria-pressed="true"].B{background:var(--b);color:#fff}
+.slide{flex:1;min-height:0;overflow:auto;background:var(--card);border:3px solid var(--ink);border-radius:22px;box-shadow:6px 6px 0 var(--ink);
+  padding:24px clamp(16px,3.5vw,40px);display:flex;flex-direction:column;gap:16px;position:relative}
+.slide[hidden]{display:none!important}
+.tag{font-family:var(--display);font-size:14px;color:var(--soft);letter-spacing:.04em}
+h1,h2{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;line-height:1.25}
+h1{font-size:clamp(30px,6vw,60px)}
+h2{font-size:clamp(22px,3.6vw,36px)}
+.lines{display:flex;flex-direction:column;gap:4px;font-size:clamp(13px,3.9vw,18px);line-height:1.55}
+.lines p{margin:0;white-space:nowrap;overflow:hidden}
+.lines p.wrapok{white-space:normal}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none}
+.nav button{font-family:var(--display);font-size:18px;border:3px solid var(--ink);background:var(--card);color:var(--ink);border-radius:14px;padding:6px 18px;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.nav button.go{background:var(--mint)}
+.nav button:disabled{opacity:.35;box-shadow:none;cursor:default}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.dots button{width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:transparent;padding:0;cursor:pointer}
+.dots button[aria-current="true"]{background:var(--ink)}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.box{border:2px solid var(--ink);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.box.A{background:var(--a-bg)}.box.B{background:var(--b-bg)}.box.M{background:var(--mint-bg)}
+.who-label{font-family:var(--display);font-size:18px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.chip{display:inline-block;border-radius:999px;padding:1px 10px;color:#fff;font-family:var(--display);font-size:14px}
+.chip.A{background:var(--a)}.chip.B{background:var(--b)}
+input[type=text],textarea{font:inherit;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:10px;padding:8px 10px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:44px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.step{border:2px solid var(--ink);border-radius:16px;padding:14px;background:#fff;display:flex;flex-direction:column;gap:6px}
+.step b{font-family:var(--display);font-weight:400;font-size:20px}
+.step .min{font-size:13px;color:var(--soft)}
+.sticker{position:absolute;right:clamp(12px,3vw,34px);top:14px;transform:rotate(6deg);background:var(--pink);border:3px solid var(--ink);border-radius:14px;padding:6px 12px;font-family:var(--display);font-size:16px}
+.qrow{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:start}
+.qrow .q{font-family:var(--display);font-size:17px;padding-top:8px}
+.qhead{font-family:var(--display)}
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.quote{text-align:left;font:inherit;border:2px solid var(--ink);border-radius:14px;background:#fff;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:4px;color:var(--ink)}
+.quote:hover{background:var(--mint-bg)}
+.quote .t{font-family:var(--display);font-size:17px}
+.quote .s{font-size:13px;color:var(--soft);white-space:nowrap}
+.quote .w{color:var(--ink);opacity:.7}
+.mantra input{font-family:var(--display);font-size:22px;text-align:center}
+.note{font-size:13px;color:var(--soft)}
+.banner{background:#fff;border:2px dashed var(--ink);border-radius:12px;padding:6px 12px;font-size:14px;flex:none}
+
+/* 만다라트: 왼쪽 패널 + 화면에 맞춰 커지는 표 */
+.mlayout{flex:1;min-height:0;display:grid;grid-template-columns:230px minmax(0,1fr);gap:20px}
+.mside{display:flex;flex-direction:column;gap:12px;min-width:0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tabs button{font-family:var(--display);font-size:16px;border:2px solid var(--ink);border-radius:999px;padding:5px 14px;background:#fff;color:var(--ink);cursor:pointer}
+.tabs button[aria-pressed="true"].A{background:var(--a);color:#fff}
+.tabs button[aria-pressed="true"].B{background:var(--b);color:#fff}
+.meter{height:16px;border:2px solid var(--ink);border-radius:999px;overflow:hidden;background:#fff}
+.meter i{display:block;height:100%;background:var(--mint);width:0;transition:width .3s}
+.count{font-family:var(--display);font-variant-numeric:tabular-nums;font-size:22px}
+.boardbox{min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;overflow:auto}
+.mgrid{display:grid;grid-template-columns:repeat(3,auto);gap:6px;width:max-content}
+.blk{display:grid;grid-template-columns:repeat(3,var(--cell));grid-auto-rows:var(--cell);gap:3px;padding:4px;border:2px solid var(--ink);border-radius:10px;background:#fff}
+.blk.center{background:var(--mint-bg)}
+.cell{word-break:keep-all;font:inherit;font-size:calc(var(--cell) * .17);line-height:1.25;border:1.5px solid var(--line);border-radius:7px;padding:3px;resize:none;text-align:center;background:#fff;color:var(--ink);width:100%;height:100%;min-height:0;overflow:auto}
+.cell.sub{background:#FFF7D6;font-family:var(--display);font-size:calc(var(--cell) * .19);border-color:var(--ink)}
+.cell.goal{background:var(--ink);color:var(--paper);font-family:var(--display);font-size:calc(var(--cell) * .2)}
+.cell.mirror{background:#FFF7D6;font-family:var(--display);font-size:calc(var(--cell) * .19);border-color:var(--ink);display:flex;align-items:center;justify-content:center;overflow:hidden;word-break:keep-all}
+.cell.mirror.empty{color:var(--soft);font-size:calc(var(--cell) * .16)}
+.board.A .cell.goal{background:var(--a);color:#fff}.board.B .cell.goal{background:var(--b);color:#fff}
+.cell::placeholder{color:#2B235066}
+.goal::placeholder{color:#ffffffcc}
+
+.mini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;max-width:420px}
+.mini div{border:2px solid var(--ink);border-radius:8px;background:#fff;padding:8px 4px;text-align:center;font-family:var(--display);font-size:14px;min-height:46px;display:flex;align-items:center;justify-content:center}
+.mini div.g{background:var(--ink);color:var(--paper)}
+.ex{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;align-items:start}
+
+/* 도장 */
+.slot{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:40px}
+.seal{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;border:3px double var(--seal);color:var(--seal);font-family:var(--display);font-size:13px;line-height:1.1;text-align:center;transform:rotate(-12deg);background:#FFF0F0;padding:4px;word-break:keep-all;flex:none}
+.seal.big{width:120px;height:120px;font-size:22px;border-width:5px}
+.seal.sm{width:46px;height:46px;font-size:11px;border-width:2.5px}
+.sbtn{font-family:var(--display);font-size:14px;border:2px solid var(--ink);border-radius:999px;padding:4px 12px;background:#fff;color:var(--ink);cursor:pointer}
+.sbtn.submit{background:var(--mint)}
+.sbtn.give{background:#FFF0F0;border-color:var(--seal);color:var(--seal)}
+.wait{font-size:13px;color:var(--soft)}
+.weeks{overflow:auto;min-height:0}
+table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100%}
+.wk th{font-family:var(--display);font-weight:400;font-size:15px;text-align:left;padding:0 6px}
+.wk td{background:#fff;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:4px 6px;vertical-align:middle;height:52px}
+.wk td:first-child{border-left:2px solid var(--ink);border-radius:10px 0 0 10px;font-family:var(--display);white-space:nowrap}
+.wk td:last-child{border-right:2px solid var(--ink);border-radius:0 10px 10px 0}
+.wk td.split{border-left:2px dashed var(--line)}
+.wk .range{font-size:12px;color:var(--soft);font-family:var(--body)}
+.checks{display:flex;gap:4px}
+.ck{width:28px;height:28px;border-radius:8px;border:2px solid var(--ink);background:#fff;cursor:pointer;font-family:var(--display);font-size:13px;color:var(--soft);padding:0}
+.ck[aria-pressed="true"].A{background:var(--a);color:#fff}
+.ck[aria-pressed="true"].B{background:var(--b);color:#fff}
+.ck:disabled{cursor:default}
+
+/* 회고·마무리 */
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.stat{border:2px solid var(--ink);border-radius:12px;background:#fff;padding:6px 10px;display:flex;flex-direction:column;min-width:96px}
+.stat b{font-family:var(--display);font-weight:400;font-size:24px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--soft)}
+.finale{flex:1;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:18px;align-items:center}
+.fcard{border:3px solid var(--ink);border-radius:20px;padding:14px 18px;display:flex;flex-direction:column;gap:5px;min-width:0;box-shadow:4px 4px 0 var(--ink)}
+.fcard.A{background:var(--a-bg)}.fcard.B{background:var(--b-bg)}
+.fcard .nm{font-family:var(--display);font-size:24px}
+.fcard .mt{font-family:var(--display);font-size:20px;line-height:1.35;word-break:keep-all}
+.fcard .lb{font-size:12px;color:var(--soft)}
+.fcard .gl{font-size:16px;word-break:keep-all}
+.fcard .ny{border-top:2px dashed var(--ink);padding-top:8px;margin-top:4px;display:flex;flex-direction:column;gap:6px}
+.fcard .ny input{padding:6px 8px}
+.fmid{display:flex;flex-direction:column;align-items:center;gap:8px;font-family:var(--display);font-size:22px;text-align:center}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:20px}
+.confetti i{position:absolute;width:10px;height:14px;border-radius:2px;opacity:.85}
+
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(calc(100% + 60px));visibility:hidden;background:var(--ink);color:var(--paper);font-family:var(--display);font-size:18px;padding:12px 20px;border-radius:16px;box-shadow:4px 4px 0 var(--pink);transition:transform .35s;z-index:20;white-space:nowrap;max-width:calc(100vw - 32px)}
+.toast.on{transform:translateX(-50%) translateY(0);visibility:visible}
+.cover-names{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-family:var(--display);font-size:20px}
+.cover-names input{width:150px;font-family:var(--display);font-size:20px;text-align:center}
+.cover-names input.A{border-color:var(--a)}.cover-names input.B{border-color:var(--b)}
+
+@media (max-width:760px){
+  .wrap{height:auto}
+  .slide{flex:none;overflow:visible;min-height:70vh}
+  .qrow{grid-template-columns:1fr}.qrow .q{padding-top:0}.qhead{display:none}
+  .mlayout{grid-template-columns:1fr}
+  .boardbox{justify-content:flex-start}
+  .finale{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">우리 둘의 8주 <span class="dday" id="dday">D-55</span></div>
+    <div class="who" role="group" aria-label="나는 누구">
+      <span>나는</span>
+      <button class="A" id="meA" aria-pressed="false"><span data-name="A">나</span></button>
+      <button class="B" id="meB" aria-pressed="false"><span data-name="B">친구</span></button>
+    </div>
+  </header>
+  <div class="banner" id="banner" hidden></div>
+
+  <!-- 1 표지 -->
+  <section class="slide" data-title="표지">
+    <div class="sticker">12/31까지 같이!</div>
+    <div class="tag">2026 연말 → 2027 연초 프로젝트</div>
+    <h1>올해,<br>아직 안 끝났거든요</h1>
+    <div class="lines">
+      <p>남은 8주, 둘이서 끝내주게 마무리해 봐요.</p>
+      <p>그리고 새해 첫 주도 같이 열어요.</p>
+      <p>다 하면 서로 도장 찍어 주기예요.</p>
+    </div>
+    <div class="cover-names">
+      <input type="text" id="nameA" class="A" data-who="X" data-key="nameA" placeholder="내 이름" aria-label="첫 번째 사람 이름">
+      <span>&amp;</span>
+      <input type="text" id="nameB" class="B" data-who="X" data-key="nameB" placeholder="친구 이름" aria-label="두 번째 사람 이름">
+    </div>
+    <div class="lines"><p class="note">오른쪽 위 "나는"에서 내 이름을 눌러요.</p></div>
+  </section>
+
+  <!-- 2 오늘 순서 -->
+  <section class="slide" data-title="오늘 순서" hidden>
+    <div class="tag">오늘 할 것</div>
+    <h2>딱 네 단계, 35분이면 돼요</h2>
+    <div class="steps">
+      <div class="step"><b>1. 몸풀기 질문</b><span>올해를 한 줄로 돌아봐요.</span><span class="min">5분</span></div>
+      <div class="step"><b>2. 만트라 고르기</b><span>힘들 때 외울 한 문장이에요.</span><span class="min">5분</span></div>
+      <div class="step"><b>3. 만다라트 채우기</b><span>다 쓰면 친구한테 제출해요.</span><span class="min">20분</span></div>
+      <div class="step"><b>4. 이번 주 할 것 3개</b><span>주말마다 제출하고 도장 받아요.</span><span class="min">5분</span></div>
+    </div>
+    <div class="lines">
+      <p>다 못 채워도 괜찮아요.</p>
+      <p>오늘은 가운데 9칸만 채워도 박수예요.</p>
+    </div>
+  </section>
+
+  <!-- 3 몸풀기 -->
+  <section class="slide" data-title="몸풀기" hidden>
+    <div class="tag">1단계 · 몸풀기</div>
+    <h2>올해를 한 줄씩만 돌아봐요</h2>
+    <div class="qrow qhead"><span></span><span class="chip A" data-name="A">나</span><span class="chip B" data-name="B">친구</span></div>
+    <div id="qs" style="display:flex;flex-direction:column;gap:12px"></div>
+  </section>
+
+  <!-- 4 만트라 -->
+  <section class="slide" data-title="만트라" hidden>
+    <div class="tag">2단계 · 만트라</div>
+    <h2>힘들 때 속으로 외울 한 문장</h2>
+    <div class="lines"><p>문장을 누르면 내 칸에 들어가요.</p><p>내 말로 고쳐 써도 좋아요.</p></div>
+    <div class="quotes" id="quotes"></div>
+    <div class="grid2 mantra">
+      <div class="box A"><div class="who-label"><span class="chip A" data-name="A">나</span>의 만트라</div><input type="text" id="mantraA" data-who="A" data-key="mantra" placeholder="예: 작게, 매일"></div>
+      <div class="box B"><div class="who-label"><span class="chip B" data-name="B">친구</span>의 만트라</div><input type="text" id="mantraB" data-who="B" data-key="mantra" placeholder="예: 끝날 때까지 끝난 게 아니다"></div>
+    </div>
+  </section>
+
+  <!-- 5 만다라트 소개 -->
+  <section class="slide" data-title="만다라트란" hidden>
+    <div class="tag">3단계 · 만다라트가 뭐냐면</div>
+    <h2>오타니가 고1 때 쓴 그 표예요</h2>
+    <div class="ex">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="mini">
+          <div>몸 만들기</div><div>제구</div><div>구위</div>
+          <div>멘탈</div><div class="g">8구단 드래프트 1순위</div><div>스피드 160km</div>
+          <div>인간성</div><div>운</div><div>변화구</div>
+        </div>
+        <div class="note"><b>오타니 쇼헤이</b>: 던지고 치는 걸 다 하는 일본 야구 선수예요.</div>
+        <div class="note">메이저리그 MVP를 여러 번 받았어요.</div>
+        <div class="note">"운" 칸 바깥에는 인사하기, 쓰레기 줍기, 책 읽기를 적었대요.</div>
+      </div>
+      <div class="lines">
+        <p class="wrapok"><b>① 가운데</b>: 12월 31일까지 이루고 싶은 것 하나.</p>
+        <p class="wrapok"><b>② 둘레 8칸</b>: 그걸 위해 필요한 것. 4개만 써도 돼요.</p>
+        <p class="wrapok"><b>③ 바깥 칸</b>: 오늘 바로 할 수 있는 행동.</p>
+        <p class="wrapok"><b>④ 제출</b>: 다 쓰면 친구한테 내고 도장 받기.</p>
+        <p class="wrapok note">"책 읽기"보다 "자기 전 10쪽"이 훨씬 좋아요.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 만다라트 -->
+  <section class="slide" data-title="만다라트" hidden>
+    <div class="mlayout">
+      <div class="mside">
+        <div class="tag">3단계 · 만다라트</div>
+        <div class="tabs">
+          <button class="A" id="tabA" aria-pressed="true"><span data-name="A">나</span>의 표</button>
+          <button class="B" id="tabB" aria-pressed="false"><span data-name="B">친구</span>의 표</button>
+        </div>
+        <div class="count" id="countTxt">0 / 73칸</div>
+        <div class="meter" aria-hidden="true"><i id="meterBar"></i></div>
+        <div class="note">노란 칸은 바깥 표로 복사돼요.</div>
+        <div class="slot" id="mslot"></div>
+      </div>
+      <div class="boardbox" id="boardbox"><div class="mgrid board A" id="board"></div></div>
+    </div>
+  </section>
+
+  <!-- 7 매주 할 것 -->
+  <section class="slide" data-title="매주 할 것" hidden>
+    <div class="tag">4단계 · 매주 할 것</div>
+    <h2>만다라트 바깥 칸에서 3개만 골라요</h2>
+    <div class="grid2">
+      <div class="box A"><div class="who-label"><span class="chip A" data-name="A">나</span>의 매주 할 것</div>
+        <input type="text" id="wA0" data-who="A" data-key="w0" placeholder="① 예: 주 3번 30분 걷기">
+        <input type="text" id="wA1" data-who="A" data-key="w1" placeholder="② 예: 자기 전 10쪽">
+        <input type="text" id="wA2" data-who="A" data-key="w2" placeholder="③ 예: 배달 주 2회까지"></div>
+      <div class="box B"><div class="who-label"><span class="chip B" data-name="B">친구</span>의 매주 할 것</div>
+        <input type="text" id="wB0" data-who="B" data-key="w0" placeholder="①">
+        <input type="text" id="wB1" data-who="B" data-key="w1" placeholder="②">
+        <input type="text" id="wB2" data-who="B" data-key="w2" placeholder="③"></div>
+    </div>
+    <div class="lines">
+      <p>한 주 동안 한 것에 체크해요.</p>
+      <p>일요일에 제출하면 친구가 도장을 찍어 줘요.</p>
+    </div>
+  </section>
+
+  <!-- 8 도장판 -->
+  <section class="slide" data-title="도장판" hidden>
+    <div class="tag">8주 도장판</div>
+    <h2>체크하고 제출하면, 친구가 도장 쾅</h2>
+    <div class="weeks"><table class="wk"><thead><tr><th>주</th><th data-name="A">나</th><th>받은 도장</th><th data-name="B">친구</th><th>받은 도장</th></tr></thead><tbody id="weeks"></tbody></table></div>
+  </section>
+
+  <!-- 9 체크인 -->
+  <section class="slide" data-title="체크인" hidden>
+    <div class="tag">약속</div>
+    <h2>매주 일요일, 15분만 만나요</h2>
+    <div class="grid2">
+      <div class="box M">
+        <div class="who-label">구글 미트 링크</div>
+        <input type="text" id="link" data-who="X" data-key="link" placeholder="meet.google.com/...">
+        <div class="who-label">시간</div>
+        <input type="text" id="time" data-who="X" data-key="time" placeholder="예: 일요일 밤 9시">
+        <div class="note">둘이서 쓰면 구글 미트는 무료여도 시간 제한이 없어요.</div>
+      </div>
+      <div class="steps" style="grid-template-columns:1fr">
+        <div class="step"><b>1. 만트라 외치기</b><span class="min">1분</span></div>
+        <div class="step"><b>2. 도장판 제출하고 도장 찍어 주기</b><span class="min">4분</span></div>
+        <div class="step"><b>3. 잘된 거 하나, 막힌 거 하나</b><span>듣는 사람은 조언 금지, 칭찬만.</span><span class="min">6분</span></div>
+        <div class="step"><b>4. 다음 주 그대로? 줄이기?</b><span class="min">4분</span></div>
+      </div>
+    </div>
+    <div class="lines"><p>체크가 반도 안 된 주엔 할 일을 반으로.</p><p>그만두기보다 줄이기가 이겨요.</p></div>
+  </section>
+
+  <!-- 10 회고 -->
+  <section class="slide" data-title="회고" hidden>
+    <div class="sticker">12/31에 열기</div>
+    <div class="tag">8주 돌아보기</div>
+    <h2>8주 동안 우리가 한 것</h2>
+    <div class="grid2">
+      <div class="box A"><div class="who-label"><span class="chip A" data-name="A">나</span></div><div class="stats" id="statsA"></div></div>
+      <div class="box B"><div class="who-label"><span class="chip B" data-name="B">친구</span></div><div class="stats" id="statsB"></div></div>
+    </div>
+    <div class="qrow qhead"><span></span><span class="chip A" data-name="A">나</span><span class="chip B" data-name="B">친구</span></div>
+    <div id="rs" style="display:flex;flex-direction:column;gap:10px"></div>
+  </section>
+
+  <!-- 11 마무리 -->
+  <section class="slide" data-title="마무리" hidden>
+    <div class="confetti" id="confetti" aria-hidden="true"></div>
+    <div class="tag">2026. 12. 31 → 2027. 1. 1</div>
+    <h1 style="font-size:clamp(26px,4.4vw,46px)">올해는 완주, 새해는 같이 출발</h1>
+    <div class="finale">
+      <div class="fcard A" id="finA"></div>
+      <div class="fmid"><span>2026 완주 도장 꾹</span><span style="font-size:15px;color:var(--soft)">→</span><span>2027 첫 주 약속</span></div>
+      <div class="fcard B" id="finB"></div>
+    </div>
+    <div class="lines"><p>8주 전의 나보다 한 칸 더 왔어요.</p><p>1월 첫 주 일요일에 또 만나요.</p></div>
+  </section>
+
+  <div class="nav">
+    <button id="prev" aria-label="이전">← 이전</button>
+    <div class="dots" id="dots"></div>
+    <button id="next" class="go" aria-label="다음">다음 →</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  const Q = ["올해 뭐가 허무했어? (하나만)","12/31에 '이거 하나는 했다' 하고 싶은 건?","그걸 막은 건 뭐였어?","남은 8주 동안 안 할 것 하나는?"];
+  const R = ["만다라트 가운데, 이뤘어?","11월의 나랑 달라진 점 하나는?","제일 뿌듯했던 주는 언제였어?","내년에도 가져갈 습관 하나는?","2027년 만트라는?"];
+  const QUOTES = [
+    ["끝날 때까지 끝난 게 아니다.","요기 베라 · 미국 야구 전설의 포수","올해 망했다 싶을 때"],
+    ["천 리 길도 한 걸음부터.","노자 · 2500년 전 중국 사상가","시작이 너무 커 보일 때"],
+    ["우리는 목표 수준으로 올라가지 않는다. 시스템 수준으로 떨어진다.","제임스 클리어 · 『아주 작은 습관의 힘』 작가","의지만 믿을 때"],
+    ["우리가 반복하는 것이 곧 우리다.","윌 듀런트 · 아리스토텔레스를 풀어 쓴 작가","하루 빠져서 포기하고 싶을 때"],
+    ["거둔 것 말고 뿌린 씨앗으로 하루를 판단하라.","스티븐슨 · 『보물섬』 작가(출처 불분명)","결과가 안 보일 때"],
+  ];
+  const WEEKS = ["11/9~15","11/16~22","11/23~29","11/30~12/6","12/7~13","12/14~20","12/21~27","12/28~31"];
+  const SEALS = ["참 잘했어요","최고야","대단해","완벽해"];
+  const PRAISE = ["오 천재인데?","잘했어요 도장 쾅","이 속도면 올해 우승","벌써? 대박","칭찬 스티커 하나 드림","멋지다 진짜"];
+
+  const S = {A:{},B:{},X:{}}, pending = {A:{},B:{},X:{}}, timers = {}, exists = {A:false,B:false,X:false};
+  const chain = {A:Promise.resolve(),B:Promise.resolve(),X:Promise.resolve()};
+  const PATH = {A:"board/a",B:"board/b",X:"board/shared"};
+  let db = null, refs = {}, readOnly = false, loaded = {A:false,B:false};
+  let me = null, boardWho = "A", cur = 0;
+
+  const $ = s => document.querySelector(s);
+  const other = w => w==="A"?"B":"A";
+  const nm = w => (S.X[w==="A"?"nameA":"nameB"]||"").trim() || (w==="A"?"나":"친구");
+  const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const ls = { get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}} };
+
+  (function(){ const t=new Date(); const end=new Date(2026,11,31); const d=Math.round((end-new Date(t.getFullYear(),t.getMonth(),t.getDate()))/864e5); $("#dday").textContent = d>0 ? "D-"+d : (d===0?"D-DAY":"새해 출발!"); })();
+
+  function qrows(el, list, prefix){
+    list.forEach((q,i)=>{
+      const row=document.createElement("div"); row.className="qrow";
+      row.innerHTML='<span class="q"></span><textarea rows="2" data-who="A" data-key="'+prefix+i+'"></textarea><textarea rows="2" data-who="B" data-key="'+prefix+i+'"></textarea>';
+      row.querySelector(".q").textContent=q;
+      row.querySelectorAll("textarea").forEach(t=>{ t.setAttribute("aria-label",q); t.id=prefix+i+t.dataset.who; t.classList.add("ph-"+t.dataset.who); });
+      el.appendChild(row);
+    });
+  }
+  qrows($("#qs"),Q,"q"); qrows($("#rs"),R,"r");
+
+  QUOTES.forEach(([t,s,w])=>{
+    const b=document.createElement("button"); b.className="quote"; b.type="button";
+    b.innerHTML='<span class="t"></span><span class="s"></span><span class="s w"></span>'; b.querySelector(".t").textContent=t; b.querySelector(".s").textContent=s; b.querySelector(".w").textContent="이럴 때: "+w;
+    b.addEventListener("click",()=>{ if(!needMe()) return; setVal(me,"mantra",t); renderValues(); toast("좋은 문장 골랐다! 만트라 등록 완료"); });
+    $("#quotes").appendChild(b);
+  });
+
+  WEEKS.forEach((r,wi)=>{
+    const tr=document.createElement("tr");
+    let h='<td>'+(wi+1)+'주 <span class="range">'+r+'</span></td>';
+    ["A","B"].forEach((w,n)=>{
+      h+='<td'+(n?' class="split"':'')+'><div class="checks">';
+      for(let i=0;i<3;i++) h+='<button class="ck '+w+'" type="button" data-who="'+w+'" data-key="k'+wi+'_'+i+'" data-ck="1" aria-pressed="false" aria-label="'+(wi+1)+'주 '+(i+1)+'번">'+(i+1)+'</button>';
+      h+='</div></td><td><div class="slot" data-slot="'+w+':W'+wi+'"></div></td>';
+    });
+    tr.innerHTML=h; $("#weeks").appendChild(tr);
+  });
+
+  // ---------- 만다라트 ----------
+  const ORDER=[0,1,2,3,null,4,5,6,7];
+  function buildBoard(){
+    const b=$("#board"); b.className="mgrid board "+boardWho; b.innerHTML="";
+    for(let bi=0;bi<9;bi++){
+      const blk=document.createElement("div"); blk.className="blk"+(bi===4?" center":"");
+      const k = bi<4?bi:bi-1;
+      for(let p=0;p<9;p++){
+        let el;
+        if(bi===4){
+          el=document.createElement("textarea");
+          if(p===4){ el.className="cell goal"; el.dataset.key="c"; el.placeholder="가운데 목표"; }
+          else { el.className="cell sub"; el.dataset.key="s"+ORDER[p]; el.placeholder="필요한 것 "+(ORDER[p]+1); }
+          el.dataset.who=boardWho;
+        } else if(p===4){
+          el=document.createElement("div"); el.className="cell mirror"; el.dataset.mirror="s"+k;
+        } else {
+          el=document.createElement("textarea"); el.className="cell"; el.dataset.who=boardWho;
+          el.dataset.key="a"+k+"_"+(p<4?p:p-1);
+        }
+        if(el.tagName==="TEXTAREA"){ el.id="m_"+boardWho+"_"+el.dataset.key; el.setAttribute("aria-label","만다라트 칸"); }
+        blk.appendChild(el);
+      }
+      b.appendChild(blk);
+    }
+    renderValues(); fitBoard();
+  }
+  function fitBoard(){
+    const box=$("#boardbox"); const w=box.clientWidth, h=box.clientHeight;
+    if(!w) return;
+    let c;
+    if(window.matchMedia("(max-width:760px)").matches) c=44;
+    else c=Math.floor(Math.min((w-66)/9,(h-66)/9));
+    c=Math.max(36,Math.min(96,c));
+    document.documentElement.style.setProperty("--cell",c+"px");
+  }
+  if(window.ResizeObserver) new ResizeObserver(fitBoard).observe($("#boardbox")); else window.addEventListener("resize",fitBoard);
+  function filled(w){ const d=S[w]; let n=0; if((d.c||"").trim())n++; for(let i=0;i<8;i++){ if((d["s"+i]||"").trim())n++; for(let j=0;j<8;j++) if((d["a"+i+"_"+j]||"").trim())n++; } return n; }
+  function checksDone(w){ let n=0; for(let wi=0;wi<8;wi++) for(let i=0;i<3;i++) if(S[w]["k"+wi+"_"+i]) n++; return n; }
+  function sealsGot(w){ const o=S[other(w)]; let n=0; for(const k in o) if(k.startsWith("give")&&o[k]!=null&&o[k]!=="") n++; return n; }
+
+  // ---------- 도장 칸 ----------
+  function slotHTML(w,k){
+    const got=S[other(w)]["give"+k];
+    if(got!=null && got!=="") return '<span class="seal'+(k==="F"?" big":k==="M"?"":" sm")+'">'+esc(SEALS[got]||"참 잘했어요")+'</span>';
+    const sub = k==="F" ? true : !!S[w]["sub"+k];
+    if(!sub){
+      if(me===w) return '<button class="sbtn submit" type="button" data-act="submit" data-w="'+w+'" data-k="'+k+'">'+esc(nm(other(w)))+'한테 제출</button>';
+      return '<span class="wait">아직 제출 전</span>';
+    }
+    if(me===other(w)) return SEALS.map((s,i)=>'<button class="sbtn give" type="button" data-act="give" data-w="'+w+'" data-k="'+k+'" data-t="'+i+'">'+s+'</button>').join("");
+    if(me===w) return '<span class="wait">'+(k==="F"?esc(nm(other(w)))+"의 도장을 기다려요":"제출 완료! 도장 기다리는 중")+'</span>';
+    return '<span class="wait">제출됨</span>';
+  }
+  function renderSlots(){
+    document.querySelectorAll("[data-slot]").forEach(el=>{ const [w,k]=el.dataset.slot.split(":"); const h=slotHTML(w,k); if(el.innerHTML!==h) el.innerHTML=h; });
+    const m=$("#mslot"); const h='<div class="who-label" style="font-size:15px">'+esc(nm(boardWho))+'의 만다라트 도장</div>'+slotHTML(boardWho,"M"); if(m.innerHTML!==h) m.innerHTML=h;
+  }
+
+  function renderStats(){
+    ["A","B"].forEach(w=>{
+      const h='<div class="stat"><b>'+checksDone(w)+'<small>/24</small></b><span>체크한 할 일</span></div>'+
+        '<div class="stat"><b>'+sealsGot(w)+'</b><span>받은 도장</span></div>'+
+        '<div class="stat"><b>'+filled(w)+'<small>/73</small></b><span>만다라트 칸</span></div>';
+      const el=$("#stats"+w); if(el.innerHTML!==h) el.innerHTML=h;
+      const f=$("#fin"+w);
+      const fh='<div class="nm">'+esc(nm(w))+'</div>'+
+        '<div class="lb">만트라</div><div class="mt">'+esc((S[w].mantra||"").trim()||"아직 비었어요")+'</div>'+
+        '<div class="lb">가운데 목표</div><div class="gl">'+esc((S[w].c||"").trim()||"아직 비었어요")+'</div>'+
+        '<div class="lb">받은 도장 '+sealsGot(w)+'개 · 체크 '+checksDone(w)+'/24</div>'+
+        '<div class="slot" data-slot="'+w+':F"></div>'+
+        '<div class="ny"><div class="lb">2027 만트라</div><input type="text" id="f_r4'+w+'" data-who="'+w+'" data-key="r4" placeholder="새해 한 문장">'+
+        '<div class="lb">1월 첫 주에 할 것 하나</div><input type="text" id="f_ny'+w+'" data-who="'+w+'" data-key="ny1" placeholder="예: 1/1 아침 산책"></div>';
+      if(f.dataset.h!==fh){ f.dataset.h=fh; f.innerHTML=fh; }
+    });
+  }
+
+  function renderValues(){
+    renderStats();
+    document.querySelectorAll("[data-who][data-key]").forEach(el=>{
+      const v=S[el.dataset.who][el.dataset.key];
+      if(el.dataset.ck){ el.setAttribute("aria-pressed", v? "true":"false"); el.disabled = !!me && me!==el.dataset.who; return; }
+      if(el===document.activeElement) return;
+      const s=v==null?"":String(v); if(el.value!==s) el.value=s;
+    });
+    document.querySelectorAll("[data-mirror]").forEach(el=>{ const v=(S[boardWho][el.dataset.mirror]||"").trim(); el.textContent=v||"← 노란 칸"; el.classList.toggle("empty",!v); });
+    document.querySelectorAll('[data-name="A"]').forEach(e=>e.textContent=nm("A"));
+    document.querySelectorAll('[data-name="B"]').forEach(e=>e.textContent=nm("B"));
+    document.querySelectorAll("textarea.ph-A").forEach(e=>e.placeholder=nm("A"));
+    document.querySelectorAll("textarea.ph-B").forEach(e=>e.placeholder=nm("B"));
+    meter();
+    renderSlots();
+  }
+  function meter(){ const n=filled(boardWho); $("#meterBar").style.width=(n/73*100)+"%"; $("#countTxt").textContent=n+" / 73칸"; }
+
+  // ---------- 저장 ----------
+  function setVal(w,key,val){
+    if(readOnly) return;
+    S[w][key]=val; pending[w][key]=val;
+    clearTimeout(timers[w]); timers[w]=setTimeout(()=>flush(w),500);
+  }
+  function setNow(w,key,val){ setVal(w,key,val); clearTimeout(timers[w]); flush(w); }
+  function flush(w){
+    const patch=pending[w]; pending[w]={};
+    if(!Object.keys(patch).length) return;
+    if(!db){ ls.set("mandal_"+w, JSON.stringify(S[w])); return; }
+    chain[w]=chain[w].then(()=> exists[w] ? refs[w].update(patch) : refs[w].set(Object.assign({},S[w])).then(()=>{exists[w]=true;}))
+      .catch(e=>{ if(e&&e.code==="invalid_argument"){ readOnly=true; banner("지금은 보기만 할 수 있어요. 쓰려면 페이지 주인에게 편집 권한을 받아 주세요."); } else if(e&&e.code==="unavailable"){ Object.assign(pending[w],patch); setTimeout(()=>flush(w),1500+Math.random()*1000); } });
+  }
+
+  // ---------- 입력 ----------
+  let lastFill={A:0,B:0};
+  document.addEventListener("input",e=>{
+    const el=e.target; if(!el.dataset||!el.dataset.who||!el.dataset.key) return;
+    setVal(el.dataset.who,el.dataset.key,el.value);
+    if(el.dataset.key[0]==="s"||el.dataset.key.startsWith("name")) renderValues(); else meter();
+  });
+  document.addEventListener("focusout",e=>{
+    const el=e.target; if(!el.classList||!el.classList.contains("cell")) return;
+    const w=el.dataset.who, n=filled(w);
+    if(w===me){ for(const m of [1,9,25,50,73]) if(lastFill[w]<m && n>=m){ toast(m===1?"첫 칸 채웠다! 시작이 반":m===9?"가운데 9칸 완성! 오늘 할 일 끝":m===73?"73칸 전부 완성… 오타니 나와":"벌써 "+m+"칸! "+PRAISE[Math.floor(Math.random()*PRAISE.length)]); break; } }
+    lastFill[w]=Math.max(lastFill[w],n); renderStats();
+  });
+  document.addEventListener("click",e=>{
+    const t=e.target.closest?e.target.closest("button"):null; if(!t) return;
+    if(t.dataset.ck){ const w=t.dataset.who,k=t.dataset.key; if(me&&me!==w) return; if(!needMe()) return; const v=!S[w][k]; setNow(w,k,v); renderValues(); if(v) toast(PRAISE[Math.floor(Math.random()*PRAISE.length)]); return; }
+    if(t.dataset.act==="submit"){ if(!needMe()) return; setNow(t.dataset.w,"sub"+t.dataset.k,true); renderValues(); toast(nm(other(t.dataset.w))+"한테 제출 완료! 두근두근"); return; }
+    if(t.dataset.act==="give"){ if(!needMe()) return; const w=t.dataset.w; setNow(me,"give"+t.dataset.k,+t.dataset.t); renderValues(); toast(nm(w)+"한테 '"+SEALS[+t.dataset.t]+"' 도장 꾹!"); if(t.dataset.k==="F") burst(); return; }
+  });
+  function needMe(){ if(me) return true; toast("오른쪽 위 \"나는\"부터 눌러 주세요"); return false; }
+
+  // 받은 도장 알림
+  const seen={A:null,B:null};
+  function checkNewSeals(w){
+    const gives={}; for(const k in S[w]) if(k.startsWith("give")) gives[k]=S[w][k];
+    if(seen[w]!==null && me===other(w)){
+      for(const k in gives) if(seen[w][k]==null && gives[k]!=null){ toast(nm(w)+"가 도장 찍어 줬어요! '"+(SEALS[gives[k]]||"")+"'"); if(k==="giveF") burst(); break; }
+    }
+    seen[w]=gives;
+  }
+
+  function burst(){
+    const c=$("#confetti"); if(!c||window.matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+    const cols=["#FF6B5B","#3D9BF2","#3FC7A4","#FF9BC4","#FFD23F"];
+    for(let i=0;i<60;i++){ const p=document.createElement("i"); p.style.left=Math.random()*100+"%"; p.style.top="-20px"; p.style.background=cols[i%5];
+      const dx=(Math.random()-.5)*200, rot=Math.random()*720;
+      p.animate([{transform:"translate(0,0) rotate(0)"},{transform:"translate("+dx+"px,"+(c.clientHeight+40)+"px) rotate("+rot+"deg)"}],{duration:1600+Math.random()*1200,easing:"cubic-bezier(.2,.6,.4,1)",fill:"forwards"});
+      c.appendChild(p); setTimeout(()=>p.remove(),3000); }
+  }
+
+  // ---------- 나는 누구 ----------
+  function setMe(w){ me=w; ls.set("mandal_me",w); $("#meA").setAttribute("aria-pressed",w==="A"); $("#meB").setAttribute("aria-pressed",w==="B"); setBoard(w); }
+  $("#meA").onclick=()=>{setMe("A");toast("반가워요! 내 칸은 빨강이에요")}; $("#meB").onclick=()=>{setMe("B");toast("반가워요! 내 칸은 파랑이에요")};
+  function setBoard(w){ boardWho=w; $("#tabA").setAttribute("aria-pressed",w==="A"); $("#tabB").setAttribute("aria-pressed",w==="B"); buildBoard(); }
+  $("#tabA").onclick=()=>setBoard("A"); $("#tabB").onclick=()=>setBoard("B");
+
+  // ---------- 슬라이드 ----------
+  const slides=[...document.querySelectorAll(".slide")];
+  slides.forEach((s,i)=>{ const d=document.createElement("button"); d.type="button"; d.setAttribute("aria-label",(i+1)+". "+s.dataset.title); d.onclick=()=>go(i); $("#dots").appendChild(d); });
+  function go(i){ cur=Math.max(0,Math.min(slides.length-1,i)); slides.forEach((s,j)=>s.hidden=j!==cur); [...$("#dots").children].forEach((d,j)=>d.setAttribute("aria-current",j===cur)); $("#prev").disabled=cur===0; $("#next").disabled=cur===slides.length-1; if(location.hash!=="#s"+(cur+1)) history.replaceState(null,"","#s"+(cur+1)); requestAnimationFrame(fitBoard); if(slides[cur].dataset.title==="마무리") setTimeout(burst,200); }
+  $("#prev").onclick=()=>go(cur-1); $("#next").onclick=()=>go(cur+1);
+  document.addEventListener("keydown",e=>{ if(/INPUT|TEXTAREA/.test(document.activeElement.tagName)) return; if(e.key==="ArrowRight"||e.key==="PageDown") go(cur+1); if(e.key==="ArrowLeft"||e.key==="PageUp") go(cur-1); });
+
+  let tt; function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("on"); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove("on"),2400); }
+  function banner(m){ const b=$("#banner"); b.textContent=m; b.hidden=false; }
+
+  // ---------- 시작 ----------
+  ["A","B","X"].forEach(w=>{ try{ const v=JSON.parse(ls.get("mandal_"+w)||"null"); if(v) S[w]=v; }catch(e){} });
+  const saved=ls.get("mandal_me"); if(saved==="A"||saved==="B") setMe(saved); else buildBoard();
+  const h=/^#s(\d+)$/.exec(location.hash); go(h?+h[1]-1:0);
+  renderValues();
+
+  // ---------- 같이 쓰기: 유지OS 서버(/api/board)에 저장, 2초마다 맞춤 ----------
+  const qs=new URLSearchParams(location.search); const KEYB=(qs.get("k")||"").toLowerCase();
+  if(!/^[a-z0-9]{10,40}$/.test(KEYB)){
+    const nk=Array.from(crypto.getRandomValues(new Uint8Array(12)),b=>"abcdefghijkmnpqrstuvwxyz23456789"[b%32]).join("");
+    location.replace(location.pathname+"?k="+nk+location.hash); return;
+  }
+  const API="/api/board?k="+KEYB;
+  let sending=0;
+  function post(w,patch){ sending++; return fetch(API+"&w="+w,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(patch)})
+    .then(r=>{ if(!r.ok) throw {code:"unavailable"}; return r.json(); }).finally(()=>{sending--;}); }
+  db={};
+  ["A","B","X"].forEach(w=>{ exists[w]=true; refs[w]={ update:p=>post(w,p), set:p=>post(w,p) }; });
+  let first=true;
+  function pull(){
+    if(sending||Object.keys(pending.A).length||Object.keys(pending.B).length||Object.keys(pending.X).length) return;
+    fetch(API,{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{
+      if(!d||sending) return;
+      const ae=document.activeElement;
+      ["A","B","X"].forEach(w=>{
+        const next=Object.assign({},d[w]||{}); for(const k in pending[w]) next[k]=pending[w][k];
+        if(first){ const loc=S[w]||{}; const push={}; for(const k in loc) if(next[k]===undefined){ next[k]=loc[k]; push[k]=loc[k]; } if(Object.keys(push).length) post(w,push); }
+        S[w]=next;
+        if(w!=="X"){ lastFill[w]=Math.max(lastFill[w],filled(w)); checkNewSeals(w); }
+      });
+      first=false;
+      ["A","B","X"].forEach(w=>ls.set("mandal_"+w,JSON.stringify(S[w])));
+      const keep=ae&&ae.dataset&&ae.dataset.key?{w:ae.dataset.who,k:ae.dataset.key,v:ae.value,s:ae.selectionStart,e:ae.selectionEnd}:null;
+      renderValues();
+      if(keep&&document.activeElement!==ae){ ae.focus(); }
+      if(keep){ try{ ae.setSelectionRange(keep.s,keep.e);}catch(e){} }
+    }).catch(()=>{});
+  }
+  pull(); setInterval(pull,2000);
+})();
+</script>
