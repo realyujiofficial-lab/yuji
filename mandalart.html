@@ -626,10 +626,17 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
   db={};
   ["A","B","X"].forEach(w=>{ exists[w]=true; refs[w]={ update:p=>post(w,p), set:p=>post(w,p) }; });
   let first=true;
+  // 바뀐 번호(rev)만 먼저 묻고, 바뀌었을 때만 전체를 받아 온다. 화면을 안 보고 있으면 묻지 않는다.
+  let lastRev=-1, busy=false;
   function pull(){
-    if(sending||Object.keys(pending.A).length||Object.keys(pending.B).length||Object.keys(pending.X).length) return;
-    fetch(API,{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>{
+    if(busy||document.hidden||sending||Object.keys(pending.A).length||Object.keys(pending.B).length||Object.keys(pending.X).length) return;
+    busy=true;
+    fetch(API+"&v=1",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(v=>{
+      if(!v||v.rev===lastRev) return null;
+      return fetch(API,{cache:"no-store"}).then(r=>r.ok?r.json():null);
+    }).then(d=>{
       if(!d||sending) return;
+      lastRev=d.rev;
       const ae=document.activeElement;
       ["A","B","X"].forEach(w=>{
         const next=Object.assign({},d[w]||{}); for(const k in pending[w]) next[k]=pending[w][k];
@@ -642,8 +649,9 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
       renderValues();
       if(keep&&document.activeElement!==ae){ ae.focus(); }
       if(keep){ try{ ae.setSelectionRange(keep.s,keep.e);}catch(e){} }
-    }).catch(()=>{});
+    }).catch(()=>{}).finally(()=>{busy=false;});
   }
-  pull(); setInterval(pull,2000);
+  pull(); setInterval(pull,3000);
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden) pull(); });
 })();
 </script>
