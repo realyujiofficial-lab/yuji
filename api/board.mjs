@@ -5,14 +5,21 @@ import { put, get } from '@vercel/blob'
 const KEY = /^[a-z0-9]{10,40}$/
 const W = ['A', 'B', 'X']
 
+// 읽기 실패를 빈 칸({})으로 처리하면 저장할 때 원래 내용을 덮어쓴다(11-07 사고). 없는 파일만 {}, 나머지 실패는 오류로.
 async function read(k, w) {
-  const r = await get(`board/${k}/${w}.json`, { access: 'private', useCache: false }).catch(() => null)
-  if (!r || r.statusCode !== 200) return {}
-  try { return JSON.parse(Buffer.from(await new Response(r.stream).arrayBuffer()).toString('utf8')) } catch { return {} }
+  let r
+  try { r = await get(`board/${k}/${w}.json`, { access: 'private', useCache: false }) }
+  catch (e) { if (/not.?found|404/i.test(String(e && (e.message || e)))) return {}; throw e }
+  if (!r) return {}
+  if (r.statusCode !== 200) throw new Error('blob ' + r.statusCode)
+  return JSON.parse(Buffer.from(await new Response(r.stream).arrayBuffer()).toString('utf8'))
 }
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store')
+  try { return await main(req, res) } catch (e) { return res.status(503).json({ error: 'store', detail: String(e && e.message || e).slice(0, 120) }) }
+}
+async function main(req, res) {
   const k = String(req.query.k || '')
   if (!KEY.test(k)) return res.status(400).json({ error: 'key' })
   if (req.method === 'POST') {
