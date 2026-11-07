@@ -636,6 +636,7 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
       return fetch(API,{cache:"no-store"}).then(r=>r.ok?r.json():null);
     }).then(d=>{
       if(!d||sending) return;
+      if(lastRev!==-1) lastChange=Date.now();
       lastRev=d.rev;
       const ae=document.activeElement;
       ["A","B","X"].forEach(w=>{
@@ -644,14 +645,28 @@ table.wk{border-collapse:separate;border-spacing:0 5px;min-width:640px;width:100
         if(w!=="X"){ lastFill[w]=Math.max(lastFill[w],filled(w)); checkNewSeals(w); }
       });
       first=false;
-      ["A","B","X"].forEach(w=>ls.set("mandal_"+w,JSON.stringify(S[w])));
+      ["A","B","X"].forEach(w=>{ ls.set("mandal_"+w,JSON.stringify(S[w]));
+        // 이 기기에 가장 많이 채워진 버전을 따로 남김(서버가 잘못돼도 여기서 되살릴 수 있게)
+        const sk="mandal_safe_"+KEYB+"_"+w; let old={}; try{ old=JSON.parse(ls.get(sk)||"{}"); }catch(e){}
+        if(Object.keys(S[w]).length>=Object.keys(old).length) ls.set(sk,JSON.stringify(S[w])); });
       const keep=ae&&ae.dataset&&ae.dataset.key?{w:ae.dataset.who,k:ae.dataset.key,v:ae.value,s:ae.selectionStart,e:ae.selectionEnd}:null;
       renderValues();
       if(keep&&document.activeElement!==ae){ ae.focus(); }
       if(keep){ try{ ae.setSelectionRange(keep.s,keep.e);}catch(e){} }
     }).catch(()=>{}).finally(()=>{busy=false;});
   }
-  pull(); setInterval(pull,3000);
-  document.addEventListener("visibilitychange",()=>{ if(!document.hidden) pull(); });
+  // 서버를 아끼는 확인 간격: 최근 2분 안에 누가 썼으면 3초, 아니면 15초, 30분 동안 이 화면에서 아무것도 안 하면 멈춤(누르거나 치면 다시).
+  let lastAct=Date.now(), lastChange=Date.now(), timer=null;
+  function tick(){
+    clearTimeout(timer);
+    if(Date.now()-lastAct>30*60*1000){ banner("잠깐 쉬는 중이에요. 화면을 누르면 다시 맞춰요."); return; }
+    pull();
+    timer=setTimeout(tick, Date.now()-lastChange<2*60*1000 ? 3000 : 15000);
+  }
+  function wake(){ const was=Date.now()-lastAct>30*60*1000; lastAct=Date.now(); if(was){ $("#banner").hidden=true; tick(); } }
+  ["pointerdown","keydown","wheel","touchstart"].forEach(t=>document.addEventListener(t,wake,{passive:true}));
+  document.addEventListener("input",()=>{ lastChange=Date.now(); });
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ wake(); pull(); } });
+  tick();
 })();
 </script>
